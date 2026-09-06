@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Job extends Model
 {
+    protected $table = 'job_posts';
+    
     protected $fillable = [
         'company_id', 'created_by_user_id', 'category_id', 'title', 'slug',
         'description', 'responsibilities', 'requirements', 'salary_min',
