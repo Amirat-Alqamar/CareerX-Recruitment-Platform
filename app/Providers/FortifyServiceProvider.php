@@ -72,6 +72,11 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::resetPasswordView(function ($request) {
             return view('auth.reset-password', ['request' => $request]);
         });
+        
+        // صفحة التحقق بخطوتين
+        Fortify::twoFactorChallengeView(function () {
+            return view('auth.two-factor-challenge');
+        }); 
 
         // التحقق من المستخدم قبل تسجيل الدخول
         Fortify::authenticateUsing(function ($request) {
