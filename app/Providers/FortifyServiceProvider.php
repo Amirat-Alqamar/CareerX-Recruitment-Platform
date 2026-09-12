@@ -16,20 +16,15 @@ use Laravel\Fortify\Fortify;
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
+use Inertia\Inertia;
 
 class FortifyServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         Fortify::createUsersUsing(CreateNewUser::class);
@@ -56,51 +51,46 @@ class FortifyServiceProvider extends ServiceProvider
             );
         });
 
-        // صفحة تسجيل الدخول
+        // 1. صفحة تسجيل الدخول عبر Inertia
         Fortify::loginView(function () {
-            return view('auth.login');
+            return Inertia::render('Auth/Login');
         });
-        // صفحة إنشاء حساب جديد
-        Fortify::registerView(function () {
-            return view('auth.register');
-        });
-        // صفحة نسيان كلمة المرور
-        Fortify::requestPasswordResetLinkView(function () {
-            return view('auth.forgot-password');
-        });
-        // صفحة إعادة تعيين كلمة المرور
-        Fortify::resetPasswordView(function ($request) {
-            return view('auth.reset-password', ['request' => $request]);
-        });
-        
-        // صفحة التحقق بخطوتين
-        Fortify::twoFactorChallengeView(function () {
-            return view('auth.two-factor-challenge');
-        }); 
 
-        // التحقق من المستخدم قبل تسجيل الدخول
+        // 2. صفحة إنشاء حساب جديد عبر Inertia
+        Fortify::registerView(function () {
+            return Inertia::render('Auth/Register');
+        });
+
+        // 3. صفحة نسيان كلمة المرور
+        Fortify::requestPasswordResetLinkView(function () {
+            return Inertia::render('Auth/ForgotPassword');
+        });
+
+        // 4. صفحة إعادة تعيين كلمة المرور
+        Fortify::resetPasswordView(function ($request) {
+            return Inertia::render('Auth/ResetPassword', ['request' => $request]);
+        });
+
+        // 5. صفحة التحقق بخطوتين
+        Fortify::twoFactorChallengeView(function () {
+            return Inertia::render('Auth/TwoFactorChallenge');
+        });
+
+        // التحقق المخصص للحسابات المحظورة
         Fortify::authenticateUsing(function ($request) {
-            // 1. نبحث عن المستخدم في قاعدة البيانات عبر الإيميل المدخل
             $user = User::where('email', $request->email)->first();
 
-            // 2. نتأكد أن المستخدم موجود وأن كلمة المرور المدخلة مطابقة للباسورد المشفر
             if ($user && Hash::check($request->password, $user->password)) {
-                
-                // 3. الشرط الخاص بنا: هل الحساب محظور (status == 0 أو false)؟
                 if (! $user->status) {
-                    // نمنعه من الدخول ونظهر له رسالة خطأ مع سبب الحظر
                     throw ValidationException::withMessages([
                         'email' => __('Your account is banned: ') . ($user->ban_reason ?? 'Please contact support.'),
                     ]);
                 }
 
-                // 4. إذا كل شيء سليم وحسابه مفعل، نرجعه لفورتيفاي ليكمل تسجيل دخوله
                 return $user;
             }
 
-            // 5. إذا كان الإيميل أو الباسورد خطأ، نرجع null ليفهم فورتيفاي أن البيانات غير صحيحة
             return null;
         });
-
     }
 }
