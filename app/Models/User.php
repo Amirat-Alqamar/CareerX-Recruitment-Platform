@@ -34,6 +34,21 @@ class User extends Authenticatable
     public function company() { return $this->belongsTo(Company::class); }
     public function profile() { return $this->hasOne(JobSeekerProfile::class, 'user_id'); }
 
+    public function isEmployer(): bool
+    {
+        return $this->role === 'employer';
+    }
+
+    public function isJobSeeker(): bool
+    {
+        return $this->role === 'job_seeker';
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
 
 
     /**

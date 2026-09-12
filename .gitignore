@@ -25,3 +25,5 @@ Thumbs.db
 resources/views/job_seeker/
 resources/views/auth/
 resources/views/layouts/
+resources/views/employer/
+

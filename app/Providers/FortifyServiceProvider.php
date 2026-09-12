@@ -24,7 +24,35 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // توجيه ذكي بحسب نوع الحساب بعد تسجيل الدخول
+        $this->app->singleton(\Laravel\Fortify\Contracts\LoginResponse::class, function () {
+            return new class implements \Laravel\Fortify\Contracts\LoginResponse {
+                public function toResponse($request)
+                {
+                    $user = $request->user();
+                    if ($user && $user->isEmployer()) {
+                        return redirect()->intended(route('employer.jobs.index'));
+                    }
+                    return redirect()->intended(route('job-seeker.profile'));
+                }
+            };
+        });
+
+        // توجيه ذكي بحسب نوع الحساب بعد إنشاء حساب جديد
+        $this->app->singleton(\Laravel\Fortify\Contracts\RegisterResponse::class, function () {
+            return new class implements \Laravel\Fortify\Contracts\RegisterResponse {
+                public function toResponse($request)
+                {
+                    $user = $request->user();
+                    if ($user && $user->isEmployer()) {
+                        return redirect()->route('employer.company.edit')
+                            ->with('success', __('Welcome to CareerX! Please complete your company profile.'));
+                    }
+                    return redirect()->route('job-seeker.profile.edit')
+                        ->with('success', __('Welcome to CareerX! Please complete your profile.'));
+                }
+            };
+        });
     }
 
     /**

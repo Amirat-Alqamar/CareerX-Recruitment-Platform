@@ -23,4 +23,7 @@ class Job extends Model
     public function skills() {
         return $this->belongsToMany(Skill::class, 'job_skill');
     }
+    public function applications() {
+        return $this->hasMany(JobApplication::class, 'job_post_id');
+    }
 }

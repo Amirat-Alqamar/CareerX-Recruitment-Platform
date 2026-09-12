@@ -1,15 +1,19 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\JobSeeker\ProfileController;
-use App\Http\Controllers\JobSeeker\ExperienceController;
-use App\Http\Controllers\JobSeeker\EducationController;
-use App\Http\Controllers\JobSeeker\SkillController;
-use App\Http\Controllers\JobSeeker\ResumeController;
-use App\Http\Controllers\JobSeeker\JobApplicationController;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group([
+    'prefix' => LaravelLocalization::setLocale(),
+    'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
+], function () {
+
+    Route::get('/', function () {
+        return view('welcome');
+    });
+
+    require __DIR__ . '/job_seeker.php';
+    require __DIR__ . '/employer.php';
+
 });
 
-require __DIR__ . '/job_seeker.php';

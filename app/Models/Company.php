@@ -13,7 +13,7 @@ class Company extends Model
 
     public function users() { return $this->hasMany(User::class); }
     public function socials() { return $this->hasMany(CompanySocial::class); }
-    //public function jobs() { return $this->hasMany(Job::class); }
+    public function jobs() { return $this->hasMany(Job::class, 'company_id'); }
     public function country() { return $this->belongsTo(Country::class); }
     public function city() { return $this->belongsTo(City::class); }
 }
