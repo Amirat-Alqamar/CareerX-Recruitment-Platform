@@ -32,8 +32,8 @@ class User extends Authenticatable
     ];
 
     public function company() { return $this->belongsTo(Company::class); }
-    //public function seekerProfile() { return $this->hasOne(JobSeekerProfile::class); }
-   // public function jobsCreated() { return $this->hasMany(Job::class, 'created_by_user_id'); }
+    public function profile() { return $this->hasOne(JobSeekerProfile::class, 'user_id'); }
+
 
 
     /**
