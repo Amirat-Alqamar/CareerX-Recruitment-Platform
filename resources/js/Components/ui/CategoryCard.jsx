@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function CategoryCard({ category }) {
+  const { __ } = useTranslation();
   const IconComponent = category.icon;
 
   return (
@@ -17,10 +19,10 @@ export default function CategoryCard({ category }) {
       {/* Category Info */}
       <div className="space-y-0.5">
         <h3 className="font-bold text-gray-900 text-base sm:text-lg group-hover:text-primary transition-colors">
-          {category.name}
+          {__(category.name)}
         </h3>
         <p className="text-sm font-medium text-gray-500">
-          {category.rolesCount} open roles
+          {category.rolesCount} {__('open roles')}
         </p>
       </div>
     </Link>

@@ -1,7 +1,10 @@
 import React from 'react';
 import { ArrowRight, Clock } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function ArticleCard({ article, onReadMore }) {
+  const { __ } = useTranslation();
+
   return (
     <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md hover:-translate-y-1 group">
       <div>
@@ -19,22 +22,22 @@ export default function ArticleCard({ article, onReadMore }) {
           {/* Badge & Read Time */}
           <div className="flex items-center gap-3 text-xs font-semibold">
             <span className="px-3 py-1 rounded-full bg-[#E6F8F6] text-[#008A7B]">
-              {article.category}
+              {__(article.category)}
             </span>
             <span className="text-slate-400 flex items-center gap-1 font-normal">
               <Clock className="w-3.5 h-3.5" />
-              {article.readTime}
+              {__(article.readTime)}
             </span>
           </div>
 
           {/* Title */}
           <h3 className="text-lg font-bold text-slate-900 group-hover:text-[#008A7B] transition-colors leading-snug line-clamp-2">
-            {article.title}
+            {__(article.title)}
           </h3>
 
           {/* Summary */}
           <p className="text-slate-500 text-sm leading-relaxed line-clamp-3">
-            {article.summary}
+            {__(article.summary)}
           </p>
         </div>
       </div>
@@ -48,8 +51,8 @@ export default function ArticleCard({ article, onReadMore }) {
           onClick={() => onReadMore(article)}
           className="text-[#008A7B] font-bold inline-flex items-center gap-1 hover:gap-2 transition-all cursor-pointer"
         >
-          <span>Read</span>
-          <ArrowRight className="w-4 h-4" />
+          <span>{__('Read')}</span>
+          <ArrowRight className="w-4 h-4 rtl:rotate-180" />
         </button>
       </div>
     </div>

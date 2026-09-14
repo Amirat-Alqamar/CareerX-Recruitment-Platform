@@ -1,8 +1,11 @@
 import React from 'react';
 import { Search, MapPin, Briefcase } from 'lucide-react';
 import { popularTags } from '@/Data/navigation';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function HeroSection() {
+  const { __ } = useTranslation();
+
   return (
     <section className="bg-gradient-to-b from-primary-light/60 via-white to-white py-12 lg:py-20">
 
@@ -13,15 +16,15 @@ export default function HeroSection() {
           <div className="lg:col-span-6 space-y-8">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-light border border-gray-200 text-primary font-semibold text-xs">
               <span className="w-2 h-2 rounded-full bg-primary-accent animate-pulse"></span>
-              50,000+ active job listings this week
+              {__('50,000+ active job listings this week')}
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-5xl font-extrabold text-gray-900 leading-[1.15] tracking-tight">
-              Find Your Dream Job or <span className="text-primary">Hire the Perfect</span> Candidate.
+              {__('Find Your Dream Job or')} <span className="text-primary">{__('Hire the Perfect')}</span> {__('Candidate.')}
             </h1>
 
             <p className="text-base sm:text-lg text-gray-600 max-w-2xl leading-relaxed">
-              TalentFlow connects top professionals with world-class companies. Whether you're launching a career or scaling a team, we make hiring simple, fast, and effective.
+              {__("CareerX connects top professionals with world-class companies. Whether you're launching a career or scaling a team, we make hiring simple, fast, and effective.")}
             </p>
 
             {/* Search Box Card */}
@@ -30,7 +33,7 @@ export default function HeroSection() {
                 <Search className="w-5 h-5 text-gray-400 shrink-0" />
                 <input
                   type="text"
-                  placeholder="Job title, skill, or keyword"
+                  placeholder={__('Job title, skill, or keyword')}
                   className="w-full text-sm border-none focus:outline-none focus:ring-0 text-gray-800 placeholder-gray-400"
                 />
               </div>
@@ -41,25 +44,25 @@ export default function HeroSection() {
                 <MapPin className="w-5 h-5 text-gray-400 shrink-0" />
                 <input
                   type="text"
-                  placeholder="City, state, or remote"
+                  placeholder={__('City, state, or remote')}
                   className="w-full text-sm border-none focus:outline-none focus:ring-0 text-gray-800 placeholder-gray-400"
                 />
               </div>
 
-              <button className="w-full sm:w-auto px-7 py-3.5 bg-primary hover:bg-primary-hover text-white font-semibold text-sm rounded-xl transition-all shadow-md hover:shadow-lg shrink-0">
-                Search Jobs
+              <button className="w-full sm:w-auto px-7 py-3.5 bg-primary hover:bg-primary-hover text-white font-semibold text-sm rounded-xl transition-all shadow-md hover:shadow-lg shrink-0 cursor-pointer">
+                {__('Search Jobs')}
               </button>
             </div>
 
             {/* Popular Searches */}
             <div className="flex flex-wrap items-center gap-2 pt-2">
-              <span className="text-xs font-semibold text-gray-400">Popular:</span>
+              <span className="text-xs font-semibold text-gray-400">{__('Popular:')}</span>
               {popularTags.map((tag) => (
                 <button
                   key={tag}
-                  className="text-xs font-medium text-gray-600 bg-primary-light hover:bg-gray-200 px-3.5 py-1.5 rounded-lg transition-colors"
+                  className="text-xs font-medium text-gray-600 bg-primary-light hover:bg-gray-200 px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer"
                 >
-                  {tag}
+                  {__(tag)}
                 </button>
               ))}
             </div>
@@ -77,24 +80,24 @@ export default function HeroSection() {
             </div>
 
             {/* Floating Badge 1 - AI Match Rate */}
-            <div className="absolute top-6 right-6 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-white/40 flex items-center gap-3">
+            <div className="absolute top-6 right-6 rtl:right-auto rtl:left-6 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-white/40 flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-primary-light text-primary-accent flex items-center justify-center font-bold text-sm">
                 98%
               </div>
               <div>
-                <p className="text-xs font-bold text-gray-900">Match Rate</p>
-                <p className="text-[11px] text-gray-500">AI powered matching</p>
+                <p className="text-xs font-bold text-gray-900">{__('Match Rate')}</p>
+                <p className="text-[11px] text-gray-500">{__('AI powered matching')}</p>
               </div>
             </div>
 
             {/* Floating Badge 2 - New Jobs */}
-            <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3.5 hidden sm:flex">
+            <div className="absolute -bottom-6 -left-6 rtl:-left-auto rtl:-right-6 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3.5 hidden sm:flex">
               <div className="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center shadow-md">
                 <Briefcase className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-sm font-bold text-gray-900">2,483 New Jobs</p>
-                <p className="text-xs text-gray-500">Posted this week</p>
+                <p className="text-sm font-bold text-gray-900">{__('2,483 New Jobs')}</p>
+                <p className="text-xs text-gray-500">{__('Posted this week')}</p>
               </div>
             </div>
           </div>

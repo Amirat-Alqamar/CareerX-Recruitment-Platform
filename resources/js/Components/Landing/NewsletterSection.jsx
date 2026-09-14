@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Bell, Mail, Send, CheckCircle2, Loader2 } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function NewsletterSection() {
+  const { __ } = useTranslation();
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [errorMessage, setErrorMessage] = useState('');
@@ -11,7 +13,7 @@ export default function NewsletterSection() {
 
     // Simple Email Validation
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setErrorMessage('Please enter a valid email address.');
+      setErrorMessage(__('Please enter a valid email address.'));
       setStatus('error');
       return;
     }
@@ -19,7 +21,7 @@ export default function NewsletterSection() {
     setStatus('loading');
     setErrorMessage('');
 
-    // Simulation of Laravel API Call (e.g., Inertia.post or fetch)
+    // Simulation of Laravel API Call
     setTimeout(() => {
       setStatus('success');
       setEmail('');
@@ -42,11 +44,12 @@ export default function NewsletterSection() {
           {/* Heading & Subtitle */}
           <div className="space-y-3">
             <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
-              Never Miss a Dream Job
+              {__('Never Miss a Dream Job')}
             </h2>
             <p className="text-slate-200 text-sm sm:text-base leading-relaxed font-normal">
-              Get personalized job alerts delivered straight to your inbox. Join{' '}
-              <span className="font-bold text-white">150,000+</span> professionals who trust CareerX.
+              {__('Get personalized job alerts delivered straight to your inbox. Join')}{' '}
+              <span className="font-bold text-white">150,000+</span>{' '}
+              {__('professionals who trust CareerX.')}
             </p>
           </div>
 
@@ -55,7 +58,7 @@ export default function NewsletterSection() {
             <div className="p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center gap-3 animate-fade-in">
               <CheckCircle2 className="w-6 h-6 text-[#00BBA7] shrink-0" />
               <span className="font-medium text-sm sm:text-base">
-                Thank you for subscribing! Check your inbox for confirmation.
+                {__('Thank you for subscribing! Check your inbox for confirmation.')}
               </span>
             </div>
           ) : (
@@ -63,13 +66,13 @@ export default function NewsletterSection() {
               <div className="flex flex-col sm:flex-row items-center gap-3 bg-white p-2 rounded-2xl shadow-xl border border-white/20">
                 {/* Email Input Field */}
                 <div className="relative w-full flex items-center">
-                  <Mail className="w-5 h-5 text-slate-400 absolute left-4 shrink-0" />
+                  <Mail className="w-5 h-5 text-slate-400 absolute left-4 rtl:left-auto rtl:right-4 shrink-0" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Your email address"
-                    className="w-full pl-12 pr-4 py-3 bg-transparent text-slate-900 placeholder-slate-400 text-sm font-medium focus:outline-none"
+                    placeholder={__('Your email address')}
+                    className="w-full pl-12 pr-4 rtl:pl-4 rtl:pr-12 py-3 bg-transparent text-slate-900 placeholder-slate-400 text-sm font-medium focus:outline-none"
                     disabled={status === 'loading'}
                   />
                 </div>
@@ -83,12 +86,12 @@ export default function NewsletterSection() {
                   {status === 'loading' ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Subscribing...</span>
+                      <span>{__('Subscribing...')}</span>
                     </>
                   ) : (
                     <>
-                      <Send className="w-4 h-4" />
-                      <span>Subscribe</span>
+                      <Send className="w-4 h-4 rtl:rotate-180" />
+                      <span>{__('Subscribe')}</span>
                     </>
                   )}
                 </button>
@@ -96,7 +99,7 @@ export default function NewsletterSection() {
 
               {/* Error Message */}
               {status === 'error' && (
-                <p className="text-xs text-rose-300 font-medium text-left px-2">
+                <p className="text-xs text-rose-300 font-medium text-left rtl:text-right px-2">
                   {errorMessage}
                 </p>
               )}

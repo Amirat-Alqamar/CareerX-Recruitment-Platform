@@ -18,6 +18,8 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+
 class FortifyServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -28,10 +30,34 @@ class FortifyServiceProvider extends ServiceProvider
                 public function toResponse($request)
                 {
                     $user = $request->user();
+
+                    // If user is employer, redirect to employer dashboard
                     if ($user && $user->isEmployer()) {
-                        return redirect()->intended(route('employer.jobs.index'));
+                        return redirect()->to(
+                            class_exists(LaravelLocalization::class)
+                                ? LaravelLocalization::localizeUrl(route('employer.dashboard'))
+                                : route('employer.dashboard')
+                        );
                     }
-                    return redirect()->intended(route('job-seeker.profile'));
+
+                    // Check if user had a specific deep intended URL (not home, landing, or auth)
+                    $intended = session()->get('url.intended');
+                    session()->forget('url.intended');
+
+                    if ($intended) {
+                        $path = trim(parse_url($intended, PHP_URL_PATH) ?? '', '/');
+                        $ignoredPaths = ['', 'en', 'ar', 'login', 'en/login', 'ar/login', 'register', 'en/register', 'ar/register'];
+                        if (!in_array($path, $ignoredPaths)) {
+                            return redirect()->to($intended);
+                        }
+                    }
+
+                    // Default to seeker dashboard
+                    $targetUrl = class_exists(LaravelLocalization::class)
+                        ? LaravelLocalization::localizeUrl(route('seeker.dashboard'))
+                        : route('seeker.dashboard');
+
+                    return redirect()->to($targetUrl);
                 }
             };
         });
@@ -43,15 +69,23 @@ class FortifyServiceProvider extends ServiceProvider
                 {
                     $user = $request->user();
                     if ($user && $user->isEmployer()) {
-                        return redirect()->route('employer.company.edit')
+                        $url = class_exists(LaravelLocalization::class)
+                            ? LaravelLocalization::localizeUrl(route('employer.company.edit'))
+                            : route('employer.company.edit');
+                        return redirect()->to($url)
                             ->with('success', __('Welcome to CareerX! Please complete your company profile.'));
                     }
-                    return redirect()->route('job-seeker.profile.edit')
+
+                    $url = class_exists(LaravelLocalization::class)
+                        ? LaravelLocalization::localizeUrl(route('seeker.dashboard'))
+                        : route('seeker.dashboard');
+                    return redirect()->to($url)
                         ->with('success', __('Welcome to CareerX! Please complete your profile.'));
                 }
             };
         });
     }
+
 
     public function boot(): void
     {
@@ -91,7 +125,9 @@ class FortifyServiceProvider extends ServiceProvider
 
         // 3. صفحة نسيان كلمة المرور
         Fortify::requestPasswordResetLinkView(function () {
-            return Inertia::render('Auth/ForgotPassword');
+            return Inertia::render('Auth/ForgotPassword', [
+                'status' => session('status'),
+            ]);
         });
 
         // 4. صفحة إعادة تعيين كلمة المرور

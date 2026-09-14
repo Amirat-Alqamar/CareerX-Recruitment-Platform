@@ -25,6 +25,19 @@ class ApplicantController extends Controller
             $q->where('company_id', $companyId);
         })->with(['jobPost', 'profile.user', 'resume']);
 
+        // Filter by search (candidate name, email, or job title)
+        if ($request->filled('search')) {
+            $term = '%' . $request->search . '%';
+            $query->where(function ($q) use ($term) {
+                $q->whereHas('profile.user', function ($uq) use ($term) {
+                    $uq->where('name', 'like', $term)
+                       ->orWhere('email', 'like', $term);
+                })->orWhereHas('jobPost', function ($jq) use ($term) {
+                    $jq->where('title', 'like', $term);
+                });
+            });
+        }
+
         // Filter by job
         if ($request->filled('job_id')) {
             $query->where('job_post_id', $request->job_id);
@@ -32,18 +45,28 @@ class ApplicantController extends Controller
 
         // Filter by status
         if ($request->filled('status')) {
-            $query->where('status', $request->status);
+            $status = $request->status;
+            if ($status === 'pending' || $status === 'applied') {
+                $query->whereIn('status', ['applied', 'pending']);
+            } else {
+                $query->where('status', $status);
+            }
         }
 
         $applications = $query->latest()->paginate(15)->withQueryString();
 
+        $appliedCount = JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->whereIn('status', ['applied', 'pending'])->count();
+
         // Application status counts for quick badges
         $counts = [
-            'total'    => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->count(),
-            'pending'  => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'pending')->count(),
-            'reviewed' => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'reviewed')->count(),
-            'accepted' => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'accepted')->count(),
-            'rejected' => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'rejected')->count(),
+            'total'       => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->count(),
+            'applied'     => $appliedCount,
+            'pending'     => $appliedCount,
+            'reviewed'    => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'reviewed')->count(),
+            'shortlisted' => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'shortlisted')->count(),
+            'accepted'    => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'accepted')->count(),
+            'rejected'    => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'rejected')->count(),
+            'hired'       => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'hired')->count(),
         ];
 
         return view('employer.applicants.index', compact('applications', 'companyJobs', 'counts'));
@@ -56,8 +79,8 @@ class ApplicantController extends Controller
     {
         $this->authorizeCompanyApplication($application);
 
-        // Auto mark as reviewed if it is currently pending
-        if ($application->status === 'pending') {
+        // Auto mark as reviewed if it is currently applied or pending
+        if (in_array($application->status, ['applied', 'pending'])) {
             $application->update(['status' => 'reviewed']);
         }
 
@@ -68,7 +91,7 @@ class ApplicantController extends Controller
             'profile.country',
             'profile.city',
             'profile.experiences' => fn($q) => $q->orderBy('start_date', 'desc'),
-            'profile.educations' => fn($q) => $q->orderBy('start_date', 'desc'),
+            'profile.educations' => fn($q) => $q->orderBy('start_year', 'desc'),
             'profile.skills',
             'profile.languages',
             'profile.certifications',
@@ -79,21 +102,39 @@ class ApplicantController extends Controller
     }
 
     /**
-     * Update the application status (accepted / rejected / reviewed).
+     * Update the application status (applied / reviewed / shortlisted / accepted / rejected / hired).
      */
     public function updateStatus(Request $request, JobApplication $application)
     {
         $this->authorizeCompanyApplication($application);
 
         $validated = $request->validate([
-            'status' => ['required', 'in:pending,reviewed,accepted,rejected'],
+            'status' => ['required', 'in:applied,pending,reviewed,shortlisted,accepted,rejected,hired'],
         ]);
 
-        $application->update(['status' => $validated['status']]);
+        $status = $validated['status'] === 'pending' ? 'applied' : $validated['status'];
+        $application->update(['status' => $status]);
 
         return redirect()->back()->with('success', __('Applicant status updated to :status successfully.', [
-            'status' => __(ucfirst($validated['status']))
+            'status' => __(ucfirst($status))
         ]));
+    }
+
+    /**
+     * Update candidate rating and internal recruiter notes.
+     */
+    public function updateEvaluation(Request $request, JobApplication $application)
+    {
+        $this->authorizeCompanyApplication($application);
+
+        $validated = $request->validate([
+            'rating' => ['nullable', 'integer', 'min:1', 'max:5'],
+            'notes'  => ['nullable', 'string', 'max:5000'],
+        ]);
+
+        $application->update($validated);
+
+        return redirect()->back()->with('success', __('Candidate evaluation and private notes saved successfully.'));
     }
 
     /**

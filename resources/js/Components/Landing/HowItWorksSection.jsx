@@ -2,8 +2,11 @@ import React from 'react';
 import { Link } from '@inertiajs/react';
 import { ArrowRight } from 'lucide-react';
 import { howItWorksData } from '@/Data/howItWorksData';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function HowItWorksSection() {
+  const { __ } = useTranslation();
+
   return (
     <section className="py-20 bg-[#F8FAFC]">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
@@ -11,10 +14,10 @@ export default function HowItWorksSection() {
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
           <span className="text-xs font-bold uppercase tracking-wider text-[#00BBA7]">
-            SIMPLE PROCESS
+            {__('SIMPLE PROCESS')}
           </span>
           <h2 className="text-3xl sm:text-4xl font-black text-[#0F172A] tracking-tight">
-            How CareerX Works
+            {__('How CareerX Works')}
           </h2>
         </div>
 
@@ -35,7 +38,7 @@ export default function HowItWorksSection() {
                       <HeaderIcon className="w-6 h-6" />
                     </div>
                     <h3 className="text-xl sm:text-2xl font-bold text-slate-900">
-                      {column.title}
+                      {__(column.title)}
                     </h3>
                   </div>
 
@@ -51,10 +54,10 @@ export default function HowItWorksSection() {
                         {/* Step Content */}
                         <div className="space-y-1">
                           <h4 className="text-base font-bold text-slate-900 group-hover:text-[#008A7B] transition-colors duration-200">
-                            {step.title}
+                            {__(step.title)}
                           </h4>
                           <p className="text-sm text-slate-500 leading-relaxed">
-                            {step.description}
+                            {__(step.description)}
                           </p>
                         </div>
                       </div>
@@ -67,8 +70,8 @@ export default function HowItWorksSection() {
                   href={column.ctaHref}
                   className={`w-full py-4 px-6 rounded-2xl ${column.btnBg} text-white font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.99]`}
                 >
-                  <span>{column.ctaText}</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>{__(column.ctaText)}</span>
+                  <ArrowRight className="w-4 h-4 rtl:rotate-180" />
                 </Link>
               </div>
             );

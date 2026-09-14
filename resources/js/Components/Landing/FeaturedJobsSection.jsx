@@ -3,8 +3,11 @@ import { Link } from '@inertiajs/react';
 import { ArrowRight } from 'lucide-react';
 import JobCard from '../ui/JobCard';
 import { featuredJobs } from '@/Data/jobs';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function FeaturedJobsSection() {
+  const { __ } = useTranslation();
+
   return (
     <section className="py-16 bg-gray-50/50">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
@@ -13,18 +16,18 @@ export default function FeaturedJobsSection() {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-primary-accent">
-              LATEST OPPORTUNITIES
+              {__('LATEST OPPORTUNITIES')}
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-1">
-              Featured Job Listings
+              {__('Featured Job Listings')}
             </h2>
           </div>
           <Link
             href="/jobs"
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-hover transition-colors"
           >
-            <span>View all jobs</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>{__('View all jobs')}</span>
+            <ArrowRight className="w-4 h-4 rtl:rotate-180" />
           </Link>
         </div>
 
@@ -41,8 +44,8 @@ export default function FeaturedJobsSection() {
             href="/jobs"
             className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border border-gray-200 bg-white text-gray-800 text-sm font-semibold hover:bg-gray-50 transition-colors shadow-sm"
           >
-            <span>Browse All 52,000+ Jobs</span>
-            <ArrowRight className="w-4 h-4 text-gray-500" />
+            <span>{__('Browse All 52,000+ Jobs')}</span>
+            <ArrowRight className="w-4 h-4 text-gray-500 rtl:rotate-180" />
           </Link>
         </div>
 

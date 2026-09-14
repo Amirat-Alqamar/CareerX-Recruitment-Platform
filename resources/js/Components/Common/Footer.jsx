@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
 import { footerSections, socialLinks } from '@/Data/footerData';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Footer() {
+  const { __ } = useTranslation();
+
   return (
     <footer className="bg-[#0B132B] text-gray-300 pt-16 pb-8 border-t border-gray-800">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
@@ -16,12 +19,12 @@ export default function Footer() {
               <img
                 src="/images/careerX-logo.webp"
                 alt="CareerX Logo"
-                className="h-30 w-auto object-contain"
+                className="h-8 w-auto object-contain brightness-0 invert"
               />
             </Link>
 
             <p className="text-sm text-gray-400 max-w-sm leading-relaxed">
-              The modern recruitment platform connecting top talent with world-class companies. Find your next opportunity or hire the perfect candidate.
+              {__('The modern recruitment platform connecting top talent with world-class companies. Find your next opportunity or hire the perfect candidate.')}
             </p>
 
             {/* Social Icons */}
@@ -47,7 +50,7 @@ export default function Footer() {
             {footerSections.map((section, idx) => (
               <div key={idx} className="space-y-4">
                 <h3 className="text-sm font-bold text-white tracking-wide">
-                  {section.title}
+                  {__(section.title)}
                 </h3>
                 <ul className="space-y-2.5">
                   {section.links.map((link, linkIdx) => (
@@ -56,7 +59,7 @@ export default function Footer() {
                         href={link.href}
                         className="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors duration-150 inline-block"
                       >
-                        {link.name}
+                        {__(link.name)}
                       </Link>
                     </li>
                   ))}
@@ -69,17 +72,17 @@ export default function Footer() {
 
         {/* Bottom Bar Separator */}
         <div className="border-t border-slate-800/80 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
-          <p>© 2026 CareerX Inc. All rights reserved.</p>
+          <p>{__('© 2026 CareerX Inc. All rights reserved.')}</p>
 
           <div className="flex items-center gap-6">
             <Link href="/privacy" className="hover:text-white transition-colors">
-              Privacy Policy
+              {__('Privacy Policy')}
             </Link>
             <Link href="/terms" className="hover:text-white transition-colors">
-              Terms of Service
+              {__('Terms of Service')}
             </Link>
             <Link href="/cookies" className="hover:text-white transition-colors">
-              Cookie Policy
+              {__('Cookie Policy')}
             </Link>
           </div>
         </div>

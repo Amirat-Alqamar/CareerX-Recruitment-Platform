@@ -73,7 +73,7 @@ return [
     |
     */
 
-    'home' => '/job-seeker/profile',
+    'home' => '/seeker/dashboard',
 
 
     /*

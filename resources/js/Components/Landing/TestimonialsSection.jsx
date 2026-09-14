@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import TestimonialCard from '@/Components/ui/TestimonialCard';
 import { testimonialsData } from '@/Data/testimonialsData';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function TestimonialsSection() {
+  const { __ } = useTranslation();
   const [activeTab, setActiveTab] = useState('candidates');
 
   return (
@@ -12,10 +14,10 @@ export default function TestimonialsSection() {
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-10 space-y-3">
           <span className="text-xs font-bold uppercase tracking-wider text-[#00BBA7]">
-            WHAT PEOPLE SAY
+            {__('WHAT PEOPLE SAY')}
           </span>
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-            Trusted by Thousands
+            {__('Trusted by Thousands')}
           </h2>
         </div>
 
@@ -24,23 +26,23 @@ export default function TestimonialsSection() {
           <div className="bg-slate-200/70 p-1.5 rounded-2xl inline-flex items-center gap-1">
             <button
               onClick={() => setActiveTab('candidates')}
-              className={`px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 ${
+              className={`px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${
                 activeTab === 'candidates'
                   ? 'bg-[#014D56] text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Candidates
+              {__('Candidates')}
             </button>
             <button
               onClick={() => setActiveTab('companies')}
-              className={`px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 ${
+              className={`px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-200 cursor-pointer ${
                 activeTab === 'companies'
                   ? 'bg-[#014D56] text-white shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              Companies
+              {__('Companies')}
             </button>
           </div>
         </div>

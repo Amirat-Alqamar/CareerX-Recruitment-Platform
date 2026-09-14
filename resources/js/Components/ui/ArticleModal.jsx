@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react';
 import { X, Clock, Calendar, User } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function ArticleModal({ article, onClose }) {
+  const { __ } = useTranslation();
+
   if (!article) return null;
 
   // Freeze background scroll when modal opens
@@ -20,7 +23,7 @@ export default function ArticleModal({ article, onClose }) {
         {/* Sticky Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-slate-900/40 hover:bg-slate-900 text-white flex items-center justify-center transition-colors backdrop-blur-md cursor-pointer"
+          className="absolute top-4 right-4 rtl:right-auto rtl:left-4 z-10 w-10 h-10 rounded-full bg-slate-900/40 hover:bg-slate-900 text-white flex items-center justify-center transition-colors backdrop-blur-md cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -30,10 +33,10 @@ export default function ArticleModal({ article, onClose }) {
           {/* Header Metadata */}
           <div className="space-y-4">
             <span className="inline-block px-3.5 py-1 rounded-full bg-[#E6F8F6] text-[#008A7B] font-bold text-xs">
-              {article.category}
+              {__(article.category)}
             </span>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
-              {article.title}
+              {__(article.title)}
             </h1>
 
             <div className="flex flex-wrap items-center gap-4 text-xs text-slate-500 pt-1 border-b border-slate-100 pb-4">
@@ -47,7 +50,7 @@ export default function ArticleModal({ article, onClose }) {
               </span>
               <span className="flex items-center gap-1.5">
                 <Clock className="w-4 h-4 text-slate-400" />
-                {article.readTime}
+                {__(article.readTime)}
               </span>
             </div>
           </div>

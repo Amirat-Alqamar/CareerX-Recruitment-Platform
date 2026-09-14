@@ -1,18 +1,20 @@
 import React from 'react';
 import { Star, Quote } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function TestimonialCard({ testimonial }) {
+  const { __ } = useTranslation();
   const { quote, rating, author } = testimonial;
 
   return (
     <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm flex flex-col justify-between h-full transition-all duration-300 hover:shadow-md hover:-translate-y-1">
       <div className="space-y-6">
         {/* Quote Icon */}
-        <Quote className="w-10 h-10 text-slate-200 fill-slate-100 rotate-180 shrink-0" />
+        <Quote className="w-10 h-10 text-slate-200 fill-slate-100 rotate-180 rtl:rotate-0 shrink-0" />
 
         {/* Quote Text */}
         <p className="text-slate-700 text-base leading-relaxed font-normal">
-          "{quote}"
+          "{__(quote)}"
         </p>
       </div>
 
@@ -31,10 +33,10 @@ export default function TestimonialCard({ testimonial }) {
           </div>
           <div className="space-y-0.5">
             <h4 className="font-bold text-slate-900 text-sm sm:text-base">
-              {author.name}
+              {__(author.name)}
             </h4>
             <p className="text-xs sm:text-sm text-slate-500 font-medium">
-              {author.role}
+              {__(author.role)}
             </p>
           </div>
         </div>

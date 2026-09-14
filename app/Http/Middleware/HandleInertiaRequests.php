@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+
 class HandleInertiaRequests extends Middleware
 {
     /**
@@ -35,9 +37,50 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $locale = app()->getLocale();
+        $direction = class_exists(LaravelLocalization::class)
+            ? LaravelLocalization::getCurrentLocaleDirection()
+            : ($locale === 'ar' ? 'rtl' : 'ltr');
+
+        $translationsPath = base_path("lang/{$locale}.json");
+        $translations = file_exists($translationsPath)
+            ? json_decode(file_get_contents($translationsPath), true) ?: []
+            : [];
+
+        $locales = [];
+        if (class_exists(LaravelLocalization::class)) {
+            foreach (LaravelLocalization::getSupportedLocales() as $code => $properties) {
+                $locales[] = [
+                    'code' => $code,
+                    'name' => $properties['name'] ?? $code,
+                    'native' => $properties['native'] ?? $code,
+                    'url' => LaravelLocalization::getLocalizedURL($code, null, [], true),
+                ];
+            }
+        }
+
+        $user = $request->user();
+        $userData = null;
+        if ($user) {
+            $userData = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+                'headline' => $user->profile?->job_title,
+            ];
+        }
+
         return [
             ...parent::share($request),
-            //
+            'auth' => [
+                'user' => $userData,
+            ],
+            'locale' => $locale,
+            'direction' => $direction,
+            'translations' => $translations,
+            'locales' => $locales,
         ];
     }
 }
+

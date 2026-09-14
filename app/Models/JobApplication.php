@@ -13,6 +13,8 @@ class JobApplication extends Model
         'profile_id',
         'resume_id',
         'cover_letter',
+        'rating',
+        'notes',
         'status',
     ];
 
@@ -21,7 +23,17 @@ class JobApplication extends Model
         return $this->belongsTo(Job::class, 'job_post_id');
     }
 
+    public function job()
+    {
+        return $this->belongsTo(Job::class, 'job_post_id');
+    }
+
     public function profile()
+    {
+        return $this->belongsTo(JobSeekerProfile::class, 'profile_id');
+    }
+
+    public function jobSeeker()
     {
         return $this->belongsTo(JobSeekerProfile::class, 'profile_id');
     }

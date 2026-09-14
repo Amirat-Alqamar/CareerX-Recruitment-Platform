@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { MapPin, Bookmark } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export default function JobCard({ job }) {
+  const { __ } = useTranslation();
   const [isSaved, setIsSaved] = useState(false);
 
   return (
@@ -15,14 +17,15 @@ export default function JobCard({ job }) {
             </div>
             <div>
               <h3 className="font-bold text-gray-900 text-base leading-snug hover:text-primary transition-colors cursor-pointer">
-                {job.title}
+                {__(job.title)}
               </h3>
               <p className="text-xs text-gray-500 font-medium">{job.company}</p>
             </div>
           </div>
           <button
             onClick={() => setIsSaved(!isSaved)}
-            className="text-gray-400 hover:text-primary transition-colors p-1"
+            className="text-gray-400 hover:text-primary transition-colors p-1 cursor-pointer"
+            title={isSaved ? __('Job Saved') : __('Save Job')}
           >
             <Bookmark className={`w-5 h-5 ${isSaved ? 'fill-primary text-primary' : ''}`} />
           </button>
@@ -35,11 +38,11 @@ export default function JobCard({ job }) {
             {job.location}
           </span>
           <span className="px-2.5 py-1 rounded-md bg-teal-50 text-teal-800 text-xs font-medium">
-            {job.type}
+            {__(job.type)}
           </span>
           {job.isRemote && (
             <span className="px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 text-xs font-medium">
-              Remote
+              {__('Remote')}
             </span>
           )}
         </div>
@@ -59,11 +62,11 @@ export default function JobCard({ job }) {
         <div>
           <p className="text-base font-bold text-gray-900">{job.salary}</p>
           <p className="text-[11px] text-gray-400 font-medium">
-            {job.experience} • {job.postedAt}
+            {__(job.experience)} • {__(job.postedAt)}
           </p>
         </div>
-        <button className="px-4 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-semibold rounded-lg transition-colors shadow-sm">
-          Apply Now
+        <button className="px-4 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-semibold rounded-lg transition-colors shadow-sm cursor-pointer">
+          {__('Apply Now')}
         </button>
       </div>
     </div>

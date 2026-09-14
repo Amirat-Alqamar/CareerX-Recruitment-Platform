@@ -24,7 +24,7 @@ class CompanyProfileController extends Controller
                 ->with('error', __('Please complete your company profile first.'));
         }
 
-        $company->load(['country', 'city', 'jobs' => function ($query) {
+        $company->load(['country', 'city', 'socials', 'jobs' => function ($query) {
             $query->latest()->take(5);
         }]);
 
@@ -42,7 +42,9 @@ class CompanyProfileController extends Controller
             ? City::where('country_id', $company->country_id)->orderBy('name')->get()
             : City::orderBy('name')->get();
 
-        return view('employer.company.edit', compact('company', 'countries', 'cities'));
+        $socials = $company ? $company->socials->pluck('url', 'platform')->toArray() : [];
+
+        return view('employer.company.edit', compact('company', 'countries', 'cities', 'socials'));
     }
 
     /**
@@ -63,6 +65,8 @@ class CompanyProfileController extends Controller
             'address'      => ['nullable', 'string', 'max:255'],
             'logo'         => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:2048'],
             'cover_image'  => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:4096'],
+            'socials'      => ['nullable', 'array'],
+            'socials.*'    => ['nullable', 'string', 'max:255'],
         ]);
 
         // Auto format website URL
@@ -92,6 +96,28 @@ class CompanyProfileController extends Controller
         }
 
         $company->update($validated);
+
+        // Sync social media accounts
+        if ($request->has('socials')) {
+            $allowedPlatforms = ['linkedin', 'facebook', 'x', 'instagram', 'other'];
+            foreach ($request->input('socials') as $platform => $url) {
+                if (!in_array($platform, $allowedPlatforms)) {
+                    continue;
+                }
+                $url = trim($url ?? '');
+                if (!empty($url)) {
+                    if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+                        $url = 'https://' . $url;
+                    }
+                    $company->socials()->updateOrCreate(
+                        ['platform' => $platform],
+                        ['url' => $url]
+                    );
+                } else {
+                    $company->socials()->where('platform', $platform)->delete();
+                }
+            }
+        }
 
         return redirect()->back()->with('success', __('Company profile updated successfully.'));
     }

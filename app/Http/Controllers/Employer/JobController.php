@@ -193,6 +193,32 @@ class JobController extends Controller
     }
 
     /**
+     * Duplicate an existing job post as a new draft.
+     */
+    public function duplicate(Job $job)
+    {
+        $this->authorizeCompanyJob($job);
+
+        $newJob = $job->replicate();
+        $newJob->title = $job->title . ' (' . __('Copy') . ')';
+        $newJob->slug = Str::slug($newJob->title) . '-' . time() . '-' . rand(100, 999);
+        $newJob->status = 'draft';
+        $newJob->is_active = false;
+        $newJob->views_count = 0;
+        $newJob->created_by_user_id = Auth::id();
+        $newJob->save();
+
+        // Copy skills relation
+        $skills = $job->skills->pluck('id')->toArray();
+        if (!empty($skills)) {
+            $newJob->skills()->sync($skills);
+        }
+
+        return redirect()->route('employer.jobs.edit', $newJob)
+            ->with('success', __('Job duplicated successfully as a draft. You can now make changes and publish it.'));
+    }
+
+    /**
      * Security check: ensure the job belongs to the authenticated user's company.
      */
     protected function authorizeCompanyJob(Job $job): void
