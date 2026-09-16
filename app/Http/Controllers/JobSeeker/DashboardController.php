@@ -102,9 +102,11 @@ class DashboardController extends Controller
             $profile = $user->profile ? $user->profile()->with([
                 'skills',
                 'languages',
-                'experiences',
-                'educations',
-                'resumes',
+                'experiences' => fn($q) => $q->orderBy('start_date', 'desc'),
+                'educations' => fn($q) => $q->orderBy('start_year', 'desc'),
+                'certifications' => fn($q) => $q->latest(),
+                'resumes' => fn($q) => $q->latest(),
+                'portfolioItems' => fn($q) => $q->latest(),
                 'city',
                 'country',
             ])->first() : null;
@@ -121,22 +123,69 @@ class DashboardController extends Controller
                     'location' => !empty($location) ? $location : null,
                     'email' => $user->email,
                     'website' => $user->website ?? null,
+                    'avatar' => $user->avatar ? (str_starts_with($user->avatar, 'http') ? $user->avatar : asset('storage/' . $user->avatar)) : null,
+                    'cover_image' => $user->cover_image ? (str_starts_with($user->cover_image, 'http') ? $user->cover_image : asset('storage/' . $user->cover_image)) : null,
                 ],
                 'summary' => $profile?->bio ?: null,
+                'details' => $profile ? [
+                    'job_title' => $profile->job_title,
+                    'bio' => $profile->bio,
+                    'country_id' => $profile->country_id,
+                    'city_id' => $profile->city_id,
+                    'nationality' => $profile->nationality,
+                    'address' => $profile->address,
+                    'marital_status' => $profile->marital_status,
+                    'birth_date' => $profile->birth_date ? \Carbon\Carbon::parse($profile->birth_date)->format('Y-m-d') : null,
+                    'years_of_experience' => $profile->years_of_experience,
+                    'work_type' => $profile->work_type,
+                    'gender_preference' => $profile->gender_preference,
+                ] : null,
                 'experiences' => $profile ? $profile->experiences : [],
-                'skills' => $profile ? $profile->skills->pluck('name')->toArray() : [],
-                'languages' => $profile ? $profile->languages->map(function ($lang) {
+                'educations' => $profile ? $profile->educations : [],
+                'certifications' => $profile ? $profile->certifications : [],
+                'resumes' => $profile ? $profile->resumes : [],
+                'portfolio' => $profile ? $profile->portfolioItems : [],
+                'skills' => $profile ? $profile->skills->map(function ($skill) {
                     return [
+                        'id' => $skill->id,
+                        'name' => $skill->name,
+                        'level_id' => $skill->pivot->level_id ?? null,
+                    ];
+                }) : [],
+                'languages' => $profile ? $profile->languages->map(function ($lang) {
+                    $level = $lang->pivot->level ?? 'Professional';
+                    $percentage = 70;
+                    if (str_contains($level, 'Native') || $level === 'Native') {
+                        $percentage = 100;
+                    } elseif (str_contains($level, 'Fluent') || str_contains($level, 'Advanced')) {
+                        $percentage = 85;
+                    } elseif (str_contains($level, 'Intermediate')) {
+                        $percentage = 60;
+                    } elseif (str_contains($level, 'Beginner')) {
+                        $percentage = 35;
+                    }
+
+                    return [
+                        'id' => $lang->id,
                         'name' => $lang->name,
-                        'level' => $lang->pivot->level ?? 'Professional',
-                        'percentage' => ($lang->pivot->level ?? '') === 'Native' ? 100 : (($lang->pivot->level ?? '') === 'Professional' ? 80 : 40),
+                        'level' => $level,
+                        'percentage' => $percentage,
                     ];
                 }) : [],
             ];
+
+            $allLanguages = \App\Models\Language::orderBy('name')->get(['id', 'name']);
+            $allSkills = \App\Models\Skill::orderBy('name')->limit(50)->get(['id', 'name']);
+            $countries = \App\Models\Country::with('cities')->orderBy('name')->get(['id', 'name']);
+            $cities = \App\Models\City::orderBy('name')->get(['id', 'name', 'country_id']);
         }
 
         return Inertia::render('Seeker/Profile', [
             'profileData' => $profileData,
+            'allLanguages' => $allLanguages ?? [],
+            'allSkills' => $allSkills ?? [],
+            'countries' => $countries ?? [],
+            'cities' => $cities ?? [],
         ]);
     }
 }

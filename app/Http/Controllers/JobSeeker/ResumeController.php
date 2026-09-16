@@ -13,11 +13,7 @@ class ResumeController extends Controller
     
     public function index()
     {
-        $profile = Auth::user()->profile;
-
-        $resumes = $profile ? $profile->resumes()->latest()->get() : [];
-
-        return view('job_seeker.resumes.index', compact('resumes'));
+        return redirect()->route('seeker.profile', ['modal' => 'resumes']);
     }
 
     public function store(Request $request)

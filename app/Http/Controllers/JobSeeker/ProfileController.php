@@ -13,16 +13,7 @@ class ProfileController extends Controller
 {
     public function edit()
     {
-        $user = Auth::user();
-
-        $profile = JobSeekerProfile::firstOrCreate(
-            ['user_id' => $user->id]
-        );
-
-        $countries = Country::with('cities')->orderBy('name')->get();
-        $cities = City::orderBy('name')->get();
-
-        return view('job_seeker.profile.edit', compact('profile', 'countries', 'cities'));
+        return redirect()->route('seeker.profile', ['modal' => 'profile']);
     }
 
 
@@ -54,13 +45,72 @@ class ProfileController extends Controller
 
     public function show()
     {
-        $user = Auth::user();
-        
-        $profile = JobSeekerProfile::with(['user', 'skills', 'languages', 'experiences', 'educations', 'resumes', 'country', 'city'])
-            ->where('user_id', $user->id)
-            ->firstOrFail();
-
-        return view('job_seeker.profile.show', compact('profile'));
+        return redirect()->route('seeker.profile');
     }
 
+    public function uploadAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpg,jpeg,png,webp|max:3072',
+        ]);
+
+        $user = Auth::user();
+
+        if ($user->avatar && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->avatar)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+        }
+
+        $path = $request->file('avatar')->store('avatars', 'public');
+        $user->avatar = $path;
+        $user->save();
+
+        return redirect()->back()->with('success', 'تم تحديث الصورة الشخصية بنجاح.');
+    }
+
+    public function uploadCover(Request $request)
+    {
+        $request->validate([
+            'cover_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
+        ]);
+
+        $user = Auth::user();
+
+        if ($user->cover_image && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->cover_image)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($user->cover_image);
+        }
+
+        $path = $request->file('cover_image')->store('covers', 'public');
+        $user->cover_image = $path;
+        $user->save();
+
+        return redirect()->back()->with('success', 'تم تحديث صورة الغلاف بنجاح.');
+    }
+
+    public function deleteAvatar()
+    {
+        $user = Auth::user();
+
+        if ($user->avatar && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->avatar)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($user->avatar);
+        }
+
+        $user->avatar = null;
+        $user->save();
+
+        return redirect()->back()->with('success', 'تم حذف الصورة الشخصية بنجاح.');
+    }
+
+    public function deleteCover()
+    {
+        $user = Auth::user();
+
+        if ($user->cover_image && \Illuminate\Support\Facades\Storage::disk('public')->exists($user->cover_image)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($user->cover_image);
+        }
+
+        $user->cover_image = null;
+        $user->save();
+
+        return redirect()->back()->with('success', 'تم حذف صورة الغلاف بنجاح.');
+    }
 }

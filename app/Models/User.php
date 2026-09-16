@@ -25,6 +25,7 @@ class User extends Authenticatable
         'password',
         'phone',
         'avatar',
+        'cover_image',
         'bio',
         'role',
         'status',
@@ -33,6 +34,7 @@ class User extends Authenticatable
 
     public function company() { return $this->belongsTo(Company::class); }
     public function profile() { return $this->hasOne(JobSeekerProfile::class, 'user_id'); }
+    public function savedJobs() { return $this->hasMany(SavedJob::class); }
 
     public function isEmployer(): bool
     {

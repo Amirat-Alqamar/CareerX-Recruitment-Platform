@@ -68,6 +68,8 @@ class HandleInertiaRequests extends Middleware
                 'email' => $user->email,
                 'role' => $user->role,
                 'headline' => $user->profile?->job_title,
+                'avatar' => $user->avatar ? (str_starts_with($user->avatar, 'http') ? $user->avatar : asset('storage/' . $user->avatar)) : null,
+                'cover_image' => $user->cover_image ? (str_starts_with($user->cover_image, 'http') ? $user->cover_image : asset('storage/' . $user->cover_image)) : null,
             ];
         }
 
@@ -75,6 +77,10 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $userData,
+            ],
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
             ],
             'locale' => $locale,
             'direction' => $direction,

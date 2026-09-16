@@ -26,29 +26,11 @@ export const seekerNavigation = [
     ],
   },
   {
-    group: 'RESUME & PORTFOLIO',
-    items: [
-      { label: 'Resume', path: '/job-seeker/resumes', isBlade: true, icon: FileText },
-      { label: 'Experience', path: '/job-seeker/experience', isBlade: true, icon: Briefcase },
-      { label: 'Education', path: '/job-seeker/education', isBlade: true, icon: GraduationCap },
-      { label: 'Skills', path: '/job-seeker/skills', isBlade: true, icon: Wrench },
-      { label: 'Languages', path: '/job-seeker/languages', isBlade: true, icon: Globe },
-      { label: 'Certificates', path: '/job-seeker/certifications', isBlade: true, icon: Award },
-      { label: 'Portfolio', path: '/job-seeker/portfolio', isBlade: true, icon: FolderKanban },
-    ],
-  },
-  {
     group: 'JOB SEARCH',
     items: [
-      { label: 'Browse Jobs', path: '/job-seeker/jobs', isBlade: true, icon: Search },
-      { label: 'Applications', path: '/job-seeker/applications', isBlade: true, icon: Send },
-      { label: 'Saved Jobs', path: '/job-seeker/saved-jobs', isBlade: true, icon: Bookmark },
-    ],
-  },
-  {
-    group: 'ACCOUNT',
-    items: [
-      { label: 'Edit Profile Info', path: '/job-seeker/profile/edit', isBlade: true, icon: Settings },
+      { label: 'Browse Jobs', path: '/job-seeker/jobs', isBlade: false, icon: Search },
+      { label: 'Applications', path: '/job-seeker/applications', isBlade: false, icon: Send },
+      { label: 'Saved Jobs', path: '/job-seeker/saved-jobs', isBlade: false, icon: Bookmark },
     ],
   },
 ];
@@ -58,21 +40,21 @@ export const employerNavigation = [
     group: 'OVERVIEW',
     items: [
       { label: 'Dashboard', path: '/employer/dashboard', isBlade: false, icon: LayoutDashboard },
-      { label: 'Manage Jobs', path: '/employer/jobs', isBlade: true, icon: Briefcase },
+      { label: 'Manage Jobs', path: '/employer/jobs', isBlade: false, icon: Briefcase },
     ],
   },
   {
     group: 'CANDIDATES & RECRUITMENT',
     items: [
-      { label: 'Job Applicants', path: '/employer/applicants', isBlade: true, icon: Users },
-      { label: 'Post a New Job', path: '/employer/jobs/create', isBlade: true, icon: PlusCircle },
+      { label: 'Job Applicants', path: '/employer/applicants', isBlade: false, icon: Users },
+      { label: 'Post a New Job', path: '/employer/jobs/create', isBlade: false, icon: PlusCircle },
     ],
   },
   {
     group: 'COMPANY PROFILE',
     items: [
-      { label: 'Company Profile', path: '/employer/company', isBlade: true, icon: Building2 },
-      { label: 'Edit Company Info', path: '/employer/company/edit', isBlade: true, icon: Settings },
+      { label: 'Company Profile', path: '/employer/company', isBlade: false, icon: Building2 },
+      { label: 'Edit Company Info', path: '/employer/company/edit', isBlade: false, icon: Settings },
     ],
   },
 ];

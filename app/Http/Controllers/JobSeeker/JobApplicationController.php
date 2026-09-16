@@ -7,17 +7,33 @@ use App\Models\JobApplication;
 use App\Models\Job;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class JobApplicationController extends Controller
 {
-
-    public function index()
+    public function index(Request $request)
     {
         $profile = Auth::user()->profile;
 
-        $applications = $profile ? $profile->applications()->with('jobPost.company')->latest()->get() : [];
+        $applications = $profile ? $profile->applications()
+            ->with(['jobPost.company', 'jobPost.city', 'jobPost.category', 'resume'])
+            ->latest()
+            ->get() : collect();
 
-        return view('job_seeker.applications.index', compact('applications'));
+        $stats = [
+            'total' => $applications->count(),
+            'applied' => $applications->where('status', 'applied')->count(),
+            'reviewed' => $applications->where('status', 'reviewed')->count(),
+            'interview' => $applications->where('status', 'interview')->count(),
+            'accepted' => $applications->where('status', 'accepted')->count(),
+            'rejected' => $applications->where('status', 'rejected')->count(),
+        ];
+
+        return Inertia::render('Seeker/Applications', [
+            'applications' => $applications,
+            'stats' => $stats,
+            'selectedAppId' => $request->get('app_id'),
+        ]);
     }
 
     public function store(Request $request)
@@ -59,8 +75,6 @@ class JobApplicationController extends Controller
             abort(403, 'You are not authorized to view this application.');
         }
 
-        $application->load(['jobPost.company', 'resume']);
-
-        return view('job_seeker.applications.show', compact('application'));
+        return redirect()->route('job-seeker.applications.index', ['app_id' => $application->id]);
     }
 }

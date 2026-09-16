@@ -11,11 +11,7 @@ class EducationController extends Controller
 {
     public function index()
     {
-        $profile = Auth::user()->profile;
-
-        $educations = $profile ? $profile->educations()->orderBy('start_year', 'desc')->get() : [];
-
-        return view('job_seeker.educations.index', compact('educations'));
+        return redirect()->route('seeker.profile', ['modal' => 'education']);
     }
 
     public function store(Request $request)

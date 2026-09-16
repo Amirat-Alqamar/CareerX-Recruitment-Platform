@@ -11,11 +11,7 @@ class CertificationController extends Controller
 {
     public function index()
     {
-        $profile = Auth::user()->profile;
-
-        $certifications = $profile ? $profile->certifications()->latest()->get() : [];
-
-        return view('job_seeker.certifications.index', compact('certifications'));
+        return redirect()->route('seeker.profile', ['modal' => 'certifications']);
     }
 
     public function store(Request $request)

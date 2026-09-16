@@ -19,6 +19,10 @@ Route::middleware(['auth'])->prefix('job-seeker')->name('job-seeker.')->group(fu
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.avatar');
+    Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.avatar.delete');
+    Route::post('/profile/cover', [ProfileController::class, 'uploadCover'])->name('profile.cover');
+    Route::delete('/profile/cover', [ProfileController::class, 'deleteCover'])->name('profile.cover.delete');
 
     // الخبرات
     Route::get('/experience', [ExperienceController::class, 'index'])->name('experience.index');

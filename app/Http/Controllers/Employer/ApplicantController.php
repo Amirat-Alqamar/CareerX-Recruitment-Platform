@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
+use App\Models\City;
 use App\Models\Job;
 use App\Models\JobApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class ApplicantController extends Controller
 {
@@ -21,9 +24,12 @@ class ApplicantController extends Controller
         // Jobs for the filter dropdown
         $companyJobs = Job::where('company_id', $companyId)->select('id', 'title')->get();
 
+        // Cities for location filter
+        $cities = City::orderBy('name')->get(['id', 'name']);
+
         $query = JobApplication::whereHas('jobPost', function ($q) use ($companyId) {
             $q->where('company_id', $companyId);
-        })->with(['jobPost', 'profile.user', 'resume']);
+        })->with(['jobPost:id,title,job_type,work_type,salary_min,salary_max', 'profile.user:id,name,email,avatar', 'profile.city:id,name', 'profile.country:id,name', 'resume:id,title,file_path']);
 
         // Filter by search (candidate name, email, or job title)
         if ($request->filled('search')) {
@@ -53,7 +59,23 @@ class ApplicantController extends Controller
             }
         }
 
-        $applications = $query->latest()->paginate(15)->withQueryString();
+        // Filter by Experience (years of experience)
+        if ($request->filled('experience')) {
+            $exp = (int) $request->experience;
+            $query->whereHas('profile', function ($pq) use ($exp) {
+                $pq->where('years_of_experience', '>=', $exp);
+            });
+        }
+
+        // Filter by Location / City
+        if ($request->filled('city_id')) {
+            $cityId = $request->city_id;
+            $query->whereHas('profile', function ($pq) use ($cityId) {
+                $pq->where('city_id', $cityId);
+            });
+        }
+
+        $applications = $query->latest()->paginate(12)->withQueryString();
 
         $appliedCount = JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->whereIn('status', ['applied', 'pending'])->count();
 
@@ -64,12 +86,19 @@ class ApplicantController extends Controller
             'pending'     => $appliedCount,
             'reviewed'    => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'reviewed')->count(),
             'shortlisted' => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'shortlisted')->count(),
+            'interview'   => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'interview')->count(),
             'accepted'    => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'accepted')->count(),
             'rejected'    => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'rejected')->count(),
             'hired'       => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'hired')->count(),
         ];
 
-        return view('employer.applicants.index', compact('applications', 'companyJobs', 'counts'));
+        return Inertia::render('Employer/Applicants', [
+            'applications' => $applications,
+            'companyJobs'  => $companyJobs,
+            'cities'       => $cities,
+            'counts'       => $counts,
+            'filters'      => $request->only(['search', 'job_id', 'status', 'experience', 'city_id']),
+        ]);
     }
 
     /**
@@ -98,26 +127,107 @@ class ApplicantController extends Controller
             'profile.portfolioItems',
         ]);
 
-        return view('employer.applicants.show', compact('application'));
+        return Inertia::render('Employer/ApplicantDetail', [
+            'application' => [
+                'id' => $application->id,
+                'status' => $application->status,
+                'rating' => $application->rating,
+                'notes' => $application->notes,
+                'cover_letter' => $application->cover_letter,
+                'interview_date' => $application->interview_date ? $application->interview_date->format('Y-m-d H:i') : null,
+                'meeting_link' => $application->meeting_link,
+                'interview_notes' => $application->interview_notes,
+                'created_at' => $application->created_at ? $application->created_at->format('M d, Y - h:i A') : '',
+                'job' => [
+                    'id' => $application->jobPost->id,
+                    'title' => $application->jobPost->title,
+                    'job_type' => $application->jobPost->job_type,
+                    'work_type' => $application->jobPost->work_type,
+                ],
+                'candidate' => [
+                    'id' => $application->profile->user->id,
+                    'name' => $application->profile->user->name,
+                    'email' => $application->profile->user->email,
+                    'phone' => $application->profile->user->phone,
+                    'avatar' => $application->profile->user->avatar ? asset('storage/' . $application->profile->user->avatar) : null,
+                    'headline' => $application->profile->job_title,
+                    'bio' => $application->profile->bio,
+                    'years_of_experience' => $application->profile->years_of_experience,
+                    'country' => $application->profile->country?->name,
+                    'city' => $application->profile->city?->name,
+                    'address' => $application->profile->address,
+                    'work_type' => $application->profile->work_type,
+                    'experiences' => $application->profile->experiences,
+                    'educations' => $application->profile->educations,
+                    'skills' => $application->profile->skills,
+                    'languages' => $application->profile->languages,
+                    'certifications' => $application->profile->certifications,
+                    'portfolio' => $application->profile->portfolioItems,
+                ],
+                'resume' => $application->resume ? [
+                    'id' => $application->resume->id,
+                    'title' => $application->resume->title,
+                    'download_url' => route('employer.applicants.resume', $application->id),
+                ] : null,
+            ],
+        ]);
     }
 
     /**
-     * Update the application status (applied / reviewed / shortlisted / accepted / rejected / hired).
+     * Schedule an interview and generate a Google Meet link.
+     */
+    public function scheduleInterview(Request $request, JobApplication $application)
+    {
+        $this->authorizeCompanyApplication($application);
+
+        $validated = $request->validate([
+            'interview_date'  => ['required', 'date'],
+            'interview_notes' => ['nullable', 'string', 'max:2000'],
+            'custom_link'     => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $meetingLink = trim($validated['custom_link'] ?? '');
+        if (!empty($meetingLink)) {
+            // Auto add protocol if missing
+            if (!preg_match("~^(?:f|ht)tps?://~i", $meetingLink)) {
+                if (str_contains($meetingLink, 'meet.google.com')) {
+                    $meetingLink = 'https://' . $meetingLink;
+                } elseif (preg_match('/^[a-z]{3}-[a-z]{4}-[a-z]{3}$/i', $meetingLink)) {
+                    $meetingLink = 'https://meet.google.com/' . strtolower($meetingLink);
+                } else {
+                    $meetingLink = 'https://' . $meetingLink;
+                }
+            }
+        } else {
+            // Fallback direct link to open Google Meet room creator
+            $meetingLink = 'https://meet.google.com/new';
+        }
+
+        $application->update([
+            'interview_date'  => $validated['interview_date'],
+            'meeting_link'    => $meetingLink,
+            'interview_notes' => $validated['interview_notes'] ?? null,
+            'status'          => 'interview',
+        ]);
+
+        return redirect()->back()->with('success', __('Interview scheduled successfully.'));
+    }
+
+    /**
+     * Update the application status.
      */
     public function updateStatus(Request $request, JobApplication $application)
     {
         $this->authorizeCompanyApplication($application);
 
         $validated = $request->validate([
-            'status' => ['required', 'in:applied,pending,reviewed,shortlisted,accepted,rejected,hired'],
+            'status' => ['required', 'in:applied,pending,reviewed,shortlisted,interview,accepted,rejected,hired'],
         ]);
 
         $status = $validated['status'] === 'pending' ? 'applied' : $validated['status'];
         $application->update(['status' => $status]);
 
-        return redirect()->back()->with('success', __('Applicant status updated to :status successfully.', [
-            'status' => __(ucfirst($status))
-        ]));
+        return redirect()->back()->with('success', __('Applicant status updated successfully.'));
     }
 
     /**

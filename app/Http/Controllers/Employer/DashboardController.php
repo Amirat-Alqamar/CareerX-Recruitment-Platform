@@ -92,6 +92,23 @@ class DashboardController extends Controller
                 ];
             });
 
+        $mostAppliedJobModel = Job::where('company_id', $companyId)
+            ->withCount('applications')
+            ->orderByDesc('applications_count')
+            ->first();
+
+        $mostAppliedJob = null;
+        if ($mostAppliedJobModel && $mostAppliedJobModel->applications_count > 0) {
+            $mostAppliedJob = [
+                'id' => $mostAppliedJobModel->id,
+                'title' => $mostAppliedJobModel->title,
+                'applications_count' => $mostAppliedJobModel->applications_count,
+                'job_type' => $mostAppliedJobModel->job_type ?? 'Full Time',
+                'work_type' => $mostAppliedJobModel->work_type ?? 'On-site',
+                'status' => $mostAppliedJobModel->status ?? 'published',
+            ];
+        }
+
         return Inertia::render('Employer/Dashboard', [
             'company' => [
                 'id' => $company->id,
@@ -109,6 +126,7 @@ class DashboardController extends Controller
                 'hiredApplicants'       => $hiredApplicants,
                 'hiringRate'            => $hiringRate,
             ],
+            'mostAppliedJob' => $mostAppliedJob,
             'recentJobs' => $recentJobs,
             'recentApplicants' => $recentApplicants,
         ]);

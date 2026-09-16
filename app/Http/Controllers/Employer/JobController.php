@@ -11,6 +11,7 @@ use App\Models\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class JobController extends Controller
 {
@@ -40,7 +41,11 @@ class JobController extends Controller
             'total_applications'=> Job::where('company_id', $companyId)->withCount('applications')->get()->sum('applications_count'),
         ];
 
-        return view('employer.jobs.index', compact('jobs', 'stats'));
+        return Inertia::render('Employer/Jobs', [
+            'jobs' => $jobs,
+            'stats' => $stats,
+            'filters' => $request->only('status'),
+        ]);
     }
 
     /**
@@ -57,7 +62,15 @@ class JobController extends Controller
             ? City::where('country_id', $company->country_id)->orderBy('name')->get()
             : City::orderBy('name')->get();
 
-        return view('employer.jobs.create', compact('categories', 'countries', 'cities', 'skills', 'company'));
+        return Inertia::render('Employer/JobForm', [
+            'categories' => $categories,
+            'countries' => $countries,
+            'cities' => $cities,
+            'skills' => $skills,
+            'company' => $company,
+            'job' => null,
+            'selectedSkills' => [],
+        ]);
     }
 
     /**
@@ -116,7 +129,15 @@ class JobController extends Controller
         $skills = Skill::orderBy('name')->get();
         $selectedSkills = $job->skills->pluck('id')->toArray();
 
-        return view('employer.jobs.edit', compact('job', 'categories', 'countries', 'cities', 'skills', 'selectedSkills'));
+        return Inertia::render('Employer/JobForm', [
+            'job' => $job,
+            'categories' => $categories,
+            'countries' => $countries,
+            'cities' => $cities,
+            'skills' => $skills,
+            'selectedSkills' => $selectedSkills,
+            'company' => Auth::user()->company,
+        ]);
     }
 
     /**

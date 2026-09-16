@@ -7,6 +7,8 @@ use App\Models\Job;
 use App\Models\JobCategory;
 use App\Models\City;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class JobSearchController extends Controller
 {
@@ -15,7 +17,7 @@ class JobSearchController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Job::with(['company', 'category', 'city'])
+        $query = Job::with(['company', 'category', 'city', 'skills'])
             ->where('is_active', true)
             ->where('status', 'published');
 
@@ -47,14 +49,29 @@ class JobSearchController extends Controller
             $query->where('city_id', $request->city_id);
         }
 
-        $jobs = $query->latest()->paginate(10);
+        $jobs = $query->latest()->paginate(12)->withQueryString();
 
         $categories = JobCategory::withCount(['jobs' => function ($q) {
             $q->where('is_active', true)->where('status', 'published');
         }])->get();
+
         $cities = City::orderBy('name')->get();
 
-        return view('job_seeker.jobs.index', compact('jobs', 'categories', 'cities'));
+        $user = Auth::user();
+        $savedJobIds = $user ? $user->savedJobs()->pluck('job_post_id')->toArray() : [];
+        $appliedJobIds = $user?->profile ? $user->profile->applications()->pluck('job_post_id')->toArray() : [];
+        $resumes = $user?->profile ? $user->profile->resumes()->latest()->get() : [];
+
+        return Inertia::render('Seeker/Jobs', [
+            'jobs' => $jobs,
+            'categories' => $categories,
+            'cities' => $cities,
+            'savedJobIds' => $savedJobIds,
+            'appliedJobIds' => $appliedJobIds,
+            'resumes' => $resumes,
+            'filters' => $request->only(['keyword', 'category_id', 'city_id', 'work_type', 'job_type']),
+            'selectedJobId' => $request->get('job_id'),
+        ]);
     }
 
     /**
@@ -62,11 +79,7 @@ class JobSearchController extends Controller
      */
     public function show(Job $job)
     {
-        // زيادة عدد المشاهدات
         $job->increment('views_count');
-
-        $job->load(['company', 'category', 'city', 'skills']);
-
-        return view('job_seeker.jobs.show', compact('job'));
+        return redirect()->route('job-seeker.jobs.index', ['job_id' => $job->id]);
     }
 }

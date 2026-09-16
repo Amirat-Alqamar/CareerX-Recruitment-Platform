@@ -11,11 +11,7 @@ class ExperienceController extends Controller
 {
     public function index()
     {
-        $profile = Auth::user()->profile;
-
-        $experiences = $profile ? $profile->experiences()->orderBy('start_date', 'desc')->get() : [];
-
-        return view('job_seeker.experiences.index', compact('experiences'));
+        return redirect()->route('seeker.profile', ['modal' => 'experience']);
     }
 
     public function store(Request $request)

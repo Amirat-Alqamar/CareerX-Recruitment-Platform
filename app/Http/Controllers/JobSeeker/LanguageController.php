@@ -11,12 +11,7 @@ class LanguageController extends Controller
 {
     public function index()
     {
-        $profile = Auth::user()->profile;
-
-        $allLanguages = Language::orderBy('name')->get();
-        $userLanguages = $profile ? $profile->languages : collect();
-
-        return view('job_seeker.languages.index', compact('allLanguages', 'userLanguages'));
+        return redirect()->route('seeker.profile', ['modal' => 'languages']);
     }
 
     public function store(Request $request)

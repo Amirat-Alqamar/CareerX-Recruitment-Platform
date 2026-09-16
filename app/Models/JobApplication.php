@@ -16,6 +16,13 @@ class JobApplication extends Model
         'rating',
         'notes',
         'status',
+        'interview_date',
+        'meeting_link',
+        'interview_notes',
+    ];
+
+    protected $casts = [
+        'interview_date' => 'datetime',
     ];
 
     public function jobPost()

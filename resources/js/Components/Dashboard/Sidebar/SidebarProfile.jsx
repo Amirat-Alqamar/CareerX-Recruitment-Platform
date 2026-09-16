@@ -1,7 +1,7 @@
 import React from 'react';
 import useTranslation from '@/hooks/useTranslation';
 
-export default function SidebarProfile({ user }) {
+export default function SidebarProfile({ user, isCollapsed = false }) {
   const { __, locale } = useTranslation();
   const isEmployer = user?.role === 'employer';
   const name = user?.name || (isEmployer ? __('Company Account') : __('Guest Seeker'));
@@ -18,6 +18,19 @@ export default function SidebarProfile({ user }) {
   const headline = isEmployer
     ? (user?.company?.name || __('Company / Employer'))
     : (user?.headline || __('Job Seeker'));
+
+  if (isCollapsed) {
+    return (
+      <div className="p-3 border-b border-slate-100 flex justify-center">
+        <div
+          className={`w-10 h-10 rounded-full ${isEmployer ? 'bg-[#008A7B]' : 'bg-[#014D55]'} text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-sm cursor-pointer`}
+          title={`${name} (${headline})`}
+        >
+          {initials}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center gap-3 p-4 border-b border-slate-100">

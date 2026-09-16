@@ -14,7 +14,9 @@ Route::middleware(['auth', 'employer'])->prefix('employer')->name('employer.')->
     // إدارة ملف الشركة
     Route::get('/company', [CompanyProfileController::class, 'show'])->name('company.show');
     Route::get('/company/edit', [CompanyProfileController::class, 'edit'])->name('company.edit');
-    Route::put('/company/update', [CompanyProfileController::class, 'update'])->name('company.update');
+    Route::match(['put', 'post'], '/company/update', [CompanyProfileController::class, 'update'])->name('company.update');
+    Route::delete('/company/logo', [CompanyProfileController::class, 'deleteLogo'])->name('company.logo.delete');
+    Route::delete('/company/cover', [CompanyProfileController::class, 'deleteCover'])->name('company.cover.delete');
 
     // إدارة ونشر الوظائف (CRUD)
     Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
@@ -30,6 +32,7 @@ Route::middleware(['auth', 'employer'])->prefix('employer')->name('employer.')->
     Route::get('/applicants', [ApplicantController::class, 'index'])->name('applicants.index');
     Route::get('/applicants/{application}', [ApplicantController::class, 'show'])->name('applicants.show');
     Route::put('/applicants/{application}/status', [ApplicantController::class, 'updateStatus'])->name('applicants.status');
+    Route::post('/applicants/{application}/interview', [ApplicantController::class, 'scheduleInterview'])->name('applicants.interview');
     Route::put('/applicants/{application}/evaluation', [ApplicantController::class, 'updateEvaluation'])->name('applicants.evaluation');
     Route::get('/applicants/{application}/resume', [ApplicantController::class, 'downloadResume'])->name('applicants.resume');
 

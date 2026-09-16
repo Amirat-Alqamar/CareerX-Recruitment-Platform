@@ -2,28 +2,36 @@ import React from 'react';
 import { Plus } from 'lucide-react';
 import useTranslation from '@/hooks/useTranslation';
 
-export default function LanguagesSection({ languages = [] }) {
-  const { __, locale } = useTranslation();
+export default function LanguagesSection({ languages = [], onAdd, onEdit }) {
+  const { __ } = useTranslation();
 
   return (
     <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-5">
       <div className="flex items-center justify-between">
         <h3 className="font-extrabold text-slate-900 text-base">{__('Languages')}</h3>
-        <a
-          href={`/${locale}/job-seeker/profile/edit`}
-          className="p-1 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+        <button
+          type="button"
+          onClick={onAdd}
+          className="p-1 text-slate-400 hover:text-[#008A7B] transition-colors cursor-pointer"
           title={__('Add Languages')}
         >
           <Plus className="w-4 h-4" />
-        </a>
+        </button>
       </div>
 
       {languages && languages.length > 0 ? (
         <div className="space-y-4">
           {languages.map((lang, index) => (
-            <div key={index} className="space-y-1.5">
+            <div
+              key={lang.id || index}
+              onClick={() => onEdit && onEdit(lang)}
+              className="space-y-1.5 group cursor-pointer p-1.5 -mx-1.5 rounded-xl hover:bg-slate-50 transition-colors"
+              title={__('Click to edit language')}
+            >
               <div className="flex justify-between items-center text-xs">
-                <span className="font-bold text-slate-800">{__(lang.name)}</span>
+                <span className="font-bold text-slate-800 group-hover:text-[#008A7B] transition-colors">
+                  {__(lang.name)}
+                </span>
                 <span className="font-semibold text-slate-400">{__(lang.level)}</span>
               </div>
               {/* Progress Bar */}
@@ -39,13 +47,14 @@ export default function LanguagesSection({ languages = [] }) {
       ) : (
         <div className="py-4 text-center text-slate-400">
           <p className="text-xs font-medium">{__('No languages added yet.')}</p>
-          <a
-            href={`/${locale}/job-seeker/profile/edit`}
-            className="inline-flex items-center gap-1 mt-2 text-xs font-bold text-[#008A7B] hover:underline"
+          <button
+            type="button"
+            onClick={onAdd}
+            className="inline-flex items-center gap-1 mt-2 text-xs font-bold text-[#008A7B] hover:underline cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>{__('Add Languages')}</span>
-          </a>
+          </button>
         </div>
       )}
     </div>

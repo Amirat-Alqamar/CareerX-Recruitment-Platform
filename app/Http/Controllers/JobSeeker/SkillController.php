@@ -11,12 +11,7 @@ class SkillController extends Controller
 {
     public function index()
     {
-        $profile = Auth::user()->profile;
-
-        $allSkills = Skill::all();
-        $userSkills = $profile ? $profile->skills : collect();
-
-        return view('job_seeker.skills.index', compact('allSkills', 'userSkills'));
+        return redirect()->route('seeker.profile', ['modal' => 'skills']);
     }
 
     public function store(Request $request)

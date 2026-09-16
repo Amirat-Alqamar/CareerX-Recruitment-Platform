@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class CompanyProfileController extends Controller
 {
@@ -17,18 +18,48 @@ class CompanyProfileController extends Controller
      */
     public function show()
     {
-        $company = Auth::user()->company;
+        $user = Auth::user();
+        $company = $user->company;
 
         if (!$company) {
-            return redirect()->route('employer.company.edit')
-                ->with('error', __('Please complete your company profile first.'));
+            $company = \App\Models\Company::create([
+                'name' => $user->name . ' Co',
+                'slug' => Str::slug($user->name . ' Co') . '-' . time(),
+                'status' => 'verified',
+            ]);
+            $user->company_id = $company->id;
+            $user->save();
         }
 
         $company->load(['country', 'city', 'socials', 'jobs' => function ($query) {
             $query->latest()->take(5);
         }]);
 
-        return view('employer.company.show', compact('company'));
+        $countries = Country::orderBy('name')->get();
+        $cities = City::orderBy('name')->get();
+        $socials = $company->socials->pluck('url', 'platform')->toArray();
+
+        return Inertia::render('Employer/CompanyProfile', [
+            'company' => [
+                'id' => $company->id,
+                'name' => $company->name,
+                'description' => $company->description,
+                'company_size' => $company->company_size,
+                'founded_year' => $company->founded_year,
+                'website' => $company->website,
+                'address' => $company->address,
+                'country_id' => $company->country_id,
+                'city_id' => $company->city_id,
+                'logo_url' => $company->logo ? asset('storage/' . $company->logo) : null,
+                'cover_url' => $company->cover_image ? asset('storage/' . $company->cover_image) : null,
+                'country' => $company->country?->name,
+                'city' => $company->city?->name,
+                'jobs' => $company->jobs,
+            ],
+            'socials' => $socials,
+            'countries' => $countries,
+            'cities' => $cities,
+        ]);
     }
 
     /**
@@ -36,15 +67,7 @@ class CompanyProfileController extends Controller
      */
     public function edit()
     {
-        $company = Auth::user()->company;
-        $countries = Country::orderBy('name')->get();
-        $cities = $company && $company->country_id
-            ? City::where('country_id', $company->country_id)->orderBy('name')->get()
-            : City::orderBy('name')->get();
-
-        $socials = $company ? $company->socials->pluck('url', 'platform')->toArray() : [];
-
-        return view('employer.company.edit', compact('company', 'countries', 'cities', 'socials'));
+        return $this->show();
     }
 
     /**
@@ -120,5 +143,37 @@ class CompanyProfileController extends Controller
         }
 
         return redirect()->back()->with('success', __('Company profile updated successfully.'));
+    }
+
+    /**
+     * Delete the company logo.
+     */
+    public function deleteLogo()
+    {
+        $company = Auth::user()->company;
+        if ($company && $company->logo) {
+            if (Storage::disk('public')->exists($company->logo)) {
+                Storage::disk('public')->delete($company->logo);
+            }
+            $company->update(['logo' => null]);
+        }
+
+        return redirect()->back()->with('success', __('Company logo removed successfully.'));
+    }
+
+    /**
+     * Delete the company cover photo.
+     */
+    public function deleteCover()
+    {
+        $company = Auth::user()->company;
+        if ($company && $company->cover_image) {
+            if (Storage::disk('public')->exists($company->cover_image)) {
+                Storage::disk('public')->delete($company->cover_image);
+            }
+            $company->update(['cover_image' => null]);
+        }
+
+        return redirect()->back()->with('success', __('Company cover image removed successfully.'));
     }
 }

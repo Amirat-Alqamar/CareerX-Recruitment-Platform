@@ -12,11 +12,7 @@ class PortfolioController extends Controller
 {
     public function index()
     {
-        $profile = Auth::user()->profile;
-
-        $portfolioItems = $profile ? $profile->portfolioItems()->latest()->get() : [];
-
-        return view('job_seeker.portfolio.index', compact('portfolioItems'));
+        return redirect()->route('seeker.profile', ['modal' => 'portfolio']);
     }
 
     public function store(Request $request)
