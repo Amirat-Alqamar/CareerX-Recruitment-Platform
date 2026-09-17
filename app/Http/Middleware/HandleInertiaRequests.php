@@ -68,6 +68,11 @@ class HandleInertiaRequests extends Middleware
                 'email' => $user->email,
                 'role' => $user->role,
                 'headline' => $user->profile?->job_title,
+                'company' => $user->company ? [
+                    'id' => $user->company->id,
+                    'name' => $user->company->name,
+                    'logo' => $user->company->logo ? asset('storage/' . $user->company->logo) : null,
+                ] : null,
                 'avatar' => $user->avatar ? (str_starts_with($user->avatar, 'http') ? $user->avatar : asset('storage/' . $user->avatar)) : null,
                 'cover_image' => $user->cover_image ? (str_starts_with($user->cover_image, 'http') ? $user->cover_image : asset('storage/' . $user->cover_image)) : null,
             ];

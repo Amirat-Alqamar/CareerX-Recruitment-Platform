@@ -31,6 +31,15 @@ class FortifyServiceProvider extends ServiceProvider
                 {
                     $user = $request->user();
 
+                    // If user is admin, redirect to admin dashboard
+                    if ($user && $user->isAdmin()) {
+                        return redirect()->to(
+                            class_exists(LaravelLocalization::class)
+                                ? LaravelLocalization::localizeUrl(route('admin.dashboard'))
+                                : route('admin.dashboard')
+                        );
+                    }
+
                     // If user is employer, redirect to employer dashboard
                     if ($user && $user->isEmployer()) {
                         return redirect()->to(

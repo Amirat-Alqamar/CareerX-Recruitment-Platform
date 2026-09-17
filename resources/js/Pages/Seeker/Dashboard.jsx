@@ -13,7 +13,7 @@ export default function Dashboard({ stats, profileCompletion }) {
   return (
     <DashboardLayout userRole="seeker">
       <Head title={__('Dashboard')} />
-      <WelcomeBanner userName={userName} profileCompletion={profileCompletion ?? 72} />
+      <WelcomeBanner userName={userName} profileCompletion={profileCompletion ?? 20} stats={stats} />
       <StatsCards statsData={stats} />
     </DashboardLayout>
   );

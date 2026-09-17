@@ -10,25 +10,25 @@ export default function StatsCards({ statsData }) {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
       <StatusCard
         title={__('Applied')}
-        value={statsData?.applied ?? 24}
+        value={statsData?.applied ?? 0}
         icon={Send}
         variant="default"
       />
       <StatusCard
         title={__('Under Review')}
-        value={statsData?.underReview ?? 8}
+        value={statsData?.underReview ?? 0}
         icon={Clock}
         variant="purple"
       />
       <StatusCard
         title={__('Interviews')}
-        value={statsData?.interviews ?? 3}
+        value={statsData?.interviews ?? 0}
         icon={Calendar}
         variant="warning"
       />
       <StatusCard
         title={__('Offers')}
-        value={statsData?.offers ?? 1}
+        value={statsData?.offers ?? 0}
         icon={CheckCircle2}
         variant="success"
       />

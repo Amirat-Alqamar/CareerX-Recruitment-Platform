@@ -3,7 +3,7 @@ import { usePage, Link } from '@inertiajs/react';
 import { ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
 import SidebarProfile from './SidebarProfile';
 import SidebarNavGroup from './SidebarNavGroup';
-import { seekerNavigation, employerNavigation } from '@/Data/navigationData';
+import { seekerNavigation, employerNavigation, adminNavigation } from '@/Data/navigationData';
 import useTranslation from '@/hooks/useTranslation';
 
 export default function Sidebar({
@@ -16,7 +16,12 @@ export default function Sidebar({
   const { auth } = usePage().props;
   const { __, isRtl, locale } = useTranslation();
   const currentRole = userRole || auth?.user?.role || 'job_seeker';
-  const navigation = currentRole === 'employer' ? employerNavigation : seekerNavigation;
+  const navigation =
+    currentRole === 'admin'
+      ? adminNavigation
+      : currentRole === 'employer'
+      ? employerNavigation
+      : seekerNavigation;
 
   const mobileTransform = isOpen
     ? 'translate-x-0'

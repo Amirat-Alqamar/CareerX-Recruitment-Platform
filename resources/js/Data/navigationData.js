@@ -15,6 +15,10 @@ import {
   Users,
   PlusCircle,
   Building2,
+  ShieldCheck,
+  BarChart3,
+  CheckCircle2,
+  BellRing,
 } from 'lucide-react';
 
 export const seekerNavigation = [
@@ -58,4 +62,28 @@ export const employerNavigation = [
     ],
   },
 ];
+
+export const adminNavigation = [
+  {
+    group: 'ADMIN CONTROL',
+    items: [
+      { label: 'Dashboard', path: '/admin/dashboard', isBlade: false, icon: LayoutDashboard },
+      { label: 'Pending Approvals', path: '/admin/pending-jobs', isBlade: false, icon: ShieldCheck },
+    ],
+  },
+  {
+    group: 'PLATFORM MANAGEMENT',
+    items: [
+      { label: 'Manage Users', path: '/admin/users', isBlade: false, icon: Users },
+      { label: 'Manage Jobs', path: '/admin/jobs', isBlade: false, icon: Briefcase },
+    ],
+  },
+  {
+    group: 'ANALYTICS & REPORTS',
+    items: [
+      { label: 'Reports & Statistics', path: '/admin/reports', isBlade: false, icon: BarChart3 },
+    ],
+  },
+];
+
 

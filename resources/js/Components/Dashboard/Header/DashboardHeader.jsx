@@ -20,39 +20,98 @@ export default function DashboardHeader({ onToggleSidebar }) {
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  const userRole = auth?.user?.role || 'job_seeker';
+
   // Notifications dropdown state
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const notificationsDropdownRef = useRef(null);
 
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      title: __('Track Applications'),
-      message: __('View updates and status changes on your job applications.'),
-      time: __('Recently'),
-      unread: true,
-      link: `/${locale}/job-seeker/applications`,
-      type: 'applications',
-    },
-    {
-      id: 2,
-      title: __('Saved Opportunities'),
-      message: __('Review the positions you bookmarked and apply anytime.'),
-      time: __('1h ago'),
-      unread: true,
-      link: `/${locale}/job-seeker/saved-jobs`,
-      type: 'saved',
-    },
-    {
-      id: 3,
-      title: __('Complete Your Profile'),
-      message: __('Add your skills, languages, and portfolio to stand out to employers.'),
-      time: __('Yesterday'),
-      unread: true,
-      link: `/${locale}/seeker/profile`,
-      type: 'profile',
-    },
-  ]);
+  const getInitialNotifications = () => {
+    if (userRole === 'admin') {
+      return [
+        {
+          id: 1,
+          title: __('Pending Job Approvals'),
+          message: __('New job postings are awaiting your review and approval.'),
+          time: __('Just now'),
+          unread: true,
+          link: `/${locale}/admin/pending-jobs`,
+          type: 'admin_pending',
+        },
+        {
+          id: 2,
+          title: __('Platform Reports Ready'),
+          message: __('View real-time job demand, candidate and company metrics.'),
+          time: __('Today'),
+          unread: true,
+          link: `/${locale}/admin/reports`,
+          type: 'admin_reports',
+        },
+        {
+          id: 3,
+          title: __('User Management'),
+          message: __('Monitor active accounts, employers, and seekers.'),
+          time: __('Yesterday'),
+          unread: false,
+          link: `/${locale}/admin/users`,
+          type: 'admin_users',
+        },
+      ];
+    }
+    if (userRole === 'employer') {
+      return [
+        {
+          id: 1,
+          title: __('Applicant Updates'),
+          message: __('Review new candidate applications received for your posted jobs.'),
+          time: __('Recently'),
+          unread: true,
+          link: `/${locale}/employer/applicants`,
+          type: 'applications',
+        },
+        {
+          id: 2,
+          title: __('Manage Active Jobs'),
+          message: __('Check the status and views count on your published listings.'),
+          time: __('1h ago'),
+          unread: true,
+          link: `/${locale}/employer/jobs`,
+          type: 'saved',
+        },
+      ];
+    }
+    return [
+      {
+        id: 1,
+        title: __('Track Applications'),
+        message: __('View updates and status changes on your job applications.'),
+        time: __('Recently'),
+        unread: true,
+        link: `/${locale}/job-seeker/applications`,
+        type: 'applications',
+      },
+      {
+        id: 2,
+        title: __('Saved Opportunities'),
+        message: __('Review the positions you bookmarked and apply anytime.'),
+        time: __('1h ago'),
+        unread: true,
+        link: `/${locale}/job-seeker/saved-jobs`,
+        type: 'saved',
+      },
+      {
+        id: 3,
+        title: __('Complete Your Profile'),
+        message: __('Add your skills, languages, and portfolio to stand out to employers.'),
+        time: __('Yesterday'),
+        unread: true,
+        link: `/${locale}/seeker/profile`,
+        type: 'profile',
+      },
+    ];
+  };
+
+  const [notifications, setNotifications] = useState(getInitialNotifications);
 
   const unreadCount = notifications.filter((n) => n.unread).length;
 
@@ -268,7 +327,13 @@ export default function DashboardHeader({ onToggleSidebar }) {
                     {__('Clear all')}
                   </button>
                   <Link
-                    href={`/${locale}/job-seeker/applications`}
+                    href={
+                      userRole === 'admin'
+                        ? `/${locale}/admin/pending-jobs`
+                        : userRole === 'employer'
+                        ? `/${locale}/employer/applicants`
+                        : `/${locale}/job-seeker/applications`
+                    }
                     onClick={() => setNotificationsOpen(false)}
                     className="text-[11px] text-[#008A7B] font-bold hover:underline"
                   >
@@ -282,9 +347,15 @@ export default function DashboardHeader({ onToggleSidebar }) {
 
         {/* User Avatar Circle */}
         <Link
-          href={`/${locale}/seeker/profile`}
+          href={
+            userRole === 'admin'
+              ? `/${locale}/admin/dashboard`
+              : userRole === 'employer'
+              ? `/${locale}/employer/company`
+              : `/${locale}/seeker/profile`
+          }
           className="w-9 h-9 rounded-full bg-[#014D55] text-white font-semibold text-xs flex items-center justify-center tracking-wider select-none shadow-sm hover:opacity-90 transition-opacity"
-          title={auth?.user?.name || __('My Profile')}
+          title={auth?.user?.name || (userRole === 'admin' ? __('Admin Panel') : __('My Profile'))}
         >
           {userInitials}
         </Link>

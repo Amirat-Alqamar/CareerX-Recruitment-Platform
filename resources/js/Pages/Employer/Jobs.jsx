@@ -54,9 +54,17 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
   };
 
   const getStatusBadge = (job) => {
+    if (job.status === 'pending') {
+      return (
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+          <Clock className="w-3 h-3" />
+          {__('Pending Admin Approval')}
+        </span>
+      );
+    }
     if (job.status === 'published' && job.is_active) {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
           {__('Published')}
         </span>
@@ -64,14 +72,14 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
     }
     if (job.status === 'draft') {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">
           <Clock className="w-3 h-3" />
           {__('Draft')}
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">
+      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
         <Archive className="w-3 h-3" />
         {__('Closed')}
       </span>
@@ -103,21 +111,25 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
           </Link>
         </div>
 
-        {/* 4 Stats Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
             <span className="text-xs font-bold text-slate-400 block mb-1">{__('Total Jobs')}</span>
             <span className="text-2xl font-black text-slate-900">{stats.total_jobs || 0}</span>
           </div>
-          <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+          <div className="bg-white rounded-2xl p-4 border border-amber-100 bg-amber-50/30 shadow-sm">
+            <span className="text-xs font-bold text-amber-700 block mb-1">{__('Pending Review')}</span>
+            <span className="text-2xl font-black text-amber-700">{stats.pending_jobs || 0}</span>
+          </div>
+          <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
             <span className="text-xs font-bold text-emerald-600 block mb-1">{__('Active Jobs')}</span>
             <span className="text-2xl font-black text-slate-900">{stats.active_jobs || 0}</span>
           </div>
-          <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
-            <span className="text-xs font-bold text-amber-600 block mb-1">{__('Closed Jobs')}</span>
+          <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
+            <span className="text-xs font-bold text-rose-600 block mb-1">{__('Closed Jobs')}</span>
             <span className="text-2xl font-black text-slate-900">{stats.closed_jobs || 0}</span>
           </div>
-          <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+          <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
             <span className="text-xs font-bold text-blue-600 block mb-1">{__('Total Applications')}</span>
             <span className="text-2xl font-black text-slate-900">{stats.total_applications || 0}</span>
           </div>
@@ -127,6 +139,7 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
         <div className="flex items-center gap-2 overflow-x-auto pb-1">
           {[
             { key: '', label: __('All Postings') },
+            { key: 'pending', label: __('Pending Approval') },
             { key: 'published', label: __('Published') },
             { key: 'draft', label: __('Drafts') },
             { key: 'closed', label: __('Closed') },

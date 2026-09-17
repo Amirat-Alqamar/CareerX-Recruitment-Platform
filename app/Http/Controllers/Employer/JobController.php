@@ -37,7 +37,9 @@ class JobController extends Controller
         $stats = [
             'total_jobs'        => Job::where('company_id', $companyId)->count(),
             'active_jobs'       => Job::where('company_id', $companyId)->where('is_active', true)->where('status', 'published')->count(),
+            'pending_jobs'      => Job::where('company_id', $companyId)->where('status', 'pending')->count(),
             'closed_jobs'       => Job::where('company_id', $companyId)->where('status', 'closed')->count(),
+            'draft_jobs'        => Job::where('company_id', $companyId)->where('status', 'draft')->count(),
             'total_applications'=> Job::where('company_id', $companyId)->withCount('applications')->get()->sum('applications_count'),
         ];
 
@@ -92,7 +94,7 @@ class JobController extends Controller
             'description'      => ['required', 'string'],
             'responsibilities' => ['nullable', 'string'],
             'requirements'     => ['nullable', 'string'],
-            'status'           => ['required', 'in:draft,published,closed'],
+            'status'           => ['required', 'in:draft,pending,published,closed'],
             'skills'           => ['nullable', 'array'],
             'skills.*'         => ['exists:skills,id'],
         ]);
@@ -102,7 +104,17 @@ class JobController extends Controller
         $validated['company_id'] = $companyId;
         $validated['created_by_user_id'] = Auth::id();
         $validated['slug'] = Str::slug($validated['title']) . '-' . time() . '-' . rand(100, 999);
-        $validated['is_active'] = ($validated['status'] === 'published');
+
+        // إذا اختار النشر أو الموافقة، تكون الحالة معلقة للمراجعة من قبل الإدارة
+        if ($validated['status'] === 'draft') {
+            $validated['status'] = 'draft';
+            $validated['is_active'] = false;
+            $message = __('Job saved as draft.');
+        } else {
+            $validated['status'] = 'pending';
+            $validated['is_active'] = false;
+            $message = __('Job post submitted successfully! It is now pending administrator review and approval before publication.');
+        }
 
         $job = Job::create($validated);
 
@@ -111,7 +123,7 @@ class JobController extends Controller
         }
 
         return redirect()->route('employer.jobs.index')
-            ->with('success', __('Job post created successfully.'));
+            ->with('success', $message);
     }
 
     /**
@@ -161,12 +173,23 @@ class JobController extends Controller
             'description'      => ['required', 'string'],
             'responsibilities' => ['nullable', 'string'],
             'requirements'     => ['nullable', 'string'],
-            'status'           => ['required', 'in:draft,published,closed'],
+            'status'           => ['required', 'in:draft,pending,published,closed'],
             'skills'           => ['nullable', 'array'],
             'skills.*'         => ['exists:skills,id'],
         ]);
 
-        $validated['is_active'] = ($validated['status'] === 'published');
+        if ($validated['status'] === 'draft') {
+            $validated['is_active'] = false;
+        } elseif ($validated['status'] === 'closed') {
+            $validated['is_active'] = false;
+        } elseif ($validated['status'] === 'pending' || ($job->status !== 'published' && $validated['status'] === 'published')) {
+            // Any new request to publish requires admin approval
+            $validated['status'] = 'pending';
+            $validated['is_active'] = false;
+        } else {
+            // Already published and editing content
+            $validated['is_active'] = true;
+        }
 
         if ($job->title !== $validated['title']) {
             $validated['slug'] = Str::slug($validated['title']) . '-' . time() . '-' . rand(100, 999);
@@ -178,8 +201,12 @@ class JobController extends Controller
             $job->skills()->sync($request->skills);
         }
 
+        $msg = $job->status === 'pending'
+            ? __('Job post submitted and is awaiting administrator approval before publication.')
+            : __('Job post updated successfully.');
+
         return redirect()->route('employer.jobs.index')
-            ->with('success', __('Job post updated successfully.'));
+            ->with('success', $msg);
     }
 
     /**
@@ -206,8 +233,8 @@ class JobController extends Controller
             $job->update(['status' => 'closed', 'is_active' => false]);
             $message = __('Job has been closed.');
         } else {
-            $job->update(['status' => 'published', 'is_active' => true]);
-            $message = __('Job has been published.');
+            $job->update(['status' => 'pending', 'is_active' => false]);
+            $message = __('Job post submitted for administrator approval.');
         }
 
         return redirect()->back()->with('success', $message);

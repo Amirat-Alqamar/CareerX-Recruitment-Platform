@@ -39,6 +39,7 @@ Route::group([
 
     require __DIR__ . '/job_seeker.php';
     require __DIR__ . '/employer.php';
+    require __DIR__ . '/admin.php';
 
 });
 

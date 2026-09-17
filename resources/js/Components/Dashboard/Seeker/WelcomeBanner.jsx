@@ -2,9 +2,13 @@ import React from 'react';
 import { Circle } from 'lucide-react';
 import useTranslation from '@/hooks/useTranslation';
 
-export default function WelcomeBanner({ userName = '', profileCompletion = 72 }) {
+export default function WelcomeBanner({ userName = '', profileCompletion = 20, stats = {} }) {
   const { __, locale } = useTranslation();
   const displayName = userName || __('Job Seeker');
+
+  const interviewsCount = stats.interviews || 0;
+  const underReviewCount = stats.underReview || 0;
+  const appliedCount = stats.applied || 0;
 
   return (
     <div className="space-y-6 mb-8">
@@ -13,7 +17,12 @@ export default function WelcomeBanner({ userName = '', profileCompletion = 72 })
           {__('Good morning, :name!', { name: displayName })} 👋
         </h1>
         <p className="text-slate-500 text-sm mt-1">
-          {__('You have 3 upcoming interviews this week and 8 applications awaiting review.')}
+          {appliedCount > 0
+            ? __('You have :interviews upcoming interview(s) and :applications application(s) awaiting review.', {
+                interviews: interviewsCount,
+                applications: underReviewCount,
+              })
+            : __('Explore open job opportunities and start applying today.')}
         </p>
       </div>
 

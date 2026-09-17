@@ -57,5 +57,3 @@ export default function SidebarProfile({ user, isCollapsed = false }) {
     </div>
   );
 }
-
-

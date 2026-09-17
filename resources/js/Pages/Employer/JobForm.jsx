@@ -43,7 +43,7 @@ export default function JobForm({
     description: job?.description || '',
     responsibilities: job?.responsibilities || '',
     requirements: job?.requirements || '',
-    status: job?.status || 'published',
+    status: job?.status || 'pending',
     skills: selectedSkills || [],
   });
 
@@ -126,6 +126,14 @@ export default function JobForm({
               <p className="text-xs text-slate-400 font-medium mt-1">
                 {__('Provide clear details to attract the best matching candidates.')}
               </p>
+            </div>
+
+            {/* Moderation notice banner */}
+            <div className="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200 text-amber-900 text-xs font-semibold flex items-center gap-2.5">
+              <Clock className="w-4 h-4 text-amber-600 shrink-0" />
+              <span>
+                {__('All submitted job posts are reviewed and approved by the CareerX administration before going live to job seekers.')}
+              </span>
             </div>
 
             {/* Title */}
@@ -391,11 +399,16 @@ export default function JobForm({
                 name="status"
                 value={form.status}
                 onChange={handleChange}
-                className="w-full sm:w-64 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-[#008A7B] cursor-pointer"
+                className="w-full sm:w-80 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-[#008A7B] cursor-pointer"
               >
-                <option value="published">{__('Published (Active)')}</option>
-                <option value="draft">{__('Draft')}</option>
-                <option value="closed">{__('Closed')}</option>
+                <option value="pending">{__('Submit for Administrator Approval')}</option>
+                <option value="draft">{__('Save as Draft')}</option>
+                {isEditing && job?.status === 'published' && (
+                  <option value="published">{__('Published (Active)')}</option>
+                )}
+                {isEditing && (
+                  <option value="closed">{__('Closed')}</option>
+                )}
               </select>
             </div>
           </div>
@@ -414,7 +427,17 @@ export default function JobForm({
               className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-xs sm:text-sm bg-[#008A7B] text-white hover:bg-[#014D55] transition-all cursor-pointer shadow-sm disabled:opacity-50"
             >
               <Save className="w-4 h-4" />
-              <span>{submitting ? __('Saving...') : isEditing ? __('Save Changes') : __('Publish Job')}</span>
+              <span>
+                {submitting
+                  ? __('Saving...')
+                  : form.status === 'draft'
+                  ? __('Save Draft')
+                  : form.status === 'pending'
+                  ? __('Submit for Approval')
+                  : isEditing
+                  ? __('Save Changes')
+                  : __('Submit for Approval')}
+              </span>
             </button>
           </div>
         </form>

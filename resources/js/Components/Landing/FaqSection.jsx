@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { ChevronDown, HelpCircle } from 'lucide-react';
 import { faqData } from '@/Data/faqData';
+import useTranslation from '@/hooks/useTranslation';
 
 export default function FaqSection() {
+  const { __ } = useTranslation();
   const [openId, setOpenId] = useState('faq-1');
 
   const toggleFaq = (id) => {
@@ -16,10 +18,10 @@ export default function FaqSection() {
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
           <span className="text-xs font-bold uppercase tracking-wider text-[#00BBA7]">
-            GOT QUESTIONS?
+            {__('GOT QUESTIONS?')}
           </span>
           <h2 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-            Frequently Asked Questions
+            {__('Frequently Asked Questions')}
           </h2>
         </div>
 
@@ -46,7 +48,7 @@ export default function FaqSection() {
                   <span className={`font-bold text-base sm:text-lg transition-colors ${
                     isOpen ? 'text-[#014D55]' : 'text-slate-900'
                   }`}>
-                    {item.question}
+                    {__(item.question)}
                   </span>
 
                   <div className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-300 ${
@@ -59,7 +61,7 @@ export default function FaqSection() {
                 {/* Accordion Content */}
                 {isOpen && (
                   <div className="px-6 pb-6 pt-0 text-slate-500 text-sm sm:text-base leading-relaxed border-t border-slate-50 mt-1 animate-fade-in">
-                    <p className="pt-4">{item.answer}</p>
+                    <p className="pt-4">{__(item.answer)}</p>
                   </div>
                 )}
               </div>

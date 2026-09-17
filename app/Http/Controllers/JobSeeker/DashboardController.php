@@ -24,32 +24,29 @@ class DashboardController extends Controller
             );
         }
 
-        // Default mock stats for guest preview / new users
+        // Real metrics from database for user
         $stats = [
-            'applied' => 24,
-            'underReview' => 8,
-            'interviews' => 3,
-            'offers' => 1,
+            'applied' => 0,
+            'underReview' => 0,
+            'interviews' => 0,
+            'offers' => 0,
         ];
-        $profileCompletion = 72;
+        $profileCompletion = 20;
 
         if ($user && $user->profile) {
             $profile = $user->profile;
 
             $appliedCount = $profile->applications()->count();
-            $underReviewCount = $profile->applications()->where('status', 'under_review')->count();
+            $underReviewCount = $profile->applications()->whereIn('status', ['applied', 'under_review', 'pending'])->count();
             $interviewsCount = $profile->applications()->where('status', 'interview')->count();
-            $offersCount = $profile->applications()->whereIn('status', ['accepted', 'offer'])->count();
+            $offersCount = $profile->applications()->whereIn('status', ['accepted', 'offer', 'hired'])->count();
 
-            // Use real metrics when applications exist
-            if ($appliedCount > 0) {
-                $stats = [
-                    'applied' => $appliedCount,
-                    'underReview' => $underReviewCount,
-                    'interviews' => $interviewsCount,
-                    'offers' => $offersCount,
-                ];
-            }
+            $stats = [
+                'applied' => $appliedCount,
+                'underReview' => $underReviewCount,
+                'interviews' => $interviewsCount,
+                'offers' => $offersCount,
+            ];
 
             // Calculate profile completion percentage based on profile sections
             $score = 20; // Base score for account

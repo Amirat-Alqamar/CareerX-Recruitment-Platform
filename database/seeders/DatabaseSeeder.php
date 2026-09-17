@@ -18,5 +18,15 @@ class DatabaseSeeder extends Seeder
         $this->call([
             InitialDataSeeder::class,
         ]);
+
+        User::firstOrCreate(
+            ['email' => 'admin@careerx.com'],
+            [
+                'name' => 'System Administrator',
+                'password' => \Illuminate\Support\Facades\Hash::make('password'),
+                'role' => 'admin',
+                'status' => true,
+            ]
+        );
     }
 }
