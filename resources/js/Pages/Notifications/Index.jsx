@@ -26,19 +26,23 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
   const userRole = auth?.user?.role || 'job_seeker';
 
   const [selectedNotification, setSelectedNotification] = useState(null);
+  const [items, setItems] = useState(notifications.data || []);
 
-  const items = notifications.data || [];
+  React.useEffect(() => {
+    setItems(notifications.data || []);
+  }, [notifications.data]);
 
   const handleOpenDetailModal = (item) => {
     setSelectedNotification(item);
     if (!item.is_read) {
+      setItems((prev) =>
+        prev.map((n) => (n.id === item.id ? { ...n, is_read: true } : n))
+      );
       router.post(
         `/${locale}/notifications/${item.id}/read`,
         {},
-        { preserveScroll: true }
+        { preserveScroll: true, preserveState: true }
       );
-      // Mark local state as read
-      item.is_read = true;
     }
   };
 
@@ -166,10 +170,10 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
               <table className="w-full text-left rtl:text-right border-collapse">
                 <thead>
                   <tr className="bg-slate-50/80 border-b border-slate-100 text-[11px] font-black uppercase tracking-wider text-slate-500">
-                    <th className="px-6 py-4 w-12 text-center">{__('Status')}</th>
+                    <th className="px-6 py-4 w-32 text-center">{__('Status')}</th>
                     <th className="px-6 py-4">{__('Notification')}</th>
                     <th className="px-6 py-4 w-44">{__('Received At')}</th>
-                    <th className="px-6 py-4 w-32 text-center">{__('Action')}</th>
+                    <th className="px-6 py-4 w-24 text-center">{__('Action')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm">
@@ -177,25 +181,30 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
                     <tr
                       key={item.id}
                       onClick={() => handleOpenDetailModal(item)}
-                      className={`hover:bg-slate-50/80 transition-colors cursor-pointer group ${
-                        !item.is_read ? 'bg-slate-50/40 font-semibold' : ''
+                      className={`transition-all duration-300 cursor-pointer group ${
+                        !item.is_read
+                          ? 'bg-[#008A7B]/[0.06] hover:bg-[#008A7B]/[0.10]'
+                          : 'bg-white hover:bg-slate-50/80'
                       }`}
                     >
-                      {/* Status Indicator & Icon */}
-                      <td className="px-6 py-4 text-center">
-                        <div className="flex items-center justify-center gap-2">
-                          {!item.is_read && (
-                            <span className="w-2 h-2 rounded-full bg-[#008A7B] animate-pulse shrink-0" title={__('Unread')} />
-                          )}
-                          <div className={`w-8 h-8 rounded-xl flex items-center justify-center border ${getBadgeStyle(item.type)}`}>
-                            {getIcon(item.type)}
-                          </div>
-                        </div>
+                      {/* Status Indicator: Read / Unread */}
+                      <td className="px-6 py-4 text-center whitespace-nowrap">
+                        {item.is_read ? (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-500 border border-slate-200">
+                            <Check className="w-3 h-3 text-slate-400" />
+                            <span>{__('Read')}</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-[#008A7B] text-white shadow-xs">
+                            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shrink-0" />
+                            <span>{__('Unread')}</span>
+                          </span>
+                        )}
                       </td>
 
                       {/* Content */}
                       <td className="px-6 py-4">
-                        <div className="space-y-0.5">
+                        <div className="space-y-0.5 min-w-0">
                           <h4 className={`text-sm text-slate-900 line-clamp-1 group-hover:text-[#008A7B] transition-colors ${!item.is_read ? 'font-black' : 'font-bold'}`}>
                             {item.title}
                           </h4>
@@ -218,10 +227,10 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
                         <button
                           type="button"
                           onClick={() => handleOpenDetailModal(item)}
-                          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-[#E6F8F6] text-slate-700 hover:text-[#008A7B] border border-slate-200 hover:border-[#008A7B]/30 font-bold text-xs transition-all cursor-pointer shadow-2xs"
+                          className="w-8 h-8 inline-flex items-center justify-center rounded-xl bg-slate-100 hover:bg-[#E6F8F6] text-slate-600 hover:text-[#008A7B] border border-slate-200 hover:border-[#008A7B]/30 transition-all cursor-pointer shadow-xs active:scale-95 mx-auto"
+                          title={__('View Details')}
                         >
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>{__('View Details')}</span>
+                          <Eye className="w-4 h-4" />
                         </button>
                       </td>
                     </tr>

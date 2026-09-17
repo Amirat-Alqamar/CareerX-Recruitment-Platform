@@ -12,7 +12,6 @@ import {
   GraduationCap,
   Award,
   Globe,
-  Star,
   Video,
   Copy,
   Check,
@@ -36,11 +35,6 @@ export default function ApplicantDetail({ application }) {
   const [currentStatus, setCurrentStatus] = useState(application.status || 'applied');
   const [updatingStatus, setUpdatingStatus] = useState(false);
 
-  // Evaluation state
-  const [rating, setRating] = useState(application.rating || 0);
-  const [notes, setNotes] = useState(application.notes || '');
-  const [savingNotes, setSavingNotes] = useState(false);
-
   // Interview Modal / Form state
   const [showInterviewModal, setShowInterviewModal] = useState(false);
   const [interviewDate, setInterviewDate] = useState(
@@ -62,19 +56,6 @@ export default function ApplicantDetail({ application }) {
       {
         preserveScroll: true,
         onFinish: () => setUpdatingStatus(false),
-      }
-    );
-  };
-
-  const handleSaveEvaluation = (e) => {
-    e.preventDefault();
-    setSavingNotes(true);
-    router.put(
-      `/${locale}/employer/applicants/${application.id}/evaluation`,
-      { rating, notes },
-      {
-        preserveScroll: true,
-        onFinish: () => setSavingNotes(false),
       }
     );
   };
@@ -293,58 +274,6 @@ export default function ApplicantDetail({ application }) {
               </p>
             </div>
           )}
-        </div>
-
-        {/* Recruiter Evaluation & Private Notes */}
-        <div className="bg-[#FFFDF7] rounded-3xl border border-amber-200/80 p-6 sm:p-7 shadow-sm">
-          <form onSubmit={handleSaveEvaluation} className="space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
-                <Star className="w-5 h-5 text-amber-500 fill-amber-400" />
-                <h3 className="text-sm sm:text-base font-bold text-slate-900">
-                  {__('Candidate Rating & Private Recruiter Notes')}
-                </h3>
-              </div>
-
-              {/* Star rating selector */}
-              <div className="flex items-center gap-1">
-                {[1, 2, 3, 4, 5].map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => setRating(s)}
-                    className="p-1 text-slate-300 hover:text-amber-400 transition-colors cursor-pointer"
-                  >
-                    <Star
-                      className={`w-5 h-5 ${
-                        s <= rating ? 'text-amber-500 fill-amber-400' : 'text-slate-200'
-                      }`}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <textarea
-                rows={3}
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder={__('Write private notes only visible to your recruiting team...')}
-                className="w-full bg-white border border-amber-200/80 rounded-2xl p-3.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all"
-              />
-            </div>
-
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                disabled={savingNotes}
-                className="px-5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-white hover:bg-slate-800 transition-all cursor-pointer shadow-sm disabled:opacity-50"
-              >
-                {savingNotes ? __('Saving...') : __('Save Evaluation')}
-              </button>
-            </div>
-          </form>
         </div>
 
         {/* Candidate Profile Tabs (Experiences, Education, Skills, Languages, Portfolio) */}

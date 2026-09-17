@@ -26,13 +26,13 @@ class CreateNewUser implements CreatesNewUsers
     public function create(array $input): User
     {
         $messages = [
-            'name.required_if' => __('يرجى إدخال الاسم الكامل.'),
-            'company_name.required_if' => __('يرجى إدخال اسم الشركة.'),
-            'email.required' => __('يرجى إدخال البريد الإلكتروني.'),
-            'email.email' => __('يرجى إدخال بريد إلكتروني صالح.'),
-            'email.unique' => __('البريد الإلكتروني مستخدم بالفعل.'),
-            'password.required' => __('يرجى إدخال كلمة المرور.'),
-            'password.confirmed' => __('تأكيد كلمة المرور غير متطابق.'),
+            'name.required_if' => __('Please enter your full name.'),
+            'company_name.required_if' => __('Please enter the company name.'),
+            'email.required' => __('Please enter your email address.'),
+            'email.email' => __('Please enter a valid email address.'),
+            'email.unique' => __('The email address is already in use.'),
+            'password.required' => __('Please enter a password.'),
+            'password.confirmed' => __('Password confirmation does not match.'),
         ];
 
         $passwordRules = !empty($input['password_confirmation'])

@@ -328,12 +328,6 @@ export default function EmployerDashboard({
                           <h4 className="text-xs font-bold text-slate-900 truncate">
                             {app.applicant_name}
                           </h4>
-                          {app.rating ? (
-                            <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200/80 px-1.5 py-0.5 rounded-full shrink-0">
-                              <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
-                              {app.rating}
-                            </span>
-                          ) : null}
                         </div>
                         <p className="text-[11px] text-slate-400 truncate">
                           {app.job_title}

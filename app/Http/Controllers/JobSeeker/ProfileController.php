@@ -40,7 +40,7 @@ class ProfileController extends Controller
             $validated
         );
 
-        return redirect()->back()->with('success', 'You have successfully updated your profile.');
+        return redirect()->back()->with('success', __('Profile updated successfully.'));
     }
 
     public function show()
@@ -64,7 +64,7 @@ class ProfileController extends Controller
         $user->avatar = $path;
         $user->save();
 
-        return redirect()->back()->with('success', 'تم تحديث الصورة الشخصية بنجاح.');
+        return redirect()->back()->with('success', __('Profile photo updated successfully.'));
     }
 
     public function uploadCover(Request $request)
@@ -83,7 +83,9 @@ class ProfileController extends Controller
         $user->cover_image = $path;
         $user->save();
 
-        return redirect()->back()->with('success', 'تم تحديث صورة الغلاف بنجاح.');
+        return redirect
+        
+        ()->back()->with('success', __('Cover photo updated successfully.'));
     }
 
     public function deleteAvatar()
@@ -97,7 +99,7 @@ class ProfileController extends Controller
         $user->avatar = null;
         $user->save();
 
-        return redirect()->back()->with('success', 'تم حذف الصورة الشخصية بنجاح.');
+        return redirect()->back()->with('success', __('Profile photo removed successfully.'));
     }
 
     public function deleteCover()
@@ -111,6 +113,6 @@ class ProfileController extends Controller
         $user->cover_image = null;
         $user->save();
 
-        return redirect()->back()->with('success', 'تم حذف صورة الغلاف بنجاح.');
+        return redirect()->back()->with('success', __('Cover photo removed successfully.'));
     }
 }

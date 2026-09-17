@@ -24,7 +24,7 @@ class LanguageController extends Controller
         $profile = Auth::user()->profile;
 
         if (!$profile) {
-            return redirect()->back()->with('error', 'يجب إنشاء البيانات الأساسية للملف الشخصي أولاً.');
+            return redirect()->back()->with('error', __('You must create the basic profile data first.'));
         }
 
         $languageName = trim($validated['language_name']);
@@ -37,7 +37,7 @@ class LanguageController extends Controller
             $language->id => ['level' => $validated['level']]
         ]);
 
-        return redirect()->back()->with('success', 'تمت إضافة اللغة بنجاح.');
+        return redirect()->back()->with('success', __('Language added successfully.'));
     }
 
     public function update(Request $request, Language $language)
@@ -54,7 +54,7 @@ class LanguageController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'تم تحديث مستوى إتقان اللغة بنجاح.');
+        return redirect()->back()->with('success', __('Language level updated successfully.'));
     }
 
     public function destroy(Language $language)
@@ -65,6 +65,6 @@ class LanguageController extends Controller
             $profile->languages()->detach($language->id);
         }
 
-        return redirect()->back()->with('success', 'تم حذف اللغة بنجاح.');
+        return redirect()->back()->with('success', __('Language removed successfully.'));
     }
 }

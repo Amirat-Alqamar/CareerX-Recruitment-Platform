@@ -27,19 +27,19 @@ class EducationController extends Controller
         $profile = Auth::user()->profile;
 
         if (!$profile) {
-            return redirect()->back()->with('error', 'You must create the basic profile data first.');
+            return redirect()->back()->with('error', __('You must create the basic profile data first.'));
         }
 
         $profile->educations()->create($validated);
 
-        return redirect()->back()->with('success', 'You have successfully added the education.');
+        return redirect()->back()->with('success', __('Education added successfully.'));
     }
 
 
     private function checkAuthorization(Education $education)
     {
         if ($education->profile_id !== Auth::user()->profile?->id) {
-            abort(403, 'You are not authorized to update this education.');
+            abort(403, __('You are not authorized to update this education.'));
         }
     }
 
@@ -56,7 +56,7 @@ class EducationController extends Controller
 
         $education->update($validated);
 
-        return redirect()->back()->with('success', 'You have successfully updated the education.');
+        return redirect()->back()->with('success', __('Education updated successfully.'));
     }
 
 
@@ -67,6 +67,6 @@ class EducationController extends Controller
 
         $education->delete();
 
-        return redirect()->back()->with('success', 'You have successfully deleted the education.');
+        return redirect()->back()->with('success', __('Education deleted successfully.'));
     }
 }

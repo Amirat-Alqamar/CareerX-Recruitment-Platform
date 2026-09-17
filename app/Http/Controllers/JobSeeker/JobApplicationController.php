@@ -47,7 +47,7 @@ class JobApplicationController extends Controller
         $profile = Auth::user()->profile;
 
         if (!$profile) {
-            return redirect()->back()->with('error', "You must complete your profile data before applying for jobs.");
+            return redirect()->back()->with('error', __('You must complete your profile data before applying for jobs.'));
         }
 
         $alreadyApplied = JobApplication::where('job_post_id', $validated['job_post_id'])
@@ -55,7 +55,7 @@ class JobApplicationController extends Controller
             ->exists();
 
         if ($alreadyApplied) {
-            return redirect()->back()->with('error', 'You have already applied for this job.');
+            return redirect()->back()->with('error', __('You have already applied for this job.'));
         }
 
         $application = JobApplication::create([
@@ -66,20 +66,16 @@ class JobApplicationController extends Controller
             'status'       => 'applied',
         ]);
 
-        $job = Job::with('company.users')->find($validated['job_post_id']);
-        if ($job && $job->company) {
-            foreach ($job->company->users as $employerUser) {
-                $employerUser->notify(new \App\Notifications\NewJobApplicationNotification($application));
-            }
-        }
+        $user = Auth::user();
+        $user->notify(new \App\Notifications\ApplicationStatusChangedNotification($application, 'applied'));
 
-        return redirect()->back()->with('success', 'You have successfully applied for this job.');
+        return redirect()->back()->with('success', __('You have successfully applied for this job.'));
     }
 
     public function show(JobApplication $application)
     {
         if ($application->profile_id !== Auth::user()->profile?->id) {
-            abort(403, 'You are not authorized to view this application.');
+            abort(403, __('You are not authorized to view this application.'));
         }
 
         return redirect()->route('job-seeker.applications.index', ['app_id' => $application->id]);

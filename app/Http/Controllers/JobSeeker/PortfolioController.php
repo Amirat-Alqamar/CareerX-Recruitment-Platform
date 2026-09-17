@@ -36,7 +36,7 @@ class PortfolioController extends Controller
         $profile = Auth::user()->profile;
 
         if (!$profile) {
-            return redirect()->back()->with('error', 'يجب إنشاء بيانات البروفايل الأساسية أولاً.');
+            return redirect()->back()->with('error', __('You must create the basic profile data first.'));
         }
 
         if ($request->hasFile('file')) {
@@ -45,13 +45,13 @@ class PortfolioController extends Controller
 
         $profile->portfolioItems()->create($validated);
 
-        return redirect()->back()->with('success', 'تمت إضافة العمل إلى المعرض بنجاح.');
+        return redirect()->back()->with('success', __('Portfolio item added successfully.'));
     }
 
     private function checkAuthorization(PortfolioItem $portfolio)
     {
         if ($portfolio->profile_id !== Auth::user()->profile?->id) {
-            abort(403, 'غير مصرح لك بالوصول إلى هذا العنصر.');
+            abort(403, __('You are not authorized to access this item.'));
         }
     }
 
@@ -85,7 +85,7 @@ class PortfolioController extends Controller
 
         $portfolio->update($validated);
 
-        return redirect()->back()->with('success', 'تم تحديث العمل بنجاح.');
+        return redirect()->back()->with('success', __('Portfolio item updated successfully.'));
     }
 
     public function destroy(PortfolioItem $portfolio)
@@ -98,6 +98,6 @@ class PortfolioController extends Controller
 
         $portfolio->delete();
 
-        return redirect()->back()->with('success', 'تم حذف العمل من المعرض بنجاح.');
+        return redirect()->back()->with('success', __('Portfolio item deleted successfully.'));
     }
 }

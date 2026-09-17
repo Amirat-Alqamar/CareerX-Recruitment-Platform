@@ -24,38 +24,83 @@ class ApplicationStatusChangedNotification extends Notification
         $jobTitle = $this->application->jobPost?->title ?? 'your application';
         $companyName = $this->application->jobPost?->company?->name ?? 'the employer';
 
-        if ($this->actionType === 'interview') {
+        if ($this->actionType === 'applied' || $this->application->status === 'applied' || $this->application->status === 'pending') {
             return [
-                'type'           => 'interview_scheduled',
+                'type'           => 'application_received',
                 'application_id' => $this->application->id,
-                'title'          => 'Interview Scheduled!',
-                'title_ar'       => 'تمت جدولة مقابلة عمل!',
-                'message'        => "{$companyName} scheduled an interview for '{$jobTitle}'.",
-                'message_ar'     => "حددت شركة {$companyName} موعد مقابلة عمل لوظيفة '{$jobTitle}'.",
-                'link'           => "/job-seeker/applications",
+                'title'          => 'Application Received',
+                'message'        => 'Your application for :job at :company has been received and is pending review.',
+                'params'         => ['job' => $jobTitle, 'company' => $companyName],
+                'link'           => '/job-seeker/applications',
             ];
         }
 
-        $status = $this->application->status;
-        $statusLabels = [
-            'reviewed'    => ['en' => 'Under Review', 'ar' => 'قيد المراجعة'],
-            'shortlisted' => ['en' => 'Shortlisted', 'ar' => 'ضمن القائمة المختصرة'],
-            'accepted'    => ['en' => 'Accepted', 'ar' => 'تم القبول'],
-            'rejected'    => ['en' => 'Not Selected', 'ar' => 'لم يتم الاختيار'],
-            'hired'       => ['en' => 'Hired', 'ar' => 'تم التوظيف بنجاح'],
-        ];
+        if ($this->actionType === 'interview' || $this->application->status === 'interview') {
+            $dateStr = $this->application->interview_date ? $this->application->interview_date->format('Y-m-d h:i A') : '';
+            return [
+                'type'           => 'interview_scheduled',
+                'application_id' => $this->application->id,
+                'title'          => 'Interview Scheduled! 📅',
+                'message'        => $dateStr
+                    ? 'Congratulations! :company invited you for an interview on :date.'
+                    : 'Congratulations! :company invited you for an interview for :job.',
+                'params'         => ['company' => $companyName, 'job' => $jobTitle, 'date' => $dateStr],
+                'link'           => '/job-seeker/applications',
+            ];
+        }
 
-        $enLabel = $statusLabels[$status]['en'] ?? ucfirst($status);
-        $arLabel = $statusLabels[$status]['ar'] ?? $status;
+        if ($this->application->status === 'reviewed' || $this->actionType === 'reviewed') {
+            return [
+                'type'           => 'application_reviewed',
+                'application_id' => $this->application->id,
+                'title'          => 'Application Reviewed',
+                'message'        => 'Company :company has reviewed your profile and resume for :job.',
+                'params'         => ['company' => $companyName, 'job' => $jobTitle],
+                'link'           => '/job-seeker/applications',
+            ];
+        }
 
+        if (in_array($this->application->status, ['accepted', 'hired'])) {
+            return [
+                'type'           => 'application_accepted',
+                'application_id' => $this->application->id,
+                'title'          => 'Application Accepted! 🎉',
+                'message'        => 'Congratulations! :company has accepted your application for :job.',
+                'params'         => ['company' => $companyName, 'job' => $jobTitle],
+                'link'           => '/job-seeker/applications',
+            ];
+        }
+
+        if ($this->application->status === 'rejected') {
+            return [
+                'type'           => 'application_rejected',
+                'application_id' => $this->application->id,
+                'title'          => 'Application Update',
+                'message'        => 'Thank you for your interest. :company has decided not to move forward with your application for :job.',
+                'params'         => ['company' => $companyName, 'job' => $jobTitle],
+                'link'           => '/job-seeker/applications',
+            ];
+        }
+
+        if ($this->application->status === 'shortlisted') {
+            return [
+                'type'           => 'application_shortlisted',
+                'application_id' => $this->application->id,
+                'title'          => 'Application Shortlisted! ⭐',
+                'message'        => 'Good news! Your application for :job at :company has been shortlisted.',
+                'params'         => ['company' => $companyName, 'job' => $jobTitle],
+                'link'           => '/job-seeker/applications',
+            ];
+        }
+
+        // Generic fallback
         return [
             'type'           => 'application_status_update',
             'application_id' => $this->application->id,
-            'title'          => "Application Status: {$enLabel}",
-            'title_ar'       => "تحديث طلب التوظيف: {$arLabel}",
-            'message'        => "Your application for '{$jobTitle}' at {$companyName} is now {$enLabel}.",
-            'message_ar'     => "تم تحديث حالة طلبك لوظيفة '{$jobTitle}' لدى شركة {$companyName} إلى: {$arLabel}.",
-            'link'           => "/job-seeker/applications",
+            'title'          => 'Application Status Updated',
+            'message'        => 'Your application for :job at :company status was updated.',
+            'params'         => ['job' => $jobTitle, 'company' => $companyName],
+            'link'           => '/job-seeker/applications',
         ];
     }
 }

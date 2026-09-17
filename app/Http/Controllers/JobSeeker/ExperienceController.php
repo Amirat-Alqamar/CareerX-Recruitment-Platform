@@ -27,18 +27,18 @@ class ExperienceController extends Controller
         $profile = Auth::user()->profile;
 
         if (!$profile) {
-            return redirect()->back()->with('error', 'You must create the basic profile data first.');
+            return redirect()->back()->with('error', __('You must create the basic profile data first.'));
         }
 
         $profile->experiences()->create($validated);
 
-        return redirect()->back()->with('success', 'You have successfully added the experience.');
+        return redirect()->back()->with('success', __('Experience added successfully.'));
     }
 
     private function checkAuthorization(Experience $experience)
     {
         if ($experience->profile_id !== Auth::user()->profile?->id) {
-            abort(403, 'You are not authorized to update this experience.');
+            abort(403, __('You are not authorized to update this experience.'));
         }
     }
 
@@ -55,7 +55,7 @@ class ExperienceController extends Controller
 
         $experience->update($validated);
 
-        return redirect()->back()->with('success', 'You have successfully updated the experience.');
+        return redirect()->back()->with('success', __('Experience updated successfully.'));
     }
 
     public function destroy(Experience $experience)
@@ -63,8 +63,7 @@ class ExperienceController extends Controller
         $this->checkAuthorization($experience);
         $experience->delete();
 
-        return redirect()->back()->with('success', 'You have successfully deleted the experience.');
+        return redirect()->back()->with('success', __('Experience deleted successfully.'));
     }
-
-
 }
+

@@ -34,18 +34,18 @@ class CertificationController extends Controller
         $profile = Auth::user()->profile;
 
         if (!$profile) {
-            return redirect()->back()->with('error', 'يجب إنشاء بيانات البروفايل الأساسية أولاً.');
+            return redirect()->back()->with('error', __('You must create the basic profile data first.'));
         }
 
         $profile->certifications()->create($validated);
 
-        return redirect()->back()->with('success', 'تمت إضافة الشهادة بنجاح.');
+        return redirect()->back()->with('success', __('Certification added successfully.'));
     }
 
     private function checkAuthorization(Certification $certification)
     {
         if ($certification->profile_id !== Auth::user()->profile?->id) {
-            abort(403, 'غير مصرح لك بتعديل هذه الشهادة.');
+            abort(403, __('You are not authorized to update this certification.'));
         }
     }
 
@@ -70,7 +70,7 @@ class CertificationController extends Controller
 
         $certification->update($validated);
 
-        return redirect()->back()->with('success', 'تم تحديث بيانات الشهادة بنجاح.');
+        return redirect()->back()->with('success', __('Certification updated successfully.'));
     }
 
     public function destroy(Certification $certification)
@@ -79,6 +79,6 @@ class CertificationController extends Controller
 
         $certification->delete();
 
-        return redirect()->back()->with('success', 'You have successfully deleted the certification.');
+        return redirect()->back()->with('success', __('Certification deleted successfully.'));
     }
 }

@@ -24,7 +24,7 @@ class SkillController extends Controller
         $profile = Auth::user()->profile;
 
         if (!$profile) {
-            return redirect()->back()->with('error', 'You must create the basic profile data first.');
+            return redirect()->back()->with('error', __('You must create the basic profile data first.'));
         }
 
         $skillName = trim($validated['skill_name']);
@@ -38,7 +38,7 @@ class SkillController extends Controller
             $skill->id => ['level_id' => $validated['level_id'] ?? null]
         ]);
 
-        return redirect()->back()->with('success', 'You have successfully added the skill.');
+        return redirect()->back()->with('success', __('Skill added successfully.'));
     }
 
     public function update(Request $request, Skill $skill)
@@ -55,7 +55,7 @@ class SkillController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'تم تحديث مستوى المهارة بنجاح.');
+        return redirect()->back()->with('success', __('Skill level updated successfully.'));
     }
 
     public function destroy(Skill $skill)
@@ -66,6 +66,6 @@ class SkillController extends Controller
             $profile->skills()->detach($skill->id);
         }
 
-        return redirect()->back()->with('success', 'تم حذف المهارة بنجاح.');
+        return redirect()->back()->with('success', __('Skill removed successfully.'));
     }
 }

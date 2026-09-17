@@ -61,22 +61,6 @@ class NotificationSeeder extends Seeder
 
             $employer->notifications()->create([
                 'id' => \Illuminate\Support\Str::uuid()->toString(),
-                'type' => 'App\Notifications\NewJobApplicationNotification',
-                'data' => [
-                    'type'        => 'new_application',
-                    'title'       => 'New Application Received',
-                    'title_ar'    => 'طلب توظيف جديد مستلم',
-                    'message'     => 'Ahmad Al-Mansour applied for Senior Full Stack Developer.',
-                    'message_ar'  => 'تقدم أحمد المنصور بطلب توظيف لوظيفة Senior Full Stack Developer.',
-                    'link'        => "/employer/applicants",
-                ],
-                'read_at' => null,
-                'created_at' => now()->subMinutes(25),
-                'updated_at' => now()->subMinutes(25),
-            ]);
-
-            $employer->notifications()->create([
-                'id' => \Illuminate\Support\Str::uuid()->toString(),
                 'type' => 'App\Notifications\JobModerationStatusNotification',
                 'data' => [
                     'type'        => 'job_approved',
@@ -86,9 +70,9 @@ class NotificationSeeder extends Seeder
                     'message_ar'  => 'تمت الموافقة على إعلان وظيفتك وهو الآن منشور ومتاح للمتقدمين.',
                     'link'        => "/employer/jobs",
                 ],
-                'read_at' => now()->subHours(1),
-                'created_at' => now()->subHours(5),
-                'updated_at' => now()->subHours(1),
+                'read_at' => null,
+                'created_at' => now()->subHours(2),
+                'updated_at' => now()->subHours(2),
             ]);
         }
 

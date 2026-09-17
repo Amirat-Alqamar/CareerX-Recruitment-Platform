@@ -41,12 +41,12 @@ class SavedJobController extends Controller
 
         if ($existing) {
             $existing->delete();
-            return redirect()->back()->with('success', 'Job removed from saved list.');
+            return redirect()->back()->with('success', __('Job removed from saved list.'));
         }
 
         $job = Job::find($jobId);
         if (!$job) {
-            return redirect()->back()->with('error', 'Job not found.');
+            return redirect()->back()->with('error', __('Job not found.'));
         }
 
         SavedJob::create([
@@ -54,6 +54,6 @@ class SavedJobController extends Controller
             'job_post_id' => $jobId,
         ]);
 
-        return redirect()->back()->with('success', 'Job saved successfully.');
+        return redirect()->back()->with('success', __('Job saved successfully.'));
     }
 }

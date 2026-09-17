@@ -44,21 +44,15 @@ export const employerNavigation = [
     group: 'OVERVIEW',
     items: [
       { label: 'Dashboard', path: '/employer/dashboard', isBlade: false, icon: LayoutDashboard },
-      { label: 'Manage Jobs', path: '/employer/jobs', isBlade: false, icon: Briefcase },
+      { label: 'Company Profile', path: '/employer/company', isBlade: false, icon: Building2 },
     ],
   },
   {
     group: 'CANDIDATES & RECRUITMENT',
     items: [
-      { label: 'Job Applicants', path: '/employer/applicants', isBlade: false, icon: Users },
+      { label: 'Manage Jobs', path: '/employer/jobs', isBlade: false, icon: Briefcase },
       { label: 'Post a New Job', path: '/employer/jobs/create', isBlade: false, icon: PlusCircle },
-    ],
-  },
-  {
-    group: 'COMPANY PROFILE',
-    items: [
-      { label: 'Company Profile', path: '/employer/company', isBlade: false, icon: Building2 },
-      { label: 'Edit Company Info', path: '/employer/company/edit', isBlade: false, icon: Settings },
+      { label: 'Job Applicants', path: '/employer/applicants', isBlade: false, icon: Users },
     ],
   },
 ];

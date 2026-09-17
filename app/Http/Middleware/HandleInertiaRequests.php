@@ -82,9 +82,22 @@ class HandleInertiaRequests extends Middleware
 
             $notifications = $user->notifications()->take(15)->get()->map(function ($n) use ($locale) {
                 $data = $n->data;
-                $title = ($locale === 'ar' && !empty($data['title_ar'])) ? $data['title_ar'] : ($data['title'] ?? 'Notification');
-                $message = ($locale === 'ar' && !empty($data['message_ar'])) ? $data['message_ar'] : ($data['message'] ?? '');
-                $link = !empty($data['link']) ? "/{$locale}" . ltrim($data['link'], '/') : null;
+                $params = $data['params'] ?? [];
+                $rawTitle = $data['title'] ?? 'Notification';
+                $rawMessage = $data['message'] ?? '';
+
+                $title = __($rawTitle, $params);
+                $message = __($rawMessage, $params);
+
+                if ($locale === 'ar' && !empty($data['title_ar']) && $title === $rawTitle) {
+                    $title = $data['title_ar'];
+                }
+                if ($locale === 'ar' && !empty($data['message_ar']) && $message === $rawMessage) {
+                    $message = $data['message_ar'];
+                }
+
+                $rawLink = !empty($data['link']) ? '/' . ltrim($data['link'], '/') : null;
+                $link = $rawLink ? "/{$locale}" . $rawLink : null;
 
                 return [
                     'id'      => $n->id,

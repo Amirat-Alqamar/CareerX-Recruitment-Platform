@@ -12,7 +12,6 @@ import {
   X,
   Clock,
   CheckCircle2,
-  Star,
   Award,
   Video,
 } from 'lucide-react';

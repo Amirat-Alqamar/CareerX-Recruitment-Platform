@@ -33,7 +33,6 @@ Route::middleware(['auth', 'employer'])->prefix('employer')->name('employer.')->
     Route::get('/applicants/{application}', [ApplicantController::class, 'show'])->name('applicants.show');
     Route::put('/applicants/{application}/status', [ApplicantController::class, 'updateStatus'])->name('applicants.status');
     Route::post('/applicants/{application}/interview', [ApplicantController::class, 'scheduleInterview'])->name('applicants.interview');
-    Route::put('/applicants/{application}/evaluation', [ApplicantController::class, 'updateEvaluation'])->name('applicants.evaluation');
     Route::get('/applicants/{application}/resume', [ApplicantController::class, 'downloadResume'])->name('applicants.resume');
 
 });

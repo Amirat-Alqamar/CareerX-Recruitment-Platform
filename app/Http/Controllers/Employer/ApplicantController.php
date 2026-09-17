@@ -111,6 +111,10 @@ class ApplicantController extends Controller
         // Auto mark as reviewed if it is currently applied or pending
         if (in_array($application->status, ['applied', 'pending'])) {
             $application->update(['status' => 'reviewed']);
+            $candidateUser = $application->profile?->user;
+            if ($candidateUser) {
+                $candidateUser->notify(new \App\Notifications\ApplicationStatusChangedNotification($application, 'reviewed'));
+            }
         }
 
         $application->load([
@@ -131,8 +135,6 @@ class ApplicantController extends Controller
             'application' => [
                 'id' => $application->id,
                 'status' => $application->status,
-                'rating' => $application->rating,
-                'notes' => $application->notes,
                 'cover_letter' => $application->cover_letter,
                 'interview_date' => $application->interview_date ? $application->interview_date->format('Y-m-d H:i') : null,
                 'meeting_link' => $application->meeting_link,
@@ -238,23 +240,6 @@ class ApplicantController extends Controller
         }
 
         return redirect()->back()->with('success', __('Applicant status updated successfully.'));
-    }
-
-    /**
-     * Update candidate rating and internal recruiter notes.
-     */
-    public function updateEvaluation(Request $request, JobApplication $application)
-    {
-        $this->authorizeCompanyApplication($application);
-
-        $validated = $request->validate([
-            'rating' => ['nullable', 'integer', 'min:1', 'max:5'],
-            'notes'  => ['nullable', 'string', 'max:5000'],
-        ]);
-
-        $application->update($validated);
-
-        return redirect()->back()->with('success', __('Candidate evaluation and private notes saved successfully.'));
     }
 
     /**

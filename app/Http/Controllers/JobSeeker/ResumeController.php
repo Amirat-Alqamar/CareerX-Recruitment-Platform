@@ -26,7 +26,7 @@ class ResumeController extends Controller
         $profile = Auth::user()->profile;
 
         if (!$profile) {
-            return redirect()->back()->with('error', 'You must create the basic profile data first.');
+            return redirect()->back()->with('error', __('You must create the basic profile data first.'));
         }
 
         $filePath = $request->file('file')->store('resumes', 'public');
@@ -36,13 +36,13 @@ class ResumeController extends Controller
             'file_path' => $filePath,
         ]);
 
-        return redirect()->back()->with('success', 'You have successfully uploaded your resume.');
+        return redirect()->back()->with('success', __('Resume uploaded successfully.'));
     }
 
     private function checkAuthorization(Resume $resume)
     {
         if ($resume->profile_id !== Auth::user()->profile?->id) {
-            abort(403, 'You are not authorized to update this resume.');
+            abort(403, __('You are not authorized to access this resume.'));
         }
     }
 
@@ -51,7 +51,7 @@ class ResumeController extends Controller
         $this->checkAuthorization($resume);
 
         if (!Storage::disk('public')->exists($resume->file_path)) {
-            return redirect()->back()->with('error', 'The file is not found on the server.');
+            return redirect()->back()->with('error', __('The file is not found on the server.'));
         }
 
         return Storage::disk('public')->download($resume->file_path, $resume->title);
@@ -66,6 +66,6 @@ class ResumeController extends Controller
 
         $resume->delete();
 
-        return redirect()->back()->with('success', 'You have successfully deleted the resume.');
+        return redirect()->back()->with('success', __('Resume deleted successfully.'));
     }
 }
