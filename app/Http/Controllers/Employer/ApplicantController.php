@@ -210,6 +210,11 @@ class ApplicantController extends Controller
             'status'          => 'interview',
         ]);
 
+        $candidateUser = $application->profile?->user;
+        if ($candidateUser) {
+            $candidateUser->notify(new \App\Notifications\ApplicationStatusChangedNotification($application, 'interview'));
+        }
+
         return redirect()->back()->with('success', __('Interview scheduled successfully.'));
     }
 
@@ -226,6 +231,11 @@ class ApplicantController extends Controller
 
         $status = $validated['status'] === 'pending' ? 'applied' : $validated['status'];
         $application->update(['status' => $status]);
+
+        $candidateUser = $application->profile?->user;
+        if ($candidateUser) {
+            $candidateUser->notify(new \App\Notifications\ApplicationStatusChangedNotification($application, 'status'));
+        }
 
         return redirect()->back()->with('success', __('Applicant status updated successfully.'));
     }

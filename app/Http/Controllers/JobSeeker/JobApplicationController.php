@@ -58,13 +58,20 @@ class JobApplicationController extends Controller
             return redirect()->back()->with('error', 'You have already applied for this job.');
         }
 
-        JobApplication::create([
+        $application = JobApplication::create([
             'job_post_id'  => $validated['job_post_id'],
             'profile_id'   => $profile->id,
             'resume_id'    => $validated['resume_id'] ?? null,
             'cover_letter' => $validated['cover_letter'] ?? null,
             'status'       => 'applied',
         ]);
+
+        $job = Job::with('company.users')->find($validated['job_post_id']);
+        if ($job && $job->company) {
+            foreach ($job->company->users as $employerUser) {
+                $employerUser->notify(new \App\Notifications\NewJobApplicationNotification($application));
+            }
+        }
 
         return redirect()->back()->with('success', 'You have successfully applied for this job.');
     }

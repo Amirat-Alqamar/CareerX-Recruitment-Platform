@@ -122,6 +122,13 @@ class JobController extends Controller
             $job->skills()->sync($request->skills);
         }
 
+        if ($job->status === 'pending') {
+            $admins = \App\Models\User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new \App\Notifications\JobPendingApprovalNotification($job));
+            }
+        }
+
         return redirect()->route('employer.jobs.index')
             ->with('success', $message);
     }

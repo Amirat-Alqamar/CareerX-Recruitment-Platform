@@ -35,6 +35,12 @@ Route::group([
         Route::get('/profile', function () {
             return redirect()->route('seeker.profile');
         })->name('profile.index');
+
+        // Notification actions
+        Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+        Route::post('/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+        Route::post('/notifications/clear', [\App\Http\Controllers\NotificationController::class, 'clearAll'])->name('notifications.clear');
+        Route::post('/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
     });
 
     require __DIR__ . '/job_seeker.php';

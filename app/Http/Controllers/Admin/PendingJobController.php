@@ -67,6 +67,11 @@ class PendingJobController extends Controller
             'is_active' => true,
         ]);
 
+        $employer = $job->createdByUser ?? $job->company?->users()->first();
+        if ($employer) {
+            $employer->notify(new \App\Notifications\JobModerationStatusNotification($job, 'approved'));
+        }
+
         return redirect()->back()->with('success', __('Job post approved and published successfully.'));
     }
 
@@ -79,6 +84,11 @@ class PendingJobController extends Controller
             'status' => 'closed',
             'is_active' => false,
         ]);
+
+        $employer = $job->createdByUser ?? $job->company?->users()->first();
+        if ($employer) {
+            $employer->notify(new \App\Notifications\JobModerationStatusNotification($job, 'rejected'));
+        }
 
         return redirect()->back()->with('success', __('Job post rejected.'));
     }

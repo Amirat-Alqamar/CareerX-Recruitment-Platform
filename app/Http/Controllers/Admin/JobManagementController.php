@@ -94,6 +94,11 @@ class JobManagementController extends Controller
             'is_active' => true,
         ]);
 
+        $employer = $job->createdByUser ?? $job->company?->users()->first();
+        if ($employer) {
+            $employer->notify(new \App\Notifications\JobModerationStatusNotification($job, 'approved'));
+        }
+
         return redirect()->back()->with('success', __('Job post has been approved and is now live.'));
     }
 
@@ -106,6 +111,11 @@ class JobManagementController extends Controller
             'status' => 'closed',
             'is_active' => false,
         ]);
+
+        $employer = $job->createdByUser ?? $job->company?->users()->first();
+        if ($employer) {
+            $employer->notify(new \App\Notifications\JobModerationStatusNotification($job, 'rejected'));
+        }
 
         return redirect()->back()->with('success', __('Job post has been rejected and closed.'));
     }

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { usePage, Link } from '@inertiajs/react';
+import { usePage, Link, router } from '@inertiajs/react';
 import {
   Bell,
   Globe,
@@ -11,6 +11,10 @@ import {
   Send,
   Bookmark,
   CheckCircle2,
+  ShieldCheck,
+  AlertCircle,
+  Clock,
+  Briefcase,
 } from 'lucide-react';
 import useTranslation from '@/hooks/useTranslation';
 
@@ -26,11 +30,14 @@ export default function DashboardHeader({ onToggleSidebar }) {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const notificationsDropdownRef = useRef(null);
 
-  const getInitialNotifications = () => {
+  const dbNotifications = auth?.notifications || [];
+  const dbUnreadCount = auth?.unread_notifications_count ?? 0;
+
+  const getFallbackNotifications = () => {
     if (userRole === 'admin') {
       return [
         {
-          id: 1,
+          id: 'fb-1',
           title: __('Pending Job Approvals'),
           message: __('New job postings are awaiting your review and approval.'),
           time: __('Just now'),
@@ -38,96 +45,50 @@ export default function DashboardHeader({ onToggleSidebar }) {
           link: `/${locale}/admin/pending-jobs`,
           type: 'admin_pending',
         },
-        {
-          id: 2,
-          title: __('Platform Reports Ready'),
-          message: __('View real-time job demand, candidate and company metrics.'),
-          time: __('Today'),
-          unread: true,
-          link: `/${locale}/admin/reports`,
-          type: 'admin_reports',
-        },
-        {
-          id: 3,
-          title: __('User Management'),
-          message: __('Monitor active accounts, employers, and seekers.'),
-          time: __('Yesterday'),
-          unread: false,
-          link: `/${locale}/admin/users`,
-          type: 'admin_users',
-        },
       ];
     }
     if (userRole === 'employer') {
       return [
         {
-          id: 1,
+          id: 'fb-1',
           title: __('Applicant Updates'),
           message: __('Review new candidate applications received for your posted jobs.'),
           time: __('Recently'),
-          unread: true,
+          unread: false,
           link: `/${locale}/employer/applicants`,
           type: 'applications',
-        },
-        {
-          id: 2,
-          title: __('Manage Active Jobs'),
-          message: __('Check the status and views count on your published listings.'),
-          time: __('1h ago'),
-          unread: true,
-          link: `/${locale}/employer/jobs`,
-          type: 'saved',
         },
       ];
     }
     return [
       {
-        id: 1,
+        id: 'fb-1',
         title: __('Track Applications'),
         message: __('View updates and status changes on your job applications.'),
         time: __('Recently'),
-        unread: true,
+        unread: false,
         link: `/${locale}/job-seeker/applications`,
         type: 'applications',
-      },
-      {
-        id: 2,
-        title: __('Saved Opportunities'),
-        message: __('Review the positions you bookmarked and apply anytime.'),
-        time: __('1h ago'),
-        unread: true,
-        link: `/${locale}/job-seeker/saved-jobs`,
-        type: 'saved',
-      },
-      {
-        id: 3,
-        title: __('Complete Your Profile'),
-        message: __('Add your skills, languages, and portfolio to stand out to employers.'),
-        time: __('Yesterday'),
-        unread: true,
-        link: `/${locale}/seeker/profile`,
-        type: 'profile',
       },
     ];
   };
 
-  const [notifications, setNotifications] = useState(getInitialNotifications);
-
-  const unreadCount = notifications.filter((n) => n.unread).length;
+  const notifications = dbNotifications.length > 0 ? dbNotifications : getFallbackNotifications();
+  const unreadCount = dbNotifications.length > 0 ? dbUnreadCount : notifications.filter((n) => n.unread).length;
 
   const markAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })));
+    router.post(`/${locale}/notifications/read-all`, {}, { preserveScroll: true });
   };
 
   const clearAllNotifications = () => {
-    setNotifications([]);
+    router.post(`/${locale}/notifications/clear`, {}, { preserveScroll: true });
   };
 
-  const handleNotificationClick = (id) => {
-    setNotifications((prev) =>
-      prev.map((n) => (n.id === id ? { ...n, unread: false } : n))
-    );
+  const handleNotificationClick = (item) => {
     setNotificationsOpen(false);
+    if (item.id && !String(item.id).startsWith('fb-')) {
+      router.post(`/${locale}/notifications/${item.id}/read`, {}, { preserveScroll: true });
+    }
   };
 
   useEffect(() => {
@@ -269,24 +230,33 @@ export default function DashboardHeader({ onToggleSidebar }) {
                   notifications.map((item) => (
                     <Link
                       key={item.id}
-                      href={item.link}
-                      onClick={() => handleNotificationClick(item.id)}
+                      href={item.link || '#'}
+                      onClick={() => handleNotificationClick(item)}
                       className={`flex items-start gap-3 p-3.5 hover:bg-slate-50 transition-colors cursor-pointer block ${
                         item.unread ? 'bg-slate-50/60' : ''
                       }`}
                     >
                       <div
                         className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
-                          item.type === 'applications'
-                            ? 'bg-[#E6F8F6] text-[#008A7B]'
-                            : item.type === 'saved'
+                          item.type === 'job_approved' || item.type === 'interview_scheduled'
+                            ? 'bg-emerald-50 text-emerald-600'
+                            : item.type === 'job_rejected'
+                            ? 'bg-rose-50 text-rose-600'
+                            : item.type === 'job_pending_approval' || item.type === 'admin_pending'
                             ? 'bg-amber-50 text-amber-600'
+                            : item.type === 'new_application' || item.type === 'applications'
+                            ? 'bg-[#E6F8F6] text-[#008A7B]'
                             : 'bg-blue-50 text-blue-600'
                         }`}
                       >
-                        {item.type === 'applications' && <Send className="w-4 h-4" />}
+                        {(item.type === 'job_pending_approval' || item.type === 'admin_pending') && <ShieldCheck className="w-4 h-4" />}
+                        {item.type === 'job_approved' && <CheckCircle2 className="w-4 h-4" />}
+                        {item.type === 'job_rejected' && <AlertCircle className="w-4 h-4" />}
+                        {item.type === 'interview_scheduled' && <Clock className="w-4 h-4" />}
+                        {(item.type === 'new_application' || item.type === 'applications') && <Send className="w-4 h-4" />}
                         {item.type === 'saved' && <Bookmark className="w-4 h-4" />}
                         {item.type === 'profile' && <CheckCircle2 className="w-4 h-4" />}
+                        {!['job_pending_approval', 'admin_pending', 'job_approved', 'job_rejected', 'interview_scheduled', 'new_application', 'applications', 'saved', 'profile'].includes(item.type) && <Bell className="w-4 h-4" />}
                       </div>
 
                       <div className="flex-1 min-w-0">
@@ -327,13 +297,7 @@ export default function DashboardHeader({ onToggleSidebar }) {
                     {__('Clear all')}
                   </button>
                   <Link
-                    href={
-                      userRole === 'admin'
-                        ? `/${locale}/admin/pending-jobs`
-                        : userRole === 'employer'
-                        ? `/${locale}/employer/applicants`
-                        : `/${locale}/job-seeker/applications`
-                    }
+                    href={`/${locale}/notifications`}
                     onClick={() => setNotificationsOpen(false)}
                     className="text-[11px] text-[#008A7B] font-bold hover:underline"
                   >

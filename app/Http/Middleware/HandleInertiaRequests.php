@@ -61,6 +61,9 @@ class HandleInertiaRequests extends Middleware
 
         $user = $request->user();
         $userData = null;
+        $notifications = [];
+        $unreadCount = 0;
+
         if ($user) {
             $userData = [
                 'id' => $user->id,
@@ -76,12 +79,33 @@ class HandleInertiaRequests extends Middleware
                 'avatar' => $user->avatar ? (str_starts_with($user->avatar, 'http') ? $user->avatar : asset('storage/' . $user->avatar)) : null,
                 'cover_image' => $user->cover_image ? (str_starts_with($user->cover_image, 'http') ? $user->cover_image : asset('storage/' . $user->cover_image)) : null,
             ];
+
+            $notifications = $user->notifications()->take(15)->get()->map(function ($n) use ($locale) {
+                $data = $n->data;
+                $title = ($locale === 'ar' && !empty($data['title_ar'])) ? $data['title_ar'] : ($data['title'] ?? 'Notification');
+                $message = ($locale === 'ar' && !empty($data['message_ar'])) ? $data['message_ar'] : ($data['message'] ?? '');
+                $link = !empty($data['link']) ? "/{$locale}" . ltrim($data['link'], '/') : null;
+
+                return [
+                    'id'      => $n->id,
+                    'type'    => $data['type'] ?? 'info',
+                    'title'   => $title,
+                    'message' => $message,
+                    'link'    => $link,
+                    'unread'  => is_null($n->read_at),
+                    'time'    => $n->created_at ? $n->created_at->diffForHumans() : '',
+                ];
+            })->toArray();
+
+            $unreadCount = $user->unreadNotifications()->count();
         }
 
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $userData,
+                'notifications' => $notifications,
+                'unread_notifications_count' => $unreadCount,
             ],
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
