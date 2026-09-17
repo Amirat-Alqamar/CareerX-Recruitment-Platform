@@ -30,51 +30,8 @@ export default function DashboardHeader({ onToggleSidebar }) {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const notificationsDropdownRef = useRef(null);
 
-  const dbNotifications = auth?.notifications || [];
-  const dbUnreadCount = auth?.unread_notifications_count ?? 0;
-
-  const getFallbackNotifications = () => {
-    if (userRole === 'admin') {
-      return [
-        {
-          id: 'fb-1',
-          title: __('Pending Job Approvals'),
-          message: __('New job postings are awaiting your review and approval.'),
-          time: __('Just now'),
-          unread: true,
-          link: `/${locale}/admin/pending-jobs`,
-          type: 'admin_pending',
-        },
-      ];
-    }
-    if (userRole === 'employer') {
-      return [
-        {
-          id: 'fb-1',
-          title: __('Applicant Updates'),
-          message: __('Review new candidate applications received for your posted jobs.'),
-          time: __('Recently'),
-          unread: false,
-          link: `/${locale}/employer/applicants`,
-          type: 'applications',
-        },
-      ];
-    }
-    return [
-      {
-        id: 'fb-1',
-        title: __('Track Applications'),
-        message: __('View updates and status changes on your job applications.'),
-        time: __('Recently'),
-        unread: false,
-        link: `/${locale}/job-seeker/applications`,
-        type: 'applications',
-      },
-    ];
-  };
-
-  const notifications = dbNotifications.length > 0 ? dbNotifications : getFallbackNotifications();
-  const unreadCount = dbNotifications.length > 0 ? dbUnreadCount : notifications.filter((n) => n.unread).length;
+  const notifications = auth?.notifications || [];
+  const unreadCount = auth?.unread_notifications_count ?? 0;
 
   const markAllAsRead = () => {
     router.post(`/${locale}/notifications/read-all`, {}, { preserveScroll: true });
@@ -86,7 +43,7 @@ export default function DashboardHeader({ onToggleSidebar }) {
 
   const handleNotificationClick = (item) => {
     setNotificationsOpen(false);
-    if (item.id && !String(item.id).startsWith('fb-')) {
+    if (item.id) {
       router.post(`/${locale}/notifications/${item.id}/read`, {}, { preserveScroll: true });
     }
   };
