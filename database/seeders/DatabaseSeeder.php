@@ -16,17 +16,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            InitialDataSeeder::class,
+            AdminSeeder::class,
+            CategorySeeder::class,
+            SkillSeeder::class,
+            LanguageSeeder::class,
+            LocationSeeder::class,
+            UserSeeder::class,
         ]);
-
-        User::firstOrCreate(
-            ['email' => 'admin@careerx.com'],
-            [
-                'name' => 'System Administrator',
-                'password' => \Illuminate\Support\Facades\Hash::make('password'),
-                'role' => 'admin',
-                'status' => true,
-            ]
-        );
     }
 }
