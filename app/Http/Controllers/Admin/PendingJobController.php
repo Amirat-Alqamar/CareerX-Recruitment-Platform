@@ -16,7 +16,7 @@ class PendingJobController extends Controller
     {
         $pendingJobs = Job::where('status', 'pending')
             ->with([
-                'company:id,name,logo,website,industry',
+                'company:id,name,logo,website',
                 'category:id,name',
                 'city:id,name',
                 'country:id,name',

@@ -92,7 +92,7 @@ class ReportController extends Controller
                     'id' => $comp->id,
                     'name' => $comp->name,
                     'logo' => $comp->logo ? asset('storage/' . $comp->logo) : null,
-                    'industry' => $comp->industry ?? 'General',
+                    'company_size' => $comp->company_size ?? 'General',
                     'jobs_count' => $comp->jobs_count,
                     'applications_count' => $compApps,
                 ];
