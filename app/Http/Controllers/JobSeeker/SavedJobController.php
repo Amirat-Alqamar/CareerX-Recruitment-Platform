@@ -25,10 +25,12 @@ class SavedJobController extends Controller
         ->get();
 
         $resumes = $user->profile ? $user->profile->resumes()->latest()->get() : [];
+        $appliedJobIds = $user->profile ? $user->profile->applications()->pluck('job_post_id')->toArray() : [];
 
         return Inertia::render('Seeker/SavedJobs', [
             'savedJobs' => $savedJobs,
             'resumes' => $resumes,
+            'appliedJobIds' => $appliedJobIds,
         ]);
     }
 

@@ -19,6 +19,7 @@ import CertificationModal from '@/Components/Dashboard/Seeker/Profile/Modals/Cer
 import ResumeModal from '@/Components/Dashboard/Seeker/Profile/Modals/ResumeModal';
 import EditProfileModal from '@/Components/Dashboard/Seeker/Profile/Modals/EditProfileModal';
 import PortfolioModal from '@/Components/Dashboard/Seeker/Profile/Modals/PortfolioModal';
+import TwoFactorModal from '@/Components/Dashboard/Common/TwoFactorModal';
 
 import useTranslation from '@/hooks/useTranslation';
 import { CheckCircle2, AlertCircle, X } from 'lucide-react';
@@ -149,6 +150,10 @@ export default function Profile({
           onOpenPortfolio={() => {
             setSelectedItem(null);
             setActiveModal('portfolio');
+          }}
+          onOpen2FA={() => {
+            setSelectedItem(null);
+            setActiveModal('2fa');
           }}
         />
 
@@ -354,6 +359,11 @@ export default function Profile({
         header={profileData?.header}
         countries={countries}
         cities={cities}
+      />
+
+      <TwoFactorModal
+        isOpen={activeModal === '2fa'}
+        onClose={closeModal}
       />
     </DashboardLayout>
   );

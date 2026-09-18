@@ -46,7 +46,7 @@ export default function SidebarProfile({ user, isCollapsed = false }) {
         {initials}
       </div>
       <div className="overflow-hidden flex-1">
-        <h4 className="font-bold text-slate-900 text-sm truncate">{name}</h4>
+        <h4 className="font-bold text-slate-900 text-sm truncate">{__(name)}</h4>
         <p className="text-xs text-slate-400 font-medium truncate">
           {headline}
         </p>

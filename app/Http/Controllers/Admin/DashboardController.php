@@ -31,7 +31,7 @@ class DashboardController extends Controller
         $closedJobs = Job::where('status', 'closed')->count();
 
         $totalApplications = JobApplication::count();
-        $hiredApplications = JobApplication::where('status', 'hired')->count();
+        $hiredApplications = JobApplication::whereIn('status', ['interview_success', 'accepted'])->count();
         $hiringRate = $totalApplications > 0 ? round(($hiredApplications / $totalApplications) * 100, 1) : 0;
 
         // Pending job approvals queue (max 5 for quick action)

@@ -100,13 +100,12 @@ class ReportController extends Controller
 
         // 6. Application Status Breakdown
         $applicationsByStatus = [
-            'applied'     => JobApplication::where('status', 'applied')->count(),
-            'pending'     => JobApplication::where('status', 'pending')->count(),
-            'reviewed'    => JobApplication::where('status', 'reviewed')->count(),
-            'shortlisted' => JobApplication::where('status', 'shortlisted')->count(),
-            'interview'   => JobApplication::where('status', 'interview')->count(),
-            'hired'       => JobApplication::where('status', 'hired')->count(),
-            'rejected'    => JobApplication::where('status', 'rejected')->count(),
+            'applied'           => JobApplication::whereIn('status', ['applied', 'pending'])->count(),
+            'reviewed'          => JobApplication::where('status', 'reviewed')->count(),
+            'interview'         => JobApplication::whereIn('status', ['interview', 'accepted'])->count(),
+            'interview_success' => JobApplication::where('status', 'interview_success')->count(),
+            'interview_failed'  => JobApplication::where('status', 'interview_failed')->count(),
+            'rejected'          => JobApplication::where('status', 'rejected')->count(),
         ];
 
         // 7. Seeker Profiles Breakdown

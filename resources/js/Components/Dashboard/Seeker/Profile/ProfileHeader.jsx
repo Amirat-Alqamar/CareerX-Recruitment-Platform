@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { usePage, router } from '@inertiajs/react';
-import { Camera, Download, Pencil, CheckCircle2, MapPin, Mail, Globe, Code2, Trash2 } from 'lucide-react';
+import { usePage, router, Link } from '@inertiajs/react';
+import { Camera, Download, Pencil, CheckCircle2, MapPin, Mail, Globe, Code2, Trash2, ShieldCheck } from 'lucide-react';
 import useTranslation from '@/hooks/useTranslation';
 
 export default function ProfileHeader({
@@ -8,6 +8,7 @@ export default function ProfileHeader({
   onEditProfile,
   onManageResumes,
   onOpenPortfolio,
+  onOpen2FA,
   activeTab = 'Profile',
   onTabChange,
 }) {
@@ -273,6 +274,18 @@ export default function ProfileHeader({
               >
                 <Code2 className="w-4 h-4" />
               </button>
+
+              <Link
+                href={`/${locale}/2fa`}
+                className={`p-2.5 border rounded-xl transition-colors cursor-pointer shadow-xs inline-flex items-center justify-center ${
+                  auth?.user?.two_factor_enabled
+                    ? 'border-teal-200 bg-teal-50/80 text-[#008A7B] hover:bg-teal-100'
+                    : 'border-slate-200 text-slate-500 hover:text-[#008A7B] hover:border-[#008A7B]/40 hover:bg-slate-50'
+                }`}
+                title={auth?.user?.two_factor_enabled ? __('2FA Security (Active)') : __('Two-Factor Authentication')}
+              >
+                <ShieldCheck className="w-4 h-4" />
+              </Link>
 
               <button
                 type="button"

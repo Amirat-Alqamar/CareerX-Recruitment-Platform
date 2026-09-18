@@ -27,6 +27,8 @@ export const seekerNavigation = [
     items: [
       { label: 'Dashboard', path: '/seeker/dashboard', isBlade: false, icon: LayoutDashboard },
       { label: 'My Profile', path: '/seeker/profile', isBlade: false, icon: User },
+      { label: 'Notifications', path: '/notifications', isBlade: false, icon: BellRing },
+      { label: 'Two-Factor Auth', path: '/2fa', isBlade: false, icon: ShieldCheck },
     ],
   },
   {
@@ -45,6 +47,8 @@ export const employerNavigation = [
     items: [
       { label: 'Dashboard', path: '/employer/dashboard', isBlade: false, icon: LayoutDashboard },
       { label: 'Company Profile', path: '/employer/company', isBlade: false, icon: Building2 },
+      { label: 'Notifications', path: '/notifications', isBlade: false, icon: BellRing },
+      { label: 'Two-Factor Auth', path: '/2fa', isBlade: false, icon: ShieldCheck },
     ],
   },
   {
@@ -63,6 +67,8 @@ export const adminNavigation = [
     items: [
       { label: 'Dashboard', path: '/admin/dashboard', isBlade: false, icon: LayoutDashboard },
       { label: 'Pending Approvals', path: '/admin/pending-jobs', isBlade: false, icon: ShieldCheck },
+      { label: 'Notifications', path: '/notifications', isBlade: false, icon: BellRing },
+      { label: 'Two-Factor Auth', path: '/2fa', isBlade: false, icon: ShieldCheck },
     ],
   },
   {

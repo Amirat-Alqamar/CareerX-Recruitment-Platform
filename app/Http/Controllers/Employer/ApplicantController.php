@@ -81,15 +81,13 @@ class ApplicantController extends Controller
 
         // Application status counts for quick badges
         $counts = [
-            'total'       => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->count(),
-            'applied'     => $appliedCount,
-            'pending'     => $appliedCount,
-            'reviewed'    => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'reviewed')->count(),
-            'shortlisted' => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'shortlisted')->count(),
-            'interview'   => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'interview')->count(),
-            'accepted'    => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'accepted')->count(),
-            'rejected'    => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'rejected')->count(),
-            'hired'       => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'hired')->count(),
+            'total'             => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->count(),
+            'applied'           => $appliedCount,
+            'reviewed'          => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'reviewed')->count(),
+            'interview'         => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->whereIn('status', ['interview', 'accepted'])->count(),
+            'interview_success' => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'interview_success')->count(),
+            'interview_failed'  => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'interview_failed')->count(),
+            'rejected'          => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->where('status', 'rejected')->count(),
         ];
 
         return Inertia::render('Employer/Applicants', [
@@ -183,7 +181,7 @@ class ApplicantController extends Controller
         $this->authorizeCompanyApplication($application);
 
         $validated = $request->validate([
-            'interview_date'  => ['required', 'date'],
+            'interview_date'  => ['required', 'date', 'after_or_equal:now'],
             'interview_notes' => ['nullable', 'string', 'max:2000'],
             'custom_link'     => ['nullable', 'string', 'max:500'],
         ]);
@@ -205,6 +203,8 @@ class ApplicantController extends Controller
             $meetingLink = 'https://meet.google.com/new';
         }
 
+        $isReschedule = !empty($application->interview_date);
+
         $application->update([
             'interview_date'  => $validated['interview_date'],
             'meeting_link'    => $meetingLink,
@@ -214,10 +214,13 @@ class ApplicantController extends Controller
 
         $candidateUser = $application->profile?->user;
         if ($candidateUser) {
-            $candidateUser->notify(new \App\Notifications\ApplicationStatusChangedNotification($application, 'interview'));
+            $candidateUser->notify(new \App\Notifications\ApplicationStatusChangedNotification(
+                $application,
+                $isReschedule ? 'interview_rescheduled' : 'interview'
+            ));
         }
 
-        return redirect()->back()->with('success', __('Interview scheduled successfully.'));
+        return redirect()->back()->with('success', $isReschedule ? __('Interview rescheduled successfully.') : __('Interview scheduled successfully.'));
     }
 
     /**
@@ -228,14 +231,16 @@ class ApplicantController extends Controller
         $this->authorizeCompanyApplication($application);
 
         $validated = $request->validate([
-            'status' => ['required', 'in:applied,pending,reviewed,shortlisted,interview,accepted,rejected,hired'],
+            'status' => ['required', 'in:applied,pending,reviewed,accepted,rejected,interview,interview_success,interview_failed'],
         ]);
 
         $status = $validated['status'] === 'pending' ? 'applied' : $validated['status'];
+        $oldStatus = $application->status;
         $application->update(['status' => $status]);
 
         $candidateUser = $application->profile?->user;
-        if ($candidateUser) {
+        // Avoid sending notification if status did not change or if status is interview (which will be sent by scheduleInterview with complete date/time)
+        if ($candidateUser && $application->wasChanged('status') && $status !== 'interview') {
             $candidateUser->notify(new \App\Notifications\ApplicationStatusChangedNotification($application, 'status'));
         }
 
