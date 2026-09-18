@@ -89,7 +89,7 @@ export default function Navbar() {
             <div className="flex items-center gap-3">
               <Link
                 href={auth.user.role === 'employer' ? `/${locale}/employer/dashboard` : `/${locale}/seeker/dashboard`}
-                className="flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-bold text-white bg-[#008A7B] rounded-xl hover:bg-[#007366] transition-colors shadow-sm"
+                className="flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-bold text-white bg-primary rounded-xl hover:bg-primary-hover transition-colors shadow-sm"
               >
                 <LayoutDashboard className="w-4 h-4" />
                 <span>{__('Dashboard')}</span>
@@ -114,7 +114,7 @@ export default function Navbar() {
               </Link>
               <Link
                 href={`/${locale}/register`}
-                className="px-4 py-2 text-xs sm:text-sm font-bold text-white bg-[#008A7B] rounded-xl hover:bg-[#007366] transition-colors shadow-sm"
+                className="px-4 py-2 text-xs sm:text-sm font-bold text-white bg-primary rounded-xl hover:bg-[#007366] transition-colors shadow-sm"
               >
                 {__('Register')}
               </Link>

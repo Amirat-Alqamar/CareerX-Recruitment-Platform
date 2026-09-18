@@ -6,43 +6,55 @@ export default function StatusCard({
   value,
   icon: Icon,
   variant = 'default',
-  badgeText,
 }) {
   const variants = {
     default: {
-      bg: 'bg-emerald-50/60 border-emerald-100',
-      iconBg: 'bg-[#014D55] text-white',
+      iconBg: 'bg-[#014D55]/10 text-[#014D55]',
+      accentColor: 'text-[#014D55]',
     },
     purple: {
-      bg: 'bg-purple-50/60 border-purple-100',
-      iconBg: 'bg-purple-600 text-white',
+      iconBg: 'bg-purple-100 text-purple-600',
+      accentColor: 'text-purple-600',
     },
     warning: {
-      bg: 'bg-amber-50/60 border-amber-100',
-      iconBg: 'bg-amber-500 text-white',
+      iconBg: 'bg-amber-100 text-amber-600',
+      accentColor: 'text-amber-600',
     },
     success: {
-      bg: 'bg-teal-50/60 border-teal-100',
-      iconBg: 'bg-[#00BBA7] text-white',
+      iconBg: 'bg-[#00BBA7]/15 text-[#008A7B]',
+      accentColor: 'text-[#008A7B]',
     },
   };
 
   const currentVariant = variants[variant] || variants.default;
 
   return (
-    <div className={`p-6 rounded-2xl border flex flex-col justify-between h-32 transition-all duration-200 hover:shadow-sm ${currentVariant.bg}`}>
+    <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between h-36 transition-all duration-300 hover:shadow-md hover:border-slate-200 hover:-translate-y-0.5 group">
+      {/* Top Bar: Icon & Trend */}
       <div className="flex items-center justify-between">
+
+        <div className="text-3xl font-black text-slate-900 tracking-tight">
+        {value}
+        </div>
+
         {Icon && (
-          <div className={`w-9 h-9 rounded-xl ${currentVariant.iconBg} flex items-center justify-center shrink-0`}>
-            <Icon className="w-4 h-4" />
+          <div className={`w-10 h-10 rounded-xl ${currentVariant.iconBg} flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-105`}>
+            <Icon className="w-5 h-5" />
           </div>
         )}
-        <TrendingUp className="w-4 h-4 text-slate-400" />
       </div>
 
-      <div>
-        <div className="text-2xl font-black text-slate-900 tracking-tight">{value}</div>
-        <div className="text-xs font-semibold text-slate-500 mt-0.5">{title}</div>
+      {/* Content */}
+      <div className="flex items-center justify-between">
+
+        <div className="text-xs font-semibold text-slate-500">
+          {title}
+        </div>
+
+        <div className="p-1.5 rounded-lg bg-slate-50 text-slate-400 group-hover:text-slate-600 group-hover:bg-slate-100 transition-colors">
+          <TrendingUp className="w-3.5 h-3.5" />
+        </div>
+        
       </div>
     </div>
   );

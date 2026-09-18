@@ -27,32 +27,11 @@ export default function HeroSection() {
               {__("CareerX connects top professionals with world-class companies. Whether you're launching a career or scaling a team, we make hiring simple, fast, and effective.")}
             </p>
 
-            {/* Search Box Card */}
-            <div className="bg-white p-2.5 sm:p-3 rounded-2xl shadow-xl border border-gray-100 flex flex-col sm:flex-row items-center gap-3">
-              <div className="flex items-center gap-3 px-3 w-full sm:w-1/2">
-                <Search className="w-5 h-5 text-gray-400 shrink-0" />
-                <input
-                  type="text"
-                  placeholder={__('Job title, skill, or keyword')}
-                  className="w-full text-sm border-none focus:outline-none focus:ring-0 text-gray-800 placeholder-gray-400"
-                />
-              </div>
+            {/* Search Button */}
 
-              <div className="hidden sm:block w-px h-8 bg-gray-200"></div>
-
-              <div className="flex items-center gap-3 px-3 w-full sm:w-1/2">
-                <MapPin className="w-5 h-5 text-gray-400 shrink-0" />
-                <input
-                  type="text"
-                  placeholder={__('City, state, or remote')}
-                  className="w-full text-sm border-none focus:outline-none focus:ring-0 text-gray-800 placeholder-gray-400"
-                />
-              </div>
-
-              <button className="w-full sm:w-auto px-7 py-3.5 bg-primary hover:bg-primary-hover text-white font-semibold text-sm rounded-xl transition-all shadow-md hover:shadow-lg shrink-0 cursor-pointer">
+            <button className="w-full sm:w-auto px-7 py-3.5 bg-primary hover:bg-primary-hover text-white font-semibold text-sm rounded-xl transition-all shadow-md hover:shadow-lg shrink-0 cursor-pointer">
                 {__('Search Jobs')}
               </button>
-            </div>
 
             {/* Popular Searches */}
             <div className="flex flex-wrap items-center gap-2 pt-2">
@@ -91,15 +70,16 @@ export default function HeroSection() {
             </div>
 
             {/* Floating Badge 2 - New Jobs */}
-            <div className="absolute -bottom-6 -left-6 rtl:-left-auto rtl:-right-6 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3.5 hidden sm:flex">
-              <div className="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center shadow-md">
+            <div className="absolute -bottom-6 start-6 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3.5 hidden sm:flex z-10">
+            <div className="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center shadow-md shrink-0">
                 <Briefcase className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-gray-900">{__('2,483 New Jobs')}</p>
-                <p className="text-xs text-gray-500">{__('Posted this week')}</p>
-              </div>
             </div>
+            <div>
+                <p className="text-sm font-bold text-gray-900 leading-snug">{__('2,483 New Jobs')}</p>
+                <p className="text-xs text-gray-500 leading-none mt-1">{__('Posted this week')}</p>
+            </div>
+            </div>
+
           </div>
 
         </div>

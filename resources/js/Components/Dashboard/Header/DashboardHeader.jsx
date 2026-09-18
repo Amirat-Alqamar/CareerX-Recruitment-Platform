@@ -49,7 +49,7 @@ export default function DashboardHeader({ onToggleSidebar }) {
         <button
           type="button"
           onClick={onToggleSidebar}
-          className="lg:hidden p-2 rounded-xl text-slate-600 hover:text-[#008A7B] hover:bg-slate-100 transition-colors cursor-pointer"
+          className="lg:hidden p-2 rounded-xl text-slate-600 hover:text-primary hover:bg-slate-100 transition-colors cursor-pointer"
           title={__('Toggle Navigation Menu')}
         >
           <Menu className="w-5 h-5" />
@@ -73,7 +73,7 @@ export default function DashboardHeader({ onToggleSidebar }) {
             className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-slate-700 bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
             title={__('Language')}
           >
-            <Globe className="w-3.5 h-3.5 text-[#008A7B]" />
+            <Globe className="w-3.5 h-3.5 text-primary" />
             <span className="uppercase">{locale}</span>
             <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${langDropdownOpen ? 'rotate-180' : ''}`} />
           </button>
@@ -104,17 +104,17 @@ export default function DashboardHeader({ onToggleSidebar }) {
 
         {/* Direct Notifications Link with Counter Badge */}
         <Link
-          href={`/${locale}/notifications`}
-          className="relative p-2 text-slate-500 hover:text-[#008A7B] hover:bg-slate-100 rounded-full transition-colors focus:outline-none"
-          aria-label={__('Notifications')}
-          title={__('Notifications')}
+        href={`/${locale}/notifications`}
+        className="relative p-2 text-slate-500 hover:text-[#008A7B] hover:bg-slate-100 rounded-full transition-colors focus:outline-none"
+        aria-label={__('Notifications')}
+        title={__('Notifications')}
         >
-          <Bell className="w-5 h-5 stroke-[1.75]" />
-          {unreadCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 rtl:-right-auto rtl:-left-0.5 min-w-[18px] h-[18px] px-1 bg-rose-500 text-white text-[10px] font-black rounded-full flex items-center justify-center ring-2 ring-white shadow-xs">
-              {unreadCount > 99 ? '99+' : unreadCount}
+        <Bell className="w-5 h-5 stroke-[1.75]" />
+        {unreadCount > 0 && (
+            <span className="absolute -top-0.5 end-0.5 min-w-[18px] h-[18px] px-1 bg-rose-500 text-white text-[10px] font-black rounded-full flex items-center justify-center ring-2 ring-white shadow-xs pointer-events-none">
+            {unreadCount > 99 ? '99+' : unreadCount}
             </span>
-          )}
+        )}
         </Link>
 
         {/* User Avatar Circle */}

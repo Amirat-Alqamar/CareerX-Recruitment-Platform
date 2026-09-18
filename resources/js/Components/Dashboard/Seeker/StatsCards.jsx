@@ -7,7 +7,7 @@ export default function StatsCards({ statsData }) {
   const { __ } = useTranslation();
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       <StatusCard
         title={__('Applied')}
         value={statsData?.applied ?? 0}
@@ -35,4 +35,3 @@ export default function StatsCards({ statsData }) {
     </div>
   );
 }
-

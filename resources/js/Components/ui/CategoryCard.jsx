@@ -7,7 +7,7 @@ export default function CategoryCard({ category }) {
   const IconComponent = category.icon;
 
   return (
-    <Link
+    <div
       href={`/jobs?category=${category.id}`}
       className={`${category.cardBg} p-6 rounded-2xl flex items-center gap-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-md cursor-pointer border border-transparent hover:border-gray-200/60 group`}
     >
@@ -25,6 +25,6 @@ export default function CategoryCard({ category }) {
           {category.rolesCount} {__('open roles')}
         </p>
       </div>
-    </Link>
+    </div>
   );
 }

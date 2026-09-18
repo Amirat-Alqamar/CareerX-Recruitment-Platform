@@ -14,7 +14,7 @@ export default function WelcomeBanner({ userName = '', profileCompletion = 20, s
     <div className="space-y-6 mb-8">
       <div>
         <h1 className="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-2">
-          {__('Good morning, :name!', { name: displayName })} 👋
+          {__('Welcome, :name!', { name: displayName })}
         </h1>
         <p className="text-slate-500 text-sm mt-1">
           {appliedCount > 0
@@ -62,7 +62,7 @@ export default function WelcomeBanner({ userName = '', profileCompletion = 20, s
           </ul>
 
           <a
-            href={`/${locale}/job-seeker/profile/edit`}
+            href={`/${locale}/job-seeker/profile`}
             className="px-5 py-2.5 bg-white hover:bg-slate-50 text-[#014D55] font-bold text-xs rounded-xl transition-all shrink-0 cursor-pointer inline-block text-center"
           >
             {__('Complete Profile')}

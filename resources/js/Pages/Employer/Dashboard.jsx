@@ -105,7 +105,7 @@ export default function EmployerDashboard({
               )}
               <div>
                 <h1 className="text-2xl sm:text-3xl font-black tracking-tight">
-                  {__('Welcome')}, {company?.name || __('Company')}! 👋
+                  {__('Welcome')}, {company?.name || __('Company')}! 
                 </h1>
                 <p className="text-emerald-100/90 text-sm font-medium">
                   {__('Manage your job openings and review candidate applications with ease.')}
