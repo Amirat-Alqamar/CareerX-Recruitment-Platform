@@ -21,9 +21,116 @@ import {
   FileText,
   FolderKanban,
   CheckCircle2,
+  XCircle,
+  Eye,
 } from 'lucide-react';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import useTranslation from '@/hooks/useTranslation';
+
+function ApplicationStepper({ status, meetingLink, __ }) {
+  let reviewState = 'current';
+  let interviewState = 'pending';
+
+  if (['accepted', 'interview', 'interview_success', 'interview_failed'].includes(status)) {
+    reviewState = 'done';
+  } else if (status === 'rejected') {
+    reviewState = 'rejected';
+  } else {
+    reviewState = 'current';
+  }
+
+  if (status === 'interview_success') {
+    interviewState = 'accepted';
+  } else if (status === 'interview_failed') {
+    interviewState = 'rejected';
+  } else if (status === 'interview' || status === 'accepted') {
+    interviewState = 'current';
+  } else if (status === 'rejected') {
+    interviewState = 'inactive';
+  } else {
+    interviewState = 'pending';
+  }
+
+  const steps = [
+    {
+      id: 'applied',
+      label: __('Applied'),
+      state: 'done',
+    },
+    {
+      id: 'review',
+      label: __('Review'),
+      state: reviewState,
+    },
+    {
+      id: 'interview',
+      label: __('Interview'),
+      state: interviewState,
+    },
+  ];
+
+  return (
+    <div className="pt-4 border-t border-slate-100 w-full">
+      <div className="grid grid-cols-3 gap-2 relative">
+        {steps.map((st, idx) => {
+          let circleBg = 'bg-slate-100 text-slate-400 border-slate-200';
+          let textColor = 'text-slate-400 font-medium';
+          let icon = idx + 1;
+
+          if (st.state === 'done') {
+            circleBg = 'bg-[#008A7B] text-white border-[#008A7B] shadow-xs';
+            textColor = 'text-[#008A7B] font-bold';
+            icon = '✓';
+          } else if (st.state === 'current') {
+            circleBg = 'bg-blue-600 text-white border-blue-600 ring-2 ring-blue-100 animate-pulse';
+            textColor = 'text-blue-700 font-bold';
+            icon = '●';
+          } else if (st.state === 'accepted') {
+            circleBg = 'bg-emerald-600 text-white border-emerald-600 shadow-xs';
+            textColor = 'text-emerald-700 font-bold';
+            icon = '✓';
+          } else if (st.state === 'rejected') {
+            circleBg = 'bg-rose-500 text-white border-rose-500 shadow-xs';
+            textColor = 'text-rose-600 font-bold';
+            icon = '✕';
+          } else if (st.state === 'inactive') {
+            circleBg = 'bg-slate-100 text-slate-300 border-dashed border-slate-300';
+            textColor = 'text-slate-300 line-through';
+            icon = '-';
+          }
+
+          return (
+            <div key={st.id} className="flex flex-col items-center text-center relative group/step">
+              {idx > 0 && (
+                <div
+                  className={`absolute top-3.5 right-[50%] rtl:right-auto rtl:left-[50%] w-full h-[2px] -z-0 ${
+                    st.state === 'done' || st.state === 'accepted'
+                      ? 'bg-[#008A7B]'
+                      : st.state === 'rejected'
+                      ? 'bg-rose-300'
+                      : st.state === 'inactive'
+                      ? 'bg-slate-200 border-t border-dashed border-slate-300'
+                      : 'bg-slate-200'
+                  }`}
+                />
+              )}
+
+              <div
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-black border transition-all z-10 ${circleBg}`}
+              >
+                {icon}
+              </div>
+
+              <span className={`text-[11px] mt-1.5 transition-colors truncate max-w-full px-1 ${textColor}`}>
+                {st.label}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 export default function ApplicantDetail({ application }) {
   const { __, locale, isRtl } = useTranslation();
@@ -44,8 +151,43 @@ export default function ApplicantDetail({ application }) {
   const [customLink, setCustomLink] = useState(application.meeting_link || '');
   const [schedulingInterview, setSchedulingInterview] = useState(false);
 
+  React.useEffect(() => {
+    if (application.status) {
+      setCurrentStatus(application.status);
+    }
+    setInterviewDate(application.interview_date ? String(application.interview_date).replace(' ', 'T') : '');
+    setCustomLink(application.meeting_link || '');
+    setInterviewNotes(application.interview_notes || '');
+  }, [application]);
+
   const candidate = application.candidate || {};
   const job = application.job || {};
+
+  const getMinDateTime = () => {
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, '0');
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  };
+
+  const formatInterviewDate = (dateStr) => {
+    if (!dateStr) return '';
+    const clean = String(dateStr).replace(' ', 'T');
+    const d = new Date(clean);
+    return isNaN(d.getTime()) ? dateStr : d.toLocaleString([], {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const handleOpenInterviewModal = () => {
+    setInterviewDate(application.interview_date ? String(application.interview_date).replace(' ', 'T') : '');
+    setCustomLink(application.meeting_link || '');
+    setInterviewNotes(application.interview_notes || '');
+    setShowInterviewModal(true);
+  };
 
   const handleStatusChange = (newStatus) => {
     setCurrentStatus(newStatus);
@@ -74,6 +216,7 @@ export default function ApplicantDetail({ application }) {
         preserveScroll: true,
         onSuccess: () => {
           setShowInterviewModal(false);
+          setCurrentStatus('interview');
         },
         onFinish: () => setSchedulingInterview(false),
       }
@@ -87,15 +230,62 @@ export default function ApplicantDetail({ application }) {
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
+  // 5 clear status options for Employer dropdown
   const statusOptions = [
-    { value: 'applied', label: __('Applied') },
-    { value: 'reviewed', label: __('Reviewed') },
-    { value: 'shortlisted', label: __('Shortlisted') },
-    { value: 'interview', label: __('Interview') },
-    { value: 'accepted', label: __('Accepted') },
-    { value: 'hired', label: __('Hired') },
-    { value: 'rejected', label: __('Rejected') },
+    { value: 'reviewed', label: __('Review') },
+    { value: 'accepted', label: __('Accept') },
+    { value: 'rejected', label: __('Reject') },
+    { value: 'interview_success', label: __('Success Interview') },
+    { value: 'interview_failed', label: __('Failed Interview') },
   ];
+
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'interview_success':
+        return (
+          <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-black inline-flex items-center gap-1.5 border border-emerald-200">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <span>{__('Success Interview')}</span>
+          </span>
+        );
+      case 'interview_failed':
+        return (
+          <span className="px-3 py-1 rounded-full bg-rose-50 text-rose-700 text-xs font-black inline-flex items-center gap-1.5 border border-rose-200">
+            <XCircle className="w-3.5 h-3.5 text-rose-600" />
+            <span>{__('Failed Interview')}</span>
+          </span>
+        );
+      case 'accepted':
+      case 'interview':
+        return (
+          <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-black inline-flex items-center gap-1.5 border border-blue-200">
+            <Video className="w-3.5 h-3.5 text-blue-600" />
+            <span>{__('Interview')}</span>
+          </span>
+        );
+      case 'rejected':
+        return (
+          <span className="px-3 py-1 rounded-full bg-rose-50 text-rose-700 text-xs font-black inline-flex items-center gap-1.5 border border-rose-200">
+            <XCircle className="w-3.5 h-3.5 text-rose-600" />
+            <span>{__('Rejected')}</span>
+          </span>
+        );
+      case 'reviewed':
+        return (
+          <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-black inline-flex items-center gap-1.5 border border-blue-200">
+            <Eye className="w-3.5 h-3.5 text-blue-600" />
+            <span>{__('Review')}</span>
+          </span>
+        );
+      default:
+        return (
+          <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-black inline-flex items-center gap-1.5 border border-slate-200">
+            <Clock className="w-3.5 h-3.5 text-slate-500" />
+            <span>{__('Applied')}</span>
+          </span>
+        );
+    }
+  };
 
   return (
     <DashboardLayout userRole="employer">
@@ -118,46 +308,58 @@ export default function ApplicantDetail({ application }) {
         </div>
 
         {/* Position Applied & Quick Status Banner */}
-        <div className="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5">
-          <div>
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
-              {__('Position Applied For')}
-            </span>
-            <h2 className="text-xl font-black text-slate-900">{job.title}</h2>
-            <div className="flex items-center gap-3 text-xs text-slate-500 font-medium mt-1">
-              {job.job_type && <span>{job.job_type}</span>}
-              {job.work_type && <span>• {job.work_type}</span>}
+        <div className="bg-white rounded-3xl border border-slate-100 p-6 sm:p-7 shadow-sm space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <div>
+              <div className="flex items-center gap-2.5 mb-1.5 flex-wrap">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                  {__('Position Applied For')}
+                </span>
+                {getStatusBadge(currentStatus)}
+              </div>
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900">{job.title}</h2>
+              <div className="flex items-center gap-3 text-xs text-slate-500 font-medium mt-1">
+                {job.job_type && <span>{job.job_type}</span>}
+                {job.work_type && <span>• {job.work_type}</span>}
+              </div>
             </div>
-          </div>
 
-          {/* Status Select & Quick Actions */}
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-slate-600">{__('Status:')}</span>
-              <select
-                value={currentStatus}
-                disabled={updatingStatus}
-                onChange={(e) => handleStatusChange(e.target.value)}
-                className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-[#008A7B] cursor-pointer"
+            {/* Status Select & Quick Actions */}
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-2xl px-3 py-1.5">
+                <span className="text-xs font-bold text-slate-500">{__('Status:')}</span>
+                <select
+                  value={currentStatus === 'applied' || currentStatus === 'pending' ? 'reviewed' : currentStatus}
+                  disabled={updatingStatus}
+                  onChange={(e) => handleStatusChange(e.target.value)}
+                  className="bg-transparent border-0 py-1 text-xs font-black text-slate-800 focus:outline-none focus:ring-0 cursor-pointer"
+                >
+                  {statusOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Schedule Google Meet Interview Button */}
+              <button
+                type="button"
+                onClick={handleOpenInterviewModal}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white transition-all cursor-pointer shadow-sm hover:shadow"
               >
-                {statusOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
+                <Video className="w-4 h-4" />
+                <span>{application.meeting_link ? __('Reschedule Google Meet') : __('Schedule Google Meet Interview')}</span>
+              </button>
             </div>
-
-            {/* Schedule Google Meet Interview Button */}
-            <button
-              type="button"
-              onClick={() => setShowInterviewModal(true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white transition-all cursor-pointer shadow-sm hover:shadow"
-            >
-              <Video className="w-4 h-4" />
-              <span>{application.meeting_link ? __('Reschedule Google Meet') : __('Schedule Google Meet Interview')}</span>
-            </button>
           </div>
+
+          {/* 3-Stage Visual Application Stepper */}
+          <ApplicationStepper
+            status={currentStatus}
+            meetingLink={application.meeting_link}
+            __={__}
+          />
         </div>
 
         {/* Interview Scheduled Alert / Banner (If scheduled) */}
@@ -172,7 +374,7 @@ export default function ApplicantDetail({ application }) {
                   <span>📅 {__('Interview Scheduled')}</span>
                 </div>
                 <h4 className="text-sm sm:text-base font-black text-slate-900">
-                  {application.interview_date ? new Date(application.interview_date).toLocaleString() : __('Scheduled')}
+                  {formatInterviewDate(application.interview_date)}
                 </h4>
                 {application.interview_notes && (
                   <p className="text-xs text-slate-600 font-medium mt-0.5">
@@ -463,6 +665,7 @@ export default function ApplicantDetail({ application }) {
                 <input
                   type="datetime-local"
                   required
+                  min={getMinDateTime()}
                   value={interviewDate}
                   onChange={(e) => setInterviewDate(e.target.value)}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs text-slate-800 focus:outline-none focus:border-[#008A7B] transition-all"

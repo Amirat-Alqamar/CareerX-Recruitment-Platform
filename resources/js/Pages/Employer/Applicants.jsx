@@ -80,30 +80,26 @@ export default function Applicants({
 
   const getStatusBadge = (st) => {
     switch (st) {
-      case 'hired':
-        return {
-          bg: 'bg-emerald-100 text-emerald-800 border-emerald-300',
-          label: __('Hired'),
-        };
-      case 'accepted':
+      case 'interview_success':
         return {
           bg: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-          label: __('Accepted'),
+          label: __('Success Interview'),
         };
+      case 'interview_failed':
+        return {
+          bg: 'bg-rose-50 text-rose-700 border-rose-200',
+          label: __('Failed Interview'),
+        };
+      case 'accepted':
       case 'interview':
         return {
-          bg: 'bg-blue-100 text-blue-800 border-blue-300 font-bold',
-          label: __('Interview Scheduled'),
-        };
-      case 'shortlisted':
-        return {
-          bg: 'bg-purple-50 text-purple-700 border-purple-200',
-          label: __('Shortlisted'),
+          bg: 'bg-blue-50 text-blue-700 border-blue-200',
+          label: __('Interview'),
         };
       case 'reviewed':
         return {
           bg: 'bg-blue-50 text-blue-700 border-blue-200',
-          label: __('Reviewed'),
+          label: __('Review'),
         };
       case 'rejected':
         return {
@@ -112,7 +108,7 @@ export default function Applicants({
         };
       default:
         return {
-          bg: 'bg-amber-50 text-amber-700 border-amber-200',
+          bg: 'bg-slate-100 text-slate-700 border-slate-200',
           label: __('Applied'),
         };
     }
@@ -121,11 +117,10 @@ export default function Applicants({
   const statusPills = [
     { key: '', label: __('All Candidates'), count: counts.total || 0 },
     { key: 'applied', label: __('Applied'), count: counts.applied || 0 },
-    { key: 'reviewed', label: __('Reviewed'), count: counts.reviewed || 0 },
-    { key: 'shortlisted', label: __('Shortlisted'), count: counts.shortlisted || 0 },
+    { key: 'reviewed', label: __('Review'), count: counts.reviewed || 0 },
     { key: 'interview', label: __('Interview'), count: counts.interview || 0 },
-    { key: 'accepted', label: __('Accepted'), count: counts.accepted || 0 },
-    { key: 'hired', label: __('Hired'), count: counts.hired || 0 },
+    { key: 'interview_success', label: __('Success Interview'), count: counts.interview_success || 0 },
+    { key: 'interview_failed', label: __('Failed Interview'), count: counts.interview_failed || 0 },
     { key: 'rejected', label: __('Rejected'), count: counts.rejected || 0 },
   ];
 

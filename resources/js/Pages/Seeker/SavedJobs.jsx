@@ -20,7 +20,7 @@ import {
   Calendar,
 } from 'lucide-react';
 
-export default function SavedJobs({ savedJobs = [], resumes = [] }) {
+export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds = [] }) {
   const { __, locale } = useTranslation();
   const { flash } = usePage().props;
 
@@ -222,14 +222,25 @@ export default function SavedJobs({ savedJobs = [], resumes = [] }) {
 
                   {/* Footer Actions */}
                   <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedJob(job)}
-                      className="flex-1 py-2.5 rounded-xl bg-[#014D55] hover:bg-[#01383E] text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-sm"
-                    >
-                      <Send className="w-3.5 h-3.5" />
-                      <span>{__('Apply Now')}</span>
-                    </button>
+                    {appliedJobIds.includes(job.id) ? (
+                      <button
+                        type="button"
+                        onClick={() => setSelectedJob(job)}
+                        className="flex-1 py-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#008A7B] border border-emerald-200 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#008A7B]" />
+                        <span>{__('Already Applied')}</span>
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setSelectedJob(job)}
+                        className="flex-1 py-2.5 rounded-xl bg-[#014D55] hover:bg-[#01383E] text-white font-bold text-xs flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-sm"
+                      >
+                        <Send className="w-3.5 h-3.5" />
+                        <span>{__('Apply Now')}</span>
+                      </button>
+                    )}
 
                     <Link
                       href={`/${locale}/job-seeker/jobs?job_id=${job.id}`}
@@ -271,82 +282,109 @@ export default function SavedJobs({ savedJobs = [], resumes = [] }) {
       <ModalWrapper
         isOpen={Boolean(selectedJob)}
         onClose={() => setSelectedJob(null)}
-        title={selectedJob ? `${__('Apply for')}: ${selectedJob.title}` : ''}
+        title={selectedJob ? (appliedJobIds.includes(selectedJob.id) ? selectedJob.title : `${__('Apply for')}: ${selectedJob.title}`) : ''}
         maxWidth="max-w-xl"
       >
         {selectedJob && (
-          <form onSubmit={handleApply} className="space-y-4">
-            <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
-              <h4 className="font-extrabold text-sm text-slate-900">{selectedJob.title}</h4>
-              <p className="text-xs text-slate-600 flex items-center gap-2">
-                <Building2 className="w-3.5 h-3.5 text-[#008A7B]" />
-                <span>{selectedJob.company?.name || __('CareerX Partner')}</span>
-              </p>
-            </div>
+          appliedJobIds.includes(selectedJob.id) ? (
+            <div className="space-y-4">
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
+                <h4 className="font-extrabold text-sm text-slate-900">{selectedJob.title}</h4>
+                <p className="text-xs text-slate-600 flex items-center gap-2">
+                  <Building2 className="w-3.5 h-3.5 text-[#008A7B]" />
+                  <span>{selectedJob.company?.name || __('CareerX Partner')}</span>
+                </p>
+              </div>
 
-            {/* Resume Selection */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-600 block">
-                {__('Select Resume / CV')}
-              </label>
-              {resumes.length > 0 ? (
-                <select
-                  value={applyResumeId}
-                  onChange={(e) => setApplyResumeId(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#008A7B] focus:border-transparent transition-all bg-white"
+              <div className="p-4 bg-emerald-50 text-[#008A7B] border border-emerald-200 rounded-2xl flex items-center gap-3 font-bold text-sm">
+                <CheckCircle2 className="w-5 h-5 shrink-0" />
+                <span>{__('You have already applied for this job position.')}</span>
+              </div>
+
+              <div className="flex items-center justify-end pt-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedJob(null)}
+                  className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-colors cursor-pointer"
                 >
-                  {resumes.map((r) => (
-                    <option key={r.id} value={r.id}>
-                      {r.title || __('Resume')} {r.is_primary ? `(${__('Primary')})` : ''}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <div className="text-xs text-amber-600 bg-amber-50 p-3 rounded-xl flex items-center justify-between">
-                  <span>{__('You do not have any uploaded resumes yet.')}</span>
-                  <Link
-                    href={`/${locale}/seeker/profile?modal=resumes`}
-                    className="font-bold underline text-[#008A7B]"
+                  {__('Close')}
+                </button>
+              </div>
+            </div>
+          ) : (
+            <form onSubmit={handleApply} className="space-y-4">
+              <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-1">
+                <h4 className="font-extrabold text-sm text-slate-900">{selectedJob.title}</h4>
+                <p className="text-xs text-slate-600 flex items-center gap-2">
+                  <Building2 className="w-3.5 h-3.5 text-[#008A7B]" />
+                  <span>{selectedJob.company?.name || __('CareerX Partner')}</span>
+                </p>
+              </div>
+
+              {/* Resume Selection */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-600 block">
+                  {__('Select Resume / CV')}
+                </label>
+                {resumes.length > 0 ? (
+                  <select
+                    value={applyResumeId}
+                    onChange={(e) => setApplyResumeId(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#008A7B] focus:border-transparent transition-all bg-white"
                   >
-                    {__('Upload CV')}
-                  </Link>
-                </div>
-              )}
-            </div>
+                    {resumes.map((r) => (
+                      <option key={r.id} value={r.id}>
+                        {r.title || __('Resume')} {r.is_primary ? `(${__('Primary')})` : ''}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <div className="text-xs text-amber-600 bg-amber-50 p-3 rounded-xl flex items-center justify-between">
+                    <span>{__('You do not have any uploaded resumes yet.')}</span>
+                    <Link
+                      href={`/${locale}/seeker/profile?modal=resumes`}
+                      className="font-bold underline text-[#008A7B]"
+                    >
+                      {__('Upload CV')}
+                    </Link>
+                  </div>
+                )}
+              </div>
 
-            {/* Cover Letter */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-600 block">
-                {__('Cover Letter (Optional)')}
-              </label>
-              <textarea
-                rows={3}
-                value={applyCoverLetter}
-                onChange={(e) => setApplyCoverLetter(e.target.value)}
-                placeholder={__('Write a short note explaining why you are a great fit...')}
-                className="w-full p-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#008A7B] focus:border-transparent transition-all"
-              />
-            </div>
+              {/* Cover Letter */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-600 block">
+                  {__('Cover Letter (Optional)')}
+                </label>
+                <textarea
+                  rows={3}
+                  value={applyCoverLetter}
+                  onChange={(e) => setApplyCoverLetter(e.target.value)}
+                  placeholder={__('Write a short note explaining why you are a great fit...')}
+                  className="w-full p-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#008A7B] focus:border-transparent transition-all"
+                />
+              </div>
 
-            {/* Actions */}
-            <div className="flex items-center justify-end gap-3 pt-2">
-              <button
-                type="button"
-                onClick={() => setSelectedJob(null)}
-                className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-xs transition-colors cursor-pointer"
-              >
-                {__('Cancel')}
-              </button>
-              <button
-                type="submit"
-                disabled={applying}
-                className="px-6 py-2.5 rounded-xl bg-[#008A7B] hover:bg-[#007467] text-white font-extrabold text-xs transition-all cursor-pointer shadow-md disabled:opacity-50 flex items-center gap-2"
-              >
-                <Send className="w-3.5 h-3.5" />
-                <span>{applying ? __('Submitting...') : __('Submit Application')}</span>
-              </button>
-            </div>
-          </form>
+              {/* Actions */}
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setSelectedJob(null)}
+                  className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold text-xs transition-colors cursor-pointer"
+                >
+                  {__('Cancel')}
+                </button>
+                <button
+                  type="submit"
+                  disabled={applying}
+                  className="px-6 py-2.5 rounded-xl bg-[#008A7B] hover:bg-[#007467] text-white font-extrabold text-xs transition-all cursor-pointer shadow-md disabled:opacity-50 flex items-center gap-2"
+                >
+                  <Send className="w-3.5 h-3.5" />
+                  <span>{applying ? __('Submitting...') : __('Submit Application')}</span>
+                </button>
+              </div>
+            </form>
+          )
         )}
       </ModalWrapper>
     </DashboardLayout>

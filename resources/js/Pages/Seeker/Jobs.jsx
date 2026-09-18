@@ -445,9 +445,20 @@ export default function Jobs({
                           e.stopPropagation();
                           setSelectedJob(job);
                         }}
-                        className="px-4 py-2.5 rounded-xl bg-[#014D55] hover:bg-[#01383E] text-white font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+                        className={`px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm ${
+                          appliedJobIds.includes(job.id)
+                            ? 'bg-emerald-50 text-[#008A7B] border border-emerald-200 hover:bg-emerald-100'
+                            : 'bg-[#014D55] hover:bg-[#01383E] text-white'
+                        }`}
                       >
-                        <span>{__('View Details')}</span>
+                        {appliedJobIds.includes(job.id) ? (
+                          <>
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#008A7B]" />
+                            <span>{__('Already Applied')}</span>
+                          </>
+                        ) : (
+                          <span>{__('View Details')}</span>
+                        )}
                       </button>
                     </div>
                   </div>

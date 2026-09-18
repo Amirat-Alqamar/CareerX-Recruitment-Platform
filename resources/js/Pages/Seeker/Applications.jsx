@@ -60,151 +60,167 @@ export default function Applications({
     return app.status === activeFilter;
   });
 
-function ApplicationStepper({ status, meetingLink, __ }) {
-  const isRejected = status === 'rejected';
-  const isAccepted = status === 'accepted' || status === 'hired';
-  const isInterview = status === 'interview' || Boolean(meetingLink);
-  const isReviewed = status === 'reviewed' || isInterview || isAccepted || isRejected || status === 'shortlisted';
-  const rejectedAfterInterview = isRejected && Boolean(meetingLink);
+  const formatInterviewDate = (dateStr) => {
+    if (!dateStr) return '';
+    const clean = String(dateStr).replace(' ', 'T');
+    const d = new Date(clean);
+    return isNaN(d.getTime()) ? dateStr : d.toLocaleString([], {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
 
-  const steps = [
-    {
-      id: 'pending',
-      label: __('Pending'),
-      isDone: true,
-      isCurrent: status === 'applied' || status === 'pending',
-    },
-    {
-      id: 'reviewed',
-      label: __('Reviewed'),
-      isDone: isReviewed && status !== 'applied' && status !== 'pending',
-      isCurrent: status === 'reviewed' || status === 'shortlisted',
-    },
-    {
-      id: 'interview',
-      label: __('Interview'),
-      isDone: isInterview && (isAccepted || (isRejected && rejectedAfterInterview)),
-      isCurrent: status === 'interview',
-      isSkipped: isRejected && !rejectedAfterInterview,
-    },
-    {
-      id: 'decision',
-      label: isRejected ? __('Not Selected') : isAccepted ? __('Accepted') : __('Final Decision'),
-      isDone: isAccepted || isRejected,
-      isCurrent: isAccepted || isRejected,
-      isRejected: isRejected,
-      isAccepted: isAccepted,
-    },
-  ];
+  function ApplicationStepper({ status, meetingLink, __ }) {
+    let reviewState = 'current';
+    let interviewState = 'pending';
 
-  return (
-    <div className="pt-4 border-t border-slate-100">
-      <div className="grid grid-cols-4 gap-2 relative">
-        {steps.map((st, idx) => {
-          let circleBg = 'bg-slate-100 text-slate-400 border-slate-200';
-          let textColor = 'text-slate-400 font-medium';
+    if (['accepted', 'interview', 'interview_success', 'interview_failed'].includes(status)) {
+      reviewState = 'done';
+    } else if (status === 'rejected') {
+      reviewState = 'rejected';
+    } else {
+      reviewState = 'current';
+    }
 
-          if (st.isRejected) {
-            circleBg = 'bg-rose-500 text-white border-rose-500 shadow-xs';
-            textColor = 'text-rose-600 font-bold';
-          } else if (st.isAccepted) {
-            circleBg = 'bg-emerald-600 text-white border-emerald-600 shadow-xs';
-            textColor = 'text-emerald-700 font-bold';
-          } else if (st.isDone) {
-            circleBg = 'bg-[#008A7B] text-white border-[#008A7B] shadow-xs';
-            textColor = 'text-[#008A7B] font-bold';
-          } else if (st.isCurrent) {
-            circleBg = 'bg-blue-600 text-white border-blue-600 ring-2 ring-blue-100 animate-pulse';
-            textColor = 'text-blue-700 font-bold';
-          } else if (st.isSkipped) {
-            circleBg = 'bg-slate-100 text-slate-300 border-slate-200';
-            textColor = 'text-slate-300 line-through';
-          }
+    if (status === 'interview_success') {
+      interviewState = 'accepted';
+    } else if (status === 'interview_failed') {
+      interviewState = 'rejected';
+    } else if (status === 'interview' || status === 'accepted') {
+      interviewState = 'current';
+    } else if (status === 'rejected') {
+      interviewState = 'inactive';
+    } else {
+      interviewState = 'pending';
+    }
 
-          return (
-            <div key={st.id} className="flex flex-col items-center text-center relative group/step">
-              {/* Connector line */}
-              {idx > 0 && (
-                <div
-                  className={`absolute top-3.5 right-[50%] rtl:right-auto rtl:left-[50%] w-full h-[2px] -z-0 ${
-                    st.isDone || st.isAccepted
-                      ? 'bg-[#008A7B]'
-                      : st.isRejected
-                      ? 'bg-rose-300'
-                      : 'bg-slate-200'
-                  }`}
-                />
-              )}
+    const steps = [
+      {
+        id: 'applied',
+        label: __('Applied'),
+        state: 'done',
+      },
+      {
+        id: 'review',
+        label: __('Review'),
+        state: reviewState,
+      },
+      {
+        id: 'interview',
+        label: __('Interview'),
+        state: interviewState,
+      },
+    ];
 
-              {/* Circle Icon */}
-              <div
-                className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-black border transition-all z-10 ${circleBg}`}
-              >
-                {st.isRejected ? (
-                  '✕'
-                ) : st.isAccepted || st.isDone ? (
-                  '✓'
-                ) : (
-                  idx + 1
+    return (
+      <div className="pt-4 border-t border-slate-100 w-full">
+        <div className="grid grid-cols-3 gap-2 relative">
+          {steps.map((st, idx) => {
+            let circleBg = 'bg-slate-100 text-slate-400 border-slate-200';
+            let textColor = 'text-slate-400 font-medium';
+            let icon = idx + 1;
+
+            if (st.state === 'done') {
+              circleBg = 'bg-[#008A7B] text-white border-[#008A7B] shadow-xs';
+              textColor = 'text-[#008A7B] font-bold';
+              icon = '✓';
+            } else if (st.state === 'current') {
+              circleBg = 'bg-blue-600 text-white border-blue-600 ring-2 ring-blue-100 animate-pulse';
+              textColor = 'text-blue-700 font-bold';
+              icon = '●';
+            } else if (st.state === 'accepted') {
+              circleBg = 'bg-emerald-600 text-white border-emerald-600 shadow-xs';
+              textColor = 'text-emerald-700 font-bold';
+              icon = '✓';
+            } else if (st.state === 'rejected') {
+              circleBg = 'bg-rose-500 text-white border-rose-500 shadow-xs';
+              textColor = 'text-rose-600 font-bold';
+              icon = '✕';
+            } else if (st.state === 'inactive') {
+              circleBg = 'bg-slate-100 text-slate-300 border-dashed border-slate-300';
+              textColor = 'text-slate-300 line-through';
+              icon = '-';
+            }
+
+            return (
+              <div key={st.id} className="flex flex-col items-center text-center relative group/step">
+                {idx > 0 && (
+                  <div
+                    className={`absolute top-3.5 right-[50%] rtl:right-auto rtl:left-[50%] w-full h-[2px] -z-0 ${
+                      st.state === 'done' || st.state === 'accepted'
+                        ? 'bg-[#008A7B]'
+                        : st.state === 'rejected'
+                        ? 'bg-rose-300'
+                        : st.state === 'inactive'
+                        ? 'bg-slate-200 border-t border-dashed border-slate-300'
+                        : 'bg-slate-200'
+                    }`}
+                  />
                 )}
+
+                <div
+                  className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-black border transition-all z-10 ${circleBg}`}
+                >
+                  {icon}
+                </div>
+
+                <span className={`text-[11px] mt-1.5 transition-colors truncate max-w-full px-1 ${textColor}`}>
+                  {st.label}
+                </span>
               </div>
-
-              {/* Label */}
-              <span className={`text-[11px] mt-1.5 transition-colors truncate max-w-full px-1 ${textColor}`}>
-                {st.label}
-              </span>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
-const getStatusBadge = (status) => {
+  const getStatusBadge = (status) => {
     switch (status) {
-      case 'applied':
-      case 'pending':
+      case 'interview_success':
         return (
-          <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-extrabold inline-flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5" />
-            <span>{__('Pending')}</span>
+          <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-black inline-flex items-center gap-1 border border-emerald-200">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <span>{__('Success Interview')}</span>
           </span>
         );
-      case 'reviewed':
-      case 'shortlisted':
+      case 'interview_failed':
         return (
-          <span className="px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-extrabold inline-flex items-center gap-1">
-            <Eye className="w-3.5 h-3.5" />
-            <span>{__('Under Review')}</span>
+          <span className="px-3 py-1 rounded-full bg-rose-50 text-rose-700 text-xs font-black inline-flex items-center gap-1 border border-rose-200">
+            <XCircle className="w-3.5 h-3.5 text-rose-600" />
+            <span>{__('Failed Interview')}</span>
           </span>
         );
       case 'accepted':
-      case 'hired':
-        return (
-          <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-extrabold inline-flex items-center gap-1">
-            <CheckCircle2 className="w-3.5 h-3.5" />
-            <span>{__('Accepted')}</span>
-          </span>
-        );
       case 'interview':
         return (
-          <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-extrabold inline-flex items-center gap-1 border border-blue-200">
+          <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-black inline-flex items-center gap-1 border border-blue-200">
             <Video className="w-3.5 h-3.5 text-blue-600" />
-            <span>{__('Interview Scheduled')}</span>
+            <span>{__('Interview')}</span>
           </span>
         );
       case 'rejected':
         return (
-          <span className="px-3 py-1 rounded-full bg-rose-50 text-rose-700 text-xs font-extrabold inline-flex items-center gap-1">
-            <XCircle className="w-3.5 h-3.5" />
+          <span className="px-3 py-1 rounded-full bg-rose-50 text-rose-700 text-xs font-black inline-flex items-center gap-1 border border-rose-200">
+            <XCircle className="w-3.5 h-3.5 text-rose-600" />
             <span>{__('Rejected')}</span>
+          </span>
+        );
+      case 'reviewed':
+        return (
+          <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-black inline-flex items-center gap-1 border border-blue-200">
+            <Eye className="w-3.5 h-3.5 text-blue-600" />
+            <span>{__('Review')}</span>
           </span>
         );
       default:
         return (
-          <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-extrabold">
-            {status}
+          <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-black inline-flex items-center gap-1 border border-slate-200">
+            <Clock className="w-3.5 h-3.5 text-slate-500" />
+            <span>{__('Applied')}</span>
           </span>
         );
     }
@@ -413,7 +429,7 @@ const getStatusBadge = (status) => {
                         </span>
                         {app.interview_date && (
                           <span className="text-[11px] text-blue-700 font-semibold">
-                            {new Date(app.interview_date).toLocaleString()}
+                            {formatInterviewDate(app.interview_date)}
                           </span>
                         )}
                       </div>
@@ -432,8 +448,12 @@ const getStatusBadge = (status) => {
                   </div>
                 )}
 
-                {/* 4-Stage Visual Stepper */}
-                <ApplicationStepper status={app.status} meetingLink={app.meeting_link} __={__} />
+                {/* 3-Stage Visual Stepper */}
+                <ApplicationStepper
+                  status={app.status}
+                  meetingLink={app.meeting_link}
+                  __={__}
+                />
               </div>
             ))
           ) : (
@@ -486,8 +506,12 @@ const getStatusBadge = (status) => {
               </p>
             </div>
 
-            {/* 4-Stage Visual Stepper in Modal */}
-            <ApplicationStepper status={selectedApp.status} meetingLink={selectedApp.meeting_link} __={__} />
+            {/* 3-Stage Visual Stepper in Modal */}
+            <ApplicationStepper
+              status={selectedApp.status}
+              meetingLink={selectedApp.meeting_link}
+              __={__}
+            />
 
             {/* Submission metadata */}
             <div className="grid grid-cols-2 gap-3 text-xs bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
@@ -562,7 +586,7 @@ const getStatusBadge = (status) => {
                     </span>
                     {selectedApp.interview_date && (
                       <span className="text-[11px] text-blue-700 font-semibold">
-                        {new Date(selectedApp.interview_date).toLocaleString()}
+                        {formatInterviewDate(selectedApp.interview_date)}
                       </span>
                     )}
                   </div>
