@@ -38,11 +38,11 @@ export default function AdminReports({
 
   const appStatusList = [
     { key: 'applied', label: __('Applied'), count: applicationsByStatus.applied || 0, color: 'bg-blue-500' },
-    { key: 'pending', label: __('Under Review'), count: applicationsByStatus.pending || 0, color: 'bg-amber-500' },
-    { key: 'shortlisted', label: __('Shortlisted'), count: applicationsByStatus.shortlisted || 0, color: 'bg-indigo-500' },
-    { key: 'interview', label: __('Interview Scheduled'), count: applicationsByStatus.interview || 0, color: 'bg-purple-500' },
-    { key: 'hired', label: __('Hired'), count: applicationsByStatus.hired || 0, color: 'bg-emerald-500' },
-    { key: 'rejected', label: __('Rejected'), count: applicationsByStatus.rejected || 0, color: 'bg-rose-500' },
+    { key: 'reviewed', label: __('Review'), count: applicationsByStatus.reviewed || 0, color: 'bg-indigo-500' },
+    { key: 'interview', label: __('Interview'), count: applicationsByStatus.interview || 0, color: 'bg-amber-500' },
+    { key: 'interview_success', label: __('Success Interview'), count: applicationsByStatus.interview_success || 0, color: 'bg-emerald-500' },
+    { key: 'interview_failed', label: __('Failed Interview'), count: applicationsByStatus.interview_failed || 0, color: 'bg-rose-400' },
+    { key: 'rejected', label: __('Rejected'), count: applicationsByStatus.rejected || 0, color: 'bg-rose-600' },
   ];
 
   return (

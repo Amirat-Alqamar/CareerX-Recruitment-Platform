@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import React from 'react';
+import { Head, Link, usePage } from '@inertiajs/react';
 import {
   Users,
   Briefcase,
@@ -8,7 +8,6 @@ import {
   ShieldCheck,
   CheckCircle2,
   XCircle,
-  Clock,
   ArrowRight,
   ArrowLeft,
   TrendingUp,
@@ -17,7 +16,6 @@ import {
   ChevronRight,
   ChevronLeft,
   Eye,
-  Check,
   AlertCircle,
   FileBarChart,
   UserCheck,
@@ -36,24 +34,6 @@ export default function AdminDashboard({
 }) {
   const { __, locale, isRtl } = useTranslation();
   const { flash } = usePage().props;
-
-  const [selectedJobModal, setSelectedJobModal] = useState(null);
-
-  const handleApproveJob = (jobId) => {
-    router.post(
-      `/${locale}/admin/jobs/${jobId}/approve`,
-      {},
-      { preserveScroll: true }
-    );
-  };
-
-  const handleRejectJob = (jobId) => {
-    router.post(
-      `/${locale}/admin/jobs/${jobId}/reject`,
-      {},
-      { preserveScroll: true }
-    );
-  };
 
   const kpis = [
     {
@@ -95,7 +75,7 @@ export default function AdminDashboard({
     {
       title: __('Total Applications'),
       value: stats.total_applications || 0,
-      sub: `${stats.hired_applications || 0} ${__('Hired')} (${stats.hiring_rate || 0}%)`,
+      sub: `${stats.hired_applications || 0} ${__('Accepted')} (${stats.hiring_rate || 0}%)`,
       icon: Send,
       color: 'bg-purple-50 text-purple-600 border-purple-100',
       badgeColor: 'bg-purple-500/10 text-purple-700',
@@ -192,95 +172,6 @@ export default function AdminDashboard({
             );
           })}
         </div>
-
-        {/* Pending Approvals Section (If any) */}
-        {pendingApprovals.length > 0 && (
-          <div className="bg-white rounded-3xl border border-amber-200/80 shadow-sm p-6 sm:p-7 space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-2xl bg-amber-50 text-amber-600">
-                  <Clock className="w-5 h-5 animate-spin" />
-                </div>
-                <div>
-                  <h2 className="text-base sm:text-lg font-black text-slate-900">
-                    {__('Job Posts Pending Approval')}
-                  </h2>
-                  <p className="text-xs text-slate-400 font-medium">
-                    {__('Employers submitted these jobs for publication review')}
-                  </p>
-                </div>
-              </div>
-              <Link
-                href={`/${locale}/admin/pending-jobs`}
-                className="inline-flex items-center gap-1.5 text-xs font-black text-[#008A7B] hover:underline"
-              >
-                <span>{__('View All Pending Jobs')}</span>
-                {isRtl ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-              </Link>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {pendingApprovals.map((job) => (
-                <div
-                  key={job.id}
-                  className="p-4 rounded-2xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 transition-colors flex flex-col justify-between space-y-4"
-                >
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      {job.company_logo ? (
-                        <img
-                          src={job.company_logo}
-                          alt={job.company_name}
-                          className="w-7 h-7 rounded-lg object-cover border border-slate-200"
-                        />
-                      ) : (
-                        <div className="w-7 h-7 rounded-lg bg-[#014D55] text-white text-[10px] font-bold flex items-center justify-center">
-                          {job.company_name.slice(0, 2).toUpperCase()}
-                        </div>
-                      )}
-                      <span className="text-xs font-bold text-slate-600 truncate">
-                        {job.company_name}
-                      </span>
-                    </div>
-                    <h3 className="text-sm font-black text-slate-900 line-clamp-1">
-                      {job.title}
-                    </h3>
-                    <div className="flex flex-wrap items-center gap-1.5 text-[10px] font-bold text-slate-500">
-                      <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200">
-                        {job.category}
-                      </span>
-                      <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200">
-                        {job.job_type}
-                      </span>
-                      <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200">
-                        {job.work_type}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
-                    <button
-                      type="button"
-                      onClick={() => handleApproveJob(job.id)}
-                      className="flex-1 py-1.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer"
-                    >
-                      <Check className="w-3.5 h-3.5" />
-                      <span>{__('Approve')}</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleRejectJob(job.id)}
-                      className="py-1.5 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer"
-                    >
-                      <XCircle className="w-3.5 h-3.5" />
-                      <span>{__('Reject')}</span>
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Analytics Highlights: Most Demanded Jobs & Top Skills */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
