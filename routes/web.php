@@ -30,6 +30,7 @@ Route::group([
 
     // Job Seeker Dashboard and Profile routes (Protected for authenticated users only)
     Route::group(['middleware' => ['auth']], function () {
+        Route::get('/2fa', [\App\Http\Controllers\Dashboard\TwoFactorAuthenticationController::class, 'index'])->name('2fa');
         Route::get('/seeker/dashboard', [DashboardController::class, 'index'])->name('seeker.dashboard');
         Route::get('/seeker/profile', [DashboardController::class, 'profile'])->name('seeker.profile');
         Route::get('/profile', function () {

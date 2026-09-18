@@ -3,7 +3,7 @@ import Sidebar from '@/Components/Dashboard/Sidebar/Sidebar';
 import DashboardHeader from '@/Components/Dashboard/Header/DashboardHeader';
 import useTranslation from '@/hooks/useTranslation';
 
-import { usePage } from '@inertiajs/react';
+import { usePage, router } from '@inertiajs/react';
 
 export default function DashboardLayout({ children, userRole }) {
   const { auth } = usePage().props;
@@ -17,6 +17,35 @@ export default function DashboardLayout({ children, userRole }) {
     document.documentElement.dir = direction;
     document.documentElement.lang = locale;
   }, [direction, locale]);
+
+  // Real-time notifications polling (updates unread count & list in real time without reloading)
+  useEffect(() => {
+    if (!auth?.user) return;
+
+    const interval = setInterval(() => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'visible') {
+        router.reload({
+          only: ['auth', 'notifications', 'unreadCount'],
+          preserveScroll: true,
+          preserveState: true,
+        });
+      }
+    }, 6000);
+
+    const handleFocus = () => {
+      router.reload({
+        only: ['auth', 'notifications', 'unreadCount'],
+        preserveScroll: true,
+        preserveState: true,
+      });
+    };
+
+    window.addEventListener('focus', handleFocus);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [auth?.user?.id]);
 
   const handleToggleSidebar = () => {
     if (typeof window !== 'undefined' && window.innerWidth < 1024) {

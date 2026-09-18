@@ -78,6 +78,8 @@ class HandleInertiaRequests extends Middleware
                 ] : null,
                 'avatar' => $user->avatar ? (str_starts_with($user->avatar, 'http') ? $user->avatar : asset('storage/' . $user->avatar)) : null,
                 'cover_image' => $user->cover_image ? (str_starts_with($user->cover_image, 'http') ? $user->cover_image : asset('storage/' . $user->cover_image)) : null,
+                'two_factor_enabled' => !is_null($user->two_factor_secret),
+                'two_factor_confirmed' => !is_null($user->two_factor_confirmed_at),
             ];
 
             $notifications = $user->notifications()->take(15)->get()->map(function ($n) use ($locale) {

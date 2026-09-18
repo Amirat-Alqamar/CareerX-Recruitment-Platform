@@ -8,13 +8,16 @@ import {
   ArrowLeft,
   ArrowRight,
   Menu,
+  ShieldCheck,
 } from 'lucide-react';
 import useTranslation from '@/hooks/useTranslation';
+import TwoFactorModal from '@/Components/Dashboard/Common/TwoFactorModal';
 
 export default function DashboardHeader({ onToggleSidebar }) {
   const { auth } = usePage().props;
   const { __, locale, isRtl, locales } = useTranslation();
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [twoFactorModalOpen, setTwoFactorModalOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const userRole = auth?.user?.role || 'job_seeker';
@@ -102,6 +105,19 @@ export default function DashboardHeader({ onToggleSidebar }) {
           )}
         </div>
 
+        {/* 2FA Security Link */}
+        <Link
+          href={`/${locale}/2fa`}
+          className={`p-2 rounded-full transition-colors ${
+            auth?.user?.two_factor_enabled
+              ? 'text-[#008A7B] bg-teal-50 hover:bg-teal-100 ring-1 ring-teal-200'
+              : 'text-slate-500 hover:text-[#008A7B] hover:bg-slate-100'
+          }`}
+          title={auth?.user?.two_factor_enabled ? __('2FA Security (Active)') : __('Two-Factor Authentication')}
+        >
+          <ShieldCheck className="w-5 h-5 stroke-[1.75]" />
+        </Link>
+
         {/* Direct Notifications Link with Counter Badge */}
         <Link
           href={`/${locale}/notifications`}
@@ -132,6 +148,11 @@ export default function DashboardHeader({ onToggleSidebar }) {
           {userInitials}
         </Link>
       </div>
+
+      <TwoFactorModal
+        isOpen={twoFactorModalOpen}
+        onClose={() => setTwoFactorModalOpen(false)}
+      />
     </header>
   );
 }
