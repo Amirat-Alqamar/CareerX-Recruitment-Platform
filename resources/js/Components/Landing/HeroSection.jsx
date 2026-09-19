@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { router } from '@inertiajs/react';
 import { Search, MapPin, Briefcase } from 'lucide-react';
 import { popularTags } from '@/Data/navigation';
 import { useTranslation } from '@/hooks/useTranslation';
 
 export default function HeroSection() {
-  const { __ } = useTranslation();
+  const { __, locale } = useTranslation();
+  const [keyword, setKeyword] = useState('');
+  const [location, setLocation] = useState('');
+
+  const handleSearch = (e) => {
+    if (e) e.preventDefault();
+    const params = new URLSearchParams();
+    if (keyword.trim()) params.set('keyword', keyword.trim());
+    if (location.trim()) params.set('location', location.trim());
+    const qs = params.toString();
+    router.visit(`/${locale}/jobs${qs ? `?${qs}` : ''}`);
+  };
+
+  const handleTagClick = (tag) => {
+    router.visit(`/${locale}/jobs?keyword=${encodeURIComponent(tag)}`);
+  };
 
   return (
     <section className="bg-gradient-to-b from-primary-light/60 via-white to-white py-12 lg:py-20">
@@ -28,13 +44,15 @@ export default function HeroSection() {
             </p>
 
             {/* Search Box Card */}
-            <div className="bg-white p-2.5 sm:p-3 rounded-2xl shadow-xl border border-gray-100 flex flex-col sm:flex-row items-center gap-3">
+            <form onSubmit={handleSearch} className="bg-white p-2.5 sm:p-3 rounded-2xl shadow-xl border border-gray-100 flex flex-col sm:flex-row items-center gap-3">
               <div className="flex items-center gap-3 px-3 w-full sm:w-1/2">
                 <Search className="w-5 h-5 text-gray-400 shrink-0" />
                 <input
                   type="text"
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
                   placeholder={__('Job title, skill, or keyword')}
-                  className="w-full text-sm border-none focus:outline-none focus:ring-0 text-gray-800 placeholder-gray-400"
+                  className="w-full text-sm border-none focus:outline-none focus:ring-0 text-gray-800 placeholder-gray-400 bg-transparent"
                 />
               </div>
 
@@ -44,15 +62,20 @@ export default function HeroSection() {
                 <MapPin className="w-5 h-5 text-gray-400 shrink-0" />
                 <input
                   type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
                   placeholder={__('City, state, or remote')}
-                  className="w-full text-sm border-none focus:outline-none focus:ring-0 text-gray-800 placeholder-gray-400"
+                  className="w-full text-sm border-none focus:outline-none focus:ring-0 text-gray-800 placeholder-gray-400 bg-transparent"
                 />
               </div>
 
-              <button className="w-full sm:w-auto px-7 py-3.5 bg-primary hover:bg-primary-hover text-white font-semibold text-sm rounded-xl transition-all shadow-md hover:shadow-lg shrink-0 cursor-pointer">
+              <button
+                type="submit"
+                className="w-full sm:w-auto px-7 py-3.5 bg-primary hover:bg-primary-hover text-white font-semibold text-sm rounded-xl transition-all shadow-md hover:shadow-lg shrink-0 cursor-pointer"
+              >
                 {__('Search Jobs')}
               </button>
-            </div>
+            </form>
 
             {/* Popular Searches */}
             <div className="flex flex-wrap items-center gap-2 pt-2">
@@ -60,6 +83,8 @@ export default function HeroSection() {
               {popularTags.map((tag) => (
                 <button
                   key={tag}
+                  type="button"
+                  onClick={() => handleTagClick(tag)}
                   className="text-xs font-medium text-gray-600 bg-primary-light hover:bg-gray-200 px-3.5 py-1.5 rounded-lg transition-colors cursor-pointer"
                 >
                   {__(tag)}

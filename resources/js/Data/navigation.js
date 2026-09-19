@@ -1,11 +1,10 @@
 export const navLinks = [
   { name: 'Home', href: '/' },
-  { name: 'Jobs', href: '/jobs' },
+  { name: 'Jobs', href: '/#jobs' },
   { name: 'Companies', href: '/companies' },
-  { name: 'Categories', href: '/categories' },
-  { name: 'Blog', href: '/blog' },
-  { name: 'Pricing', href: '/pricing' },
-  { name: 'About', href: '/about' },
+  { name: 'Categories', href: '/#categories' },
+  { name: 'Blog', href: '/#blog' },
+  { name: 'About', href: '/#about' },
 ];
 
 export const popularTags = [

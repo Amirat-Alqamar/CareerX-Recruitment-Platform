@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import { Globe, ChevronDown, Check, LayoutDashboard, LogOut } from 'lucide-react';
+import { Globe, ChevronDown, Check, LayoutDashboard, LogOut, Menu, X } from 'lucide-react';
 import { navLinks } from '@/Data/navigation';
 import { useTranslation } from '@/hooks/useTranslation';
 
@@ -9,6 +9,7 @@ export default function Navbar() {
   const auth = props?.auth;
   const { __, locale, locales } = useTranslation();
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -20,6 +21,24 @@ export default function Navbar() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const getHref = (href) => {
+    if (href === '/') return `/${locale}`;
+    if (href.startsWith('/#')) return `/${locale}#${href.slice(2)}`;
+    return href.startsWith('/') ? `/${locale}${href}` : href;
+  };
+
+  const handleNavClick = (e, link) => {
+    if (link.href.includes('#')) {
+      const hash = link.href.split('#')[1];
+      const elem = document.getElementById(hash);
+      if (elem) {
+        e.preventDefault();
+        elem.scrollIntoView({ behavior: 'smooth' });
+        window.history.pushState(null, '', `#${hash}`);
+      }
+    }
+  };
 
   return (
     <header className="w-full bg-white border-b border-gray-100 sticky top-0 z-50">
@@ -39,7 +58,8 @@ export default function Navbar() {
           {navLinks.map((link) => (
             <Link
               key={link.name}
-              href={link.href.startsWith('/') ? `/${locale}${link.href}` : link.href}
+              href={getHref(link.href)}
+              onClick={(e) => handleNavClick(e, link)}
               className="text-sm font-medium text-gray-600 hover:text-teal-800 transition-colors"
             >
               {__(link.name)}
@@ -120,9 +140,38 @@ export default function Navbar() {
               </Link>
             </div>
           )}
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-xl text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors cursor-pointer"
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5 text-gray-800" /> : <Menu className="w-5 h-5 text-gray-800" />}
+          </button>
         </div>
 
       </div>
+
+      {/* Mobile Navigation Drawer */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white border-b border-gray-200 px-4 pt-2 pb-6 space-y-2 shadow-lg animate-fade-in">
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              href={getHref(link.href)}
+              onClick={(e) => {
+                handleNavClick(e, link);
+                setMobileMenuOpen(false);
+              }}
+              className="block px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-teal-50 hover:text-[#008A7B] transition-colors"
+            >
+              {__(link.name)}
+            </Link>
+          ))}
+        </div>
+      )}
     </header>
   );
 }

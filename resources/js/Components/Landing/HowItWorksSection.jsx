@@ -5,10 +5,10 @@ import { howItWorksData } from '@/Data/howItWorksData';
 import { useTranslation } from '@/hooks/useTranslation';
 
 export default function HowItWorksSection() {
-  const { __ } = useTranslation();
+  const { __, locale } = useTranslation();
 
   return (
-    <section className="py-20 bg-[#F8FAFC]">
+    <section id="about" className="py-20 bg-[#F8FAFC] scroll-mt-20">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
 
         {/* Section Header */}
@@ -67,7 +67,7 @@ export default function HowItWorksSection() {
 
                 {/* Call To Action Button */}
                 <Link
-                  href={column.ctaHref}
+                  href={column.ctaHref?.startsWith('/') ? `/${locale}${column.ctaHref}` : column.ctaHref}
                   className={`w-full py-4 px-6 rounded-2xl ${column.btnBg} text-white font-bold text-sm flex items-center justify-center gap-2 transition-all duration-200 shadow-md hover:shadow-lg active:scale-[0.99]`}
                 >
                   <span>{__(column.ctaText)}</span>

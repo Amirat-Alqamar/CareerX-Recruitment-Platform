@@ -12,7 +12,7 @@ export default function FaqSection() {
   };
 
   return (
-    <section className="py-20 bg-[#F8FAFC]">
+    <section id="faq" className="py-20 bg-[#F8FAFC] scroll-mt-20">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
 
         {/* Section Header */}
