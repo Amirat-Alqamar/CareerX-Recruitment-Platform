@@ -9,7 +9,7 @@ export default function BlogSection() {
   const [selectedArticle, setSelectedArticle] = useState(null);
 
   return (
-    <section className="py-20 bg-white">
+    <section id="blog" className="py-20 bg-white scroll-mt-20">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
 
         {/* Centered Header Section */}

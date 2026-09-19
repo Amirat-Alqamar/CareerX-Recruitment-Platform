@@ -4,15 +4,25 @@ use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Inertia\Inertia;
 use App\Http\Controllers\JobSeeker\DashboardController;
+use App\Http\Controllers\JobListingController;
 
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
     'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
 ], function () {
 
-    Route::get('/', function () {
-        return Inertia::render('LandingPage');
-    })->name('home');
+    Route::get('/', [JobListingController::class, 'home'])->name('home');
+    Route::get('/jobs', [JobListingController::class, 'index'])->name('jobs.index');
+    Route::get('/companies', [JobListingController::class, 'companies'])->name('companies.index');
+    Route::get('/categories', function () {
+        return redirect('/' . app()->getLocale() . '#categories');
+    })->name('categories.redirect');
+    Route::get('/blog', function () {
+        return redirect('/' . app()->getLocale() . '#blog');
+    })->name('blog.redirect');
+    Route::get('/about', function () {
+        return redirect('/' . app()->getLocale() . '#about');
+    })->name('about.redirect');
 
     Route::get('/login', function () {
         return Inertia::render('Auth/Login');

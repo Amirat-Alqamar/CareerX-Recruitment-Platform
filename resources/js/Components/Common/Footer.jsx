@@ -4,7 +4,13 @@ import { footerSections, socialLinks } from '@/Data/footerData';
 import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Footer() {
-  const { __ } = useTranslation();
+  const { __, locale } = useTranslation();
+
+  const getHref = (href) => {
+    if (href === '/') return `/${locale}`;
+    if (href.startsWith('/#')) return `/${locale}#${href.slice(2)}`;
+    return href.startsWith('/') ? `/${locale}${href}` : href;
+  };
 
   return (
     <footer className="bg-[#0B132B] text-gray-300 pt-16 pb-8 border-t border-gray-800">
@@ -15,7 +21,7 @@ export default function Footer() {
 
           {/* Brand Info Column */}
           <div className="lg:col-span-4 space-y-6">
-            <Link href="/" className="inline-flex items-center">
+            <Link href={`/${locale}`} className="inline-flex items-center">
               <img
                 src="/images/careerX-logo.webp"
                 alt="CareerX Logo"
@@ -56,7 +62,7 @@ export default function Footer() {
                   {section.links.map((link, linkIdx) => (
                     <li key={linkIdx}>
                       <Link
-                        href={link.href}
+                        href={getHref(link.href)}
                         className="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors duration-150 inline-block"
                       >
                         {__(link.name)}
