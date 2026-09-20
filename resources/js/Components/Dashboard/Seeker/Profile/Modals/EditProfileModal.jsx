@@ -66,7 +66,6 @@ export default function EditProfileModal({
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => {
-      // If country changed, reset city_id
       if (name === 'country_id') {
         return { ...prev, country_id: value, city_id: '' };
       }
@@ -104,7 +103,6 @@ export default function EditProfileModal({
       maxWidth="max-w-2xl"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Job Title / Headline */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
             {__('Professional Headline / Job Title')} <span className="text-red-500">*</span>
@@ -123,7 +121,6 @@ export default function EditProfileModal({
           )}
         </div>
 
-        {/* Bio / Summary */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
             {__('Professional Bio & Summary')}
@@ -141,7 +138,6 @@ export default function EditProfileModal({
           )}
         </div>
 
-        {/* Country & City Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
@@ -183,7 +179,6 @@ export default function EditProfileModal({
           </div>
         </div>
 
-        {/* Experience Years & Work Type */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
@@ -232,7 +227,6 @@ export default function EditProfileModal({
           </div>
         </div>
 
-        {/* Modal Actions */}
         <div className="flex items-center justify-end gap-2 pt-4 border-t border-slate-100 mt-6">
           <button
             type="button"

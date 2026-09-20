@@ -5,13 +5,12 @@ import { useTranslation } from '@/hooks/useTranslation';
 export default function NewsletterSection() {
   const { __ } = useTranslation();
   const [email, setEmail] = useState('');
-  const [status, setStatus] = useState('idle'); // idle | loading | success | error
+  const [status, setStatus] = useState('idle'); 
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Simple Email Validation
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setErrorMessage(__('Please enter a valid email address.'));
       setStatus('error');
@@ -21,7 +20,6 @@ export default function NewsletterSection() {
     setStatus('loading');
     setErrorMessage('');
 
-    // Simulation of Laravel API Call
     setTimeout(() => {
       setStatus('success');
       setEmail('');
@@ -30,18 +28,15 @@ export default function NewsletterSection() {
 
   return (
     <section className="py-20 bg-[#014D55] text-white relative overflow-hidden">
-      {/* Background Subtle Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/5 to-transparent pointer-events-none" />
 
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
         <div className="max-w-2xl mx-auto text-center space-y-6">
 
-          {/* Top Icon Badge */}
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 text-[#00BBA7] shadow-inner mx-auto">
             <Bell className="w-6 h-6 animate-pulse" />
           </div>
 
-          {/* Heading & Subtitle */}
           <div className="space-y-3">
             <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
               {__('Never Miss a Dream Job')}
@@ -53,7 +48,6 @@ export default function NewsletterSection() {
             </p>
           </div>
 
-          {/* Subscription Form / Success State */}
           {status === 'success' ? (
             <div className="p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 text-white flex items-center justify-center gap-3 animate-fade-in">
               <CheckCircle2 className="w-6 h-6 text-[#00BBA7] shrink-0" />
@@ -64,7 +58,6 @@ export default function NewsletterSection() {
           ) : (
             <form onSubmit={handleSubmit} className="space-y-3">
               <div className="flex flex-col sm:flex-row items-center gap-3 bg-white p-2 rounded-2xl shadow-xl border border-white/20">
-                {/* Email Input Field */}
                 <div className="relative w-full flex items-center">
                   <Mail className="w-5 h-5 text-slate-400 absolute left-4 rtl:left-auto rtl:right-4 shrink-0" />
                   <input
@@ -77,7 +70,6 @@ export default function NewsletterSection() {
                   />
                 </div>
 
-                {/* Submit Button */}
                 <button
                   type="submit"
                   disabled={status === 'loading'}
@@ -97,7 +89,6 @@ export default function NewsletterSection() {
                 </button>
               </div>
 
-              {/* Error Message */}
               {status === 'error' && (
                 <p className="text-xs text-rose-300 font-medium text-left rtl:text-right px-2">
                   {errorMessage}

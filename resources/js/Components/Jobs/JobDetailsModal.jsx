@@ -36,7 +36,6 @@ export default function JobDetailsModal({
   const [applying, setApplying] = useState(false);
   const [savingJobId, setSavingJobId] = useState(null);
 
-  // Sync first resume if available
   useEffect(() => {
     if (resumes && resumes.length > 0) {
       const primary = resumes.find((r) => r.is_primary) || resumes[0];
@@ -54,7 +53,6 @@ export default function JobDetailsModal({
   const isSaved = savedJobIds.includes(job.id);
   const isApplied = appliedJobIds.includes(job.id);
 
-  // Formatting helpers
   const formatWorkType = (type) => {
     if (!type) return __('Full-time');
     if (type === 'remotely' || type === 'remote') return __('Remote');
@@ -73,7 +71,6 @@ export default function JobDetailsModal({
     return __(type.charAt(0).toUpperCase() + type.slice(1).replace('_', ' '));
   };
 
-  // Salary string
   const formatSalary = () => {
     if (job.salary_min && job.salary_max) {
       return `$${Number(job.salary_min).toLocaleString()} – $${Number(job.salary_max).toLocaleString()}`;
@@ -83,7 +80,6 @@ export default function JobDetailsModal({
     return __('Negotiable');
   };
 
-  // Toggle Save
   const handleToggleSave = (e) => {
     if (e) e.stopPropagation();
     if (!isAuthenticated) {
@@ -109,7 +105,6 @@ export default function JobDetailsModal({
     );
   };
 
-  // Apply Submission
   const handleApply = (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
@@ -139,7 +134,6 @@ export default function JobDetailsModal({
     );
   };
 
-  // Company Initials fallback
   const companyName = job.company?.name || job.company || __('CareerX Partner');
   const companyInitials = companyName
     .split(' ')
@@ -156,7 +150,6 @@ export default function JobDetailsModal({
       maxWidth="max-w-2xl"
     >
       <div className="space-y-6">
-        {/* Company & Details Header */}
         <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-100">
           <div className="flex items-center gap-3.5">
             {job.company?.logo ? (
@@ -211,7 +204,6 @@ export default function JobDetailsModal({
           </button>
         </div>
 
-        {/* Quick Metrics Bar */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-slate-50/80 p-4 rounded-2xl border border-slate-100 text-xs">
           <div>
             <p className="text-slate-400 font-semibold">{__('Salary')}</p>
@@ -233,7 +225,6 @@ export default function JobDetailsModal({
           </div>
         </div>
 
-        {/* Job Description */}
         <div className="space-y-2">
           <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">
             {__('Job Description')}
@@ -243,7 +234,6 @@ export default function JobDetailsModal({
           </p>
         </div>
 
-        {/* Responsibilities */}
         {job.responsibilities && (
           <div className="space-y-2">
             <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">
@@ -255,7 +245,6 @@ export default function JobDetailsModal({
           </div>
         )}
 
-        {/* Requirements */}
         {job.requirements && (
           <div className="space-y-2">
             <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">
@@ -267,7 +256,6 @@ export default function JobDetailsModal({
           </div>
         )}
 
-        {/* Required Skills */}
         {job.skills && job.skills.length > 0 && (
           <div className="space-y-2">
             <h4 className="text-xs font-black uppercase tracking-wider text-slate-400">
@@ -290,10 +278,8 @@ export default function JobDetailsModal({
           </div>
         )}
 
-        {/* Action / Application Section */}
         <div className="pt-4 border-t border-slate-100">
           {!isAuthenticated ? (
-            /* Guest Prompt */
             <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200/70 text-center space-y-3">
               <div className="w-10 h-10 rounded-full bg-primary-light text-primary flex items-center justify-center mx-auto">
                 <Lock className="w-5 h-5" />
@@ -322,20 +308,17 @@ export default function JobDetailsModal({
               </div>
             </div>
           ) : isApplied ? (
-            /* Already applied */
             <div className="p-4 bg-emerald-50 text-emerald-800 rounded-2xl flex items-center gap-3 font-bold text-sm border border-emerald-100">
               <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
               <span>{__('You have already applied for this job position.')}</span>
             </div>
           ) : isJobSeeker ? (
-            /* Job seeker apply form */
             <form onSubmit={handleApply} className="space-y-4">
               <h4 className="text-sm font-black text-slate-900 flex items-center gap-2">
                 <Send className="w-4 h-4 text-primary" />
                 <span>{__('Apply for this position')}</span>
               </h4>
 
-              {/* Select Resume */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-slate-700 block">
                   {__('Select Resume / CV')}
@@ -365,7 +348,6 @@ export default function JobDetailsModal({
                 )}
               </div>
 
-              {/* Cover Letter */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-slate-700 block">
                   {__('Cover Letter (Optional)')}
@@ -379,7 +361,6 @@ export default function JobDetailsModal({
                 />
               </div>
 
-              {/* Actions */}
               <div className="flex items-center justify-end gap-3 pt-2">
                 <button
                   type="button"
@@ -399,7 +380,6 @@ export default function JobDetailsModal({
               </div>
             </form>
           ) : (
-            /* Employer or Admin */
             <div className="p-4 bg-slate-50 text-slate-600 rounded-2xl flex items-center gap-3 font-semibold text-xs border border-slate-200">
               <AlertCircle className="w-4 h-4 text-slate-400 shrink-0" />
               <span>{__('Employers and Admins cannot apply for jobs.')}</span>

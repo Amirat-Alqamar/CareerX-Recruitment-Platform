@@ -34,7 +34,6 @@ export default function LanguagesSection({ languages = [], onAdd, onEdit }) {
                 </span>
                 <span className="font-semibold text-slate-400">{__(lang.level)}</span>
               </div>
-              {/* Progress Bar */}
               <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-[#014D55] rounded-full transition-all duration-300"

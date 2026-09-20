@@ -136,7 +136,6 @@ class ApplicationStatusChangedNotification extends Notification
             ];
         }
 
-        // Generic fallback
         return [
             'type'           => 'application_status_update',
             'application_id' => $this->application->id,
@@ -147,3 +146,4 @@ class ApplicationStatusChangedNotification extends Notification
         ];
     }
 }
+

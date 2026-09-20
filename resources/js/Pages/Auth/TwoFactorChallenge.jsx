@@ -37,7 +37,6 @@ export default function TwoFactorChallenge() {
         <div className="min-h-screen flex bg-gray-100 font-sans" dir={direction}>
             <Head title={__('Two-Factor Authentication')} />
 
-            {/* Left Hero Section */}
             <div className="hidden lg:flex lg:w-5/12 bg-gradient-to-br from-[#00B7B5] to-[#008A7B] p-12 flex-col justify-between text-white relative overflow-hidden">
                 <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-white/10 rounded-full blur-2xl pointer-events-none" />
                 <div className="absolute -left-10 top-1/4 w-60 h-60 bg-white/5 rounded-full blur-xl pointer-events-none" />
@@ -74,9 +73,7 @@ export default function TwoFactorChallenge() {
                 </div>
             </div>
 
-            {/* Right Form Section */}
             <div className="flex-1 flex flex-col justify-between p-6 sm:p-12 relative">
-                {/* Language Switcher */}
                 <div className="self-end flex items-center gap-2">
                     <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 shadow-xs text-xs font-semibold">
                         <Globe className="w-3.5 h-3.5 text-[#00B7B5] mx-1" />
@@ -147,7 +144,6 @@ export default function TwoFactorChallenge() {
                                         autoFocus
                                         value={data.code}
                                         onChange={(e) => {
-                                            // clean input
                                             const val = e.target.value.replace(/[^0-9]/g, '').slice(0, 6);
                                             setData('code', val);
                                         }}

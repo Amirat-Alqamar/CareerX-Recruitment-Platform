@@ -81,3 +81,4 @@ class JobApplicationController extends Controller
         return redirect()->route('job-seeker.applications.index', ['app_id' => $application->id]);
     }
 }
+

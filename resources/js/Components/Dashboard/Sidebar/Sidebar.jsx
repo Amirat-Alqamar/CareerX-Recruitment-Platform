@@ -39,7 +39,6 @@ export default function Sidebar({
 
   return (
     <>
-      {/* Mobile Backdrop Overlay */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-40 lg:hidden transition-opacity"
@@ -47,14 +46,12 @@ export default function Sidebar({
         />
       )}
 
-      {/* Sidebar Container */}
       <aside
         className={`fixed lg:static top-0 bottom-0 start-0 z-50 bg-white border-r rtl:border-r-0 rtl:border-l border-slate-100 flex flex-col justify-between h-screen shrink-0 select-none shadow-2xl lg:shadow-none transition-all duration-300 ease-in-out lg:translate-x-0 ${mobileTransform} ${
           isCollapsed ? 'w-72 lg:w-20' : 'w-72 lg:w-64'
         }`}
       >
         <div className="overflow-y-auto flex-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-          {/* Brand Header */}
           <div
             className={`p-4 border-b border-slate-100 flex items-center transition-all ${
               isCollapsed ? 'justify-center flex-col gap-3' : 'justify-between'
@@ -92,10 +89,8 @@ export default function Sidebar({
             </button>
           </div>
 
-          {/* User Info Card */}
           <SidebarProfile user={auth?.user} isCollapsed={isCollapsed} />
 
-          {/* Dynamic Navigation Groups */}
           <SidebarNavGroup
             navigation={navigation}
             onItemClick={onClose}
@@ -103,7 +98,6 @@ export default function Sidebar({
           />
         </div>
 
-        {/* Sign Out Action */}
         <div className={`p-4 border-t border-slate-100 ${isCollapsed ? 'flex justify-center' : ''}`}>
           <Link
             href={typeof route !== 'undefined' && route().has('logout') ? route('logout') : '/logout'}

@@ -1,27 +1,17 @@
 import React, { useState } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
-  ShieldCheck,
   Check,
   XCircle,
   Clock,
-  Building2,
-  MapPin,
-  DollarSign,
   CheckCircle2,
   AlertCircle,
-  Briefcase,
-  Layers,
-  ArrowRight,
-  ArrowLeft,
-  ExternalLink,
-  Sparkles,
 } from 'lucide-react';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import useTranslation from '@/hooks/useTranslation';
 
 export default function PendingJobs({ pendingJobs = [], count = 0 }) {
-  const { __, locale, isRtl } = useTranslation();
+  const { __, locale } = useTranslation();
   const { flash } = usePage().props;
 
   const handleApprove = (jobId) => {
@@ -45,7 +35,6 @@ export default function PendingJobs({ pendingJobs = [], count = 0 }) {
       <Head title={__('Pending Job Approvals') + ' - CareerX'} />
 
       <div className="space-y-6 max-w-7xl mx-auto pb-12 animate-fade-in">
-        {/* Flash messages */}
         {flash?.success && (
           <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center gap-3">
             <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
@@ -59,36 +48,36 @@ export default function PendingJobs({ pendingJobs = [], count = 0 }) {
           </div>
         )}
 
-        {/* Top Header Card */}
-        <div className="bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 rounded-3xl p-6 sm:p-8 text-slate-950 shadow-lg flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-xl">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/10 text-slate-900 text-xs font-black tracking-wide">
-              <Clock className="w-3.5 h-3.5" />
+        <div className="bg-gradient-to-r rtl:bg-gradient-to-l from-[#03444B] via-[#026E78] to-[#009B99] text-white rounded-3xl p-6 sm:p-8 shadow-xl shadow-teal-950/10 border border-teal-500/20 flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+          <div className="absolute -right-12 -top-12 w-72 h-72 rounded-full bg-white/15 blur-3xl pointer-events-none" />
+          <div className="absolute -left-12 -bottom-12 w-80 h-80 rounded-full bg-[#00B7B5]/25 blur-3xl pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.12),transparent_65%)] pointer-events-none" />
+          <div className="space-y-2.5 max-w-xl relative z-10">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md border border-white/20 text-teal-100 text-xs font-bold tracking-wide shadow-xs">
+              <Clock className="w-3.5 h-3.5 text-teal-200" />
               <span>{__('Moderation & Quality Assurance')}</span>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-950">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-xs">
               {__('Job Posts Awaiting Approval')}
             </h1>
-            <p className="text-slate-900/80 text-xs sm:text-sm font-medium leading-relaxed">
+            <p className="text-teal-50/90 text-xs sm:text-sm font-medium leading-relaxed">
               {__('Review employer job details before approving publication to ensure platform standards and job seeker safety.')}
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 text-center shrink-0">
-            <span className="text-xs font-bold text-slate-900 block">{__('Queue Count')}</span>
-            <span className="text-3xl font-black text-slate-950">{count}</span>
+          <div className="p-4.5 rounded-2xl bg-white/15 backdrop-blur-md border border-white/20 text-center shrink-0 min-w-[130px] relative z-10 shadow-sm">
+            <span className="text-xs font-semibold text-teal-100/90 block mb-0.5">{__('Queue Count')}</span>
+            <span className="text-3xl font-black text-white">{count}</span>
           </div>
         </div>
 
-        {/* Jobs List */}
         {pendingJobs.length > 0 ? (
           <div className="space-y-4">
             {pendingJobs.map((job) => (
               <div
                 key={job.id}
-                className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 sm:p-7 space-y-5 hover:border-amber-200 transition-colors"
+                className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 sm:p-7 space-y-5 hover:border-teal-300/60 transition-colors"
               >
-                {/* Top Info */}
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 pb-4">
                   <div className="flex items-start gap-4">
                     {job.company_logo ? (
@@ -108,14 +97,18 @@ export default function PendingJobs({ pendingJobs = [], count = 0 }) {
                         <span className="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-amber-50 text-amber-700 border border-amber-200">
                           {__('Pending Review')}
                         </span>
+                        {job.is_updated && (
+                          <span className="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold bg-blue-50 text-blue-700 border border-blue-200">
+                            {__('Edited / Updated')}
+                          </span>
+                        )}
                       </div>
                       <p className="text-xs text-slate-500 font-medium">
-                        <strong>{job.company_name}</strong> · {job.creator_name} ({job.creator_email}) · {job.time_ago}
+                        <strong>{job.company_name}</strong> · {job.creator_name} ({job.creator_email}) · {job.is_updated ? `${__('Updated')}: ` : ''}{job.time_ago}
                       </p>
                     </div>
                   </div>
 
-                  {/* Actions */}
                   <div className="flex items-center gap-2.5 shrink-0">
                     <button
                       type="button"
@@ -136,7 +129,6 @@ export default function PendingJobs({ pendingJobs = [], count = 0 }) {
                   </div>
                 </div>
 
-                {/* Meta details pills */}
                 <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-slate-600">
                   <span className="px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-100">
                     📂 {job.category}
@@ -159,7 +151,6 @@ export default function PendingJobs({ pendingJobs = [], count = 0 }) {
                   )}
                 </div>
 
-                {/* Content description */}
                 <div className="space-y-3 text-xs text-slate-700">
                   <div>
                     <h4 className="font-black text-slate-900 mb-1">{__('Description')}</h4>

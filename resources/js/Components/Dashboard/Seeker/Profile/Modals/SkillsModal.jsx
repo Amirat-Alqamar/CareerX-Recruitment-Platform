@@ -67,7 +67,6 @@ export default function SkillsModal({ isOpen, onClose, skills = [], allSkills = 
       maxWidth="max-w-xl"
     >
       <div className="space-y-6">
-        {/* Add Skill Input Form */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -100,7 +99,6 @@ export default function SkillsModal({ isOpen, onClose, skills = [], allSkills = 
           )}
         </form>
 
-        {/* Popular Suggested Skills */}
         <div>
           <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
             {__('Suggested Skills (Click to add):')}
@@ -129,7 +127,6 @@ export default function SkillsModal({ isOpen, onClose, skills = [], allSkills = 
           </div>
         </div>
 
-        {/* Current Skills List with Remove Buttons */}
         <div>
           <div className="flex items-center justify-between mb-2">
             <label className="block text-xs font-bold text-slate-700 uppercase">
@@ -168,7 +165,6 @@ export default function SkillsModal({ isOpen, onClose, skills = [], allSkills = 
           )}
         </div>
 
-        {/* Footer Done Button */}
         <div className="flex justify-end pt-4 border-t border-slate-100">
           <button
             type="button"

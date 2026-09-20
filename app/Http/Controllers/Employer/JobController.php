@@ -6,8 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\City;
 use App\Models\Country;
 use App\Models\Job;
+use App\Models\JobApplication;
 use App\Models\JobCategory;
 use App\Models\Skill;
+use App\Models\User;
+use App\Notifications\JobDetailsUpdatedCandidateNotification;
+use App\Notifications\JobPendingApprovalNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -15,9 +19,7 @@ use Inertia\Inertia;
 
 class JobController extends Controller
 {
-    /**
-     * Display a listing of the employer's company jobs.
-     */
+
     public function index(Request $request)
     {
         $companyId = Auth::user()->company_id;
@@ -26,21 +28,19 @@ class JobController extends Controller
             ->with(['category', 'city', 'country'])
             ->withCount('applications');
 
-        // Optional status filter
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
         $jobs = $query->latest()->paginate(10)->withQueryString();
 
-        // Key stats for employer dashboard
         $stats = [
             'total_jobs'        => Job::where('company_id', $companyId)->count(),
             'active_jobs'       => Job::where('company_id', $companyId)->where('is_active', true)->where('status', 'published')->count(),
             'pending_jobs'      => Job::where('company_id', $companyId)->where('status', 'pending')->count(),
             'closed_jobs'       => Job::where('company_id', $companyId)->where('status', 'closed')->count(),
             'draft_jobs'        => Job::where('company_id', $companyId)->where('status', 'draft')->count(),
-            'total_applications'=> Job::where('company_id', $companyId)->withCount('applications')->get()->sum('applications_count'),
+            'total_applications'=> JobApplication::whereHas('job', fn($q) => $q->where('company_id', $companyId))->count(),
         ];
 
         return Inertia::render('Employer/Jobs', [
@@ -50,9 +50,6 @@ class JobController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new job.
-     */
     public function create()
     {
         $categories = JobCategory::orderBy('name')->get();
@@ -75,9 +72,6 @@ class JobController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created job in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -105,7 +99,6 @@ class JobController extends Controller
         $validated['created_by_user_id'] = Auth::id();
         $validated['slug'] = Str::slug($validated['title']) . '-' . time() . '-' . rand(100, 999);
 
-        // إذا اختار النشر أو الموافقة، تكون الحالة معلقة للمراجعة من قبل الإدارة
         if ($validated['status'] === 'draft') {
             $validated['status'] = 'draft';
             $validated['is_active'] = false;
@@ -133,9 +126,6 @@ class JobController extends Controller
             ->with('success', $message);
     }
 
-    /**
-     * Show the form for editing the specified job.
-     */
     public function edit(Job $job)
     {
         $this->authorizeCompanyJob($job);
@@ -159,9 +149,6 @@ class JobController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified job in storage.
-     */
     public function update(Request $request, Job $job)
     {
         $this->authorizeCompanyJob($job);
@@ -185,17 +172,22 @@ class JobController extends Controller
             'skills.*'         => ['exists:skills,id'],
         ]);
 
+        $wasPublished = ($job->status === 'published');
+
         if ($validated['status'] === 'draft') {
             $validated['is_active'] = false;
         } elseif ($validated['status'] === 'closed') {
             $validated['is_active'] = false;
-        } elseif ($validated['status'] === 'pending' || ($job->status !== 'published' && $validated['status'] === 'published')) {
-            // Any new request to publish requires admin approval
-            $validated['status'] = 'pending';
-            $validated['is_active'] = false;
         } else {
-            // Already published and editing content
-            $validated['is_active'] = true;
+
+            if ($wasPublished) {
+                $validated['status'] = 'published';
+                $validated['is_active'] = true;
+            } else {
+
+                $validated['status'] = 'pending';
+                $validated['is_active'] = false;
+            }
         }
 
         if ($job->title !== $validated['title']) {
@@ -208,7 +200,34 @@ class JobController extends Controller
             $job->skills()->sync($request->skills);
         }
 
-        $msg = $job->status === 'pending'
+        if ($job->status === 'pending') {
+            $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new JobPendingApprovalNotification($job, false));
+            }
+        } elseif ($wasPublished) {
+
+            $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new JobPendingApprovalNotification($job, true));
+            }
+
+            $applications = $job->applications()
+                ->whereNotIn('status', ['rejected'])
+                ->with('profile.user')
+                ->get();
+
+            $notifiedUserIds = [];
+            foreach ($applications as $application) {
+                $candidateUser = $application->profile?->user;
+                if ($candidateUser && !in_array($candidateUser->id, $notifiedUserIds)) {
+                    $candidateUser->notify(new JobDetailsUpdatedCandidateNotification($job));
+                    $notifiedUserIds[] = $candidateUser->id;
+                }
+            }
+        }
+
+        $msg = $validated['status'] === 'pending'
             ? __('Job post submitted and is awaiting administrator approval before publication.')
             : __('Job post updated successfully.');
 
@@ -216,9 +235,6 @@ class JobController extends Controller
             ->with('success', $msg);
     }
 
-    /**
-     * Remove the specified job from storage.
-     */
     public function destroy(Job $job)
     {
         $this->authorizeCompanyJob($job);
@@ -229,9 +245,6 @@ class JobController extends Controller
             ->with('success', __('Job post deleted successfully.'));
     }
 
-    /**
-     * Toggle the status of a job (publish/close).
-     */
     public function toggleStatus(Job $job)
     {
         $this->authorizeCompanyJob($job);
@@ -241,15 +254,16 @@ class JobController extends Controller
             $message = __('Job has been closed.');
         } else {
             $job->update(['status' => 'pending', 'is_active' => false]);
+            $admins = User::where('role', 'admin')->get();
+            foreach ($admins as $admin) {
+                $admin->notify(new JobPendingApprovalNotification($job, true));
+            }
             $message = __('Job post submitted for administrator approval.');
         }
 
         return redirect()->back()->with('success', $message);
     }
 
-    /**
-     * Duplicate an existing job post as a new draft.
-     */
     public function duplicate(Job $job)
     {
         $this->authorizeCompanyJob($job);
@@ -263,7 +277,6 @@ class JobController extends Controller
         $newJob->created_by_user_id = Auth::id();
         $newJob->save();
 
-        // Copy skills relation
         $skills = $job->skills->pluck('id')->toArray();
         if (!empty($skills)) {
             $newJob->skills()->sync($skills);
@@ -273,9 +286,6 @@ class JobController extends Controller
             ->with('success', __('Job duplicated successfully as a draft. You can now make changes and publish it.'));
     }
 
-    /**
-     * Security check: ensure the job belongs to the authenticated user's company.
-     */
     protected function authorizeCompanyJob(Job $job): void
     {
         if ($job->company_id !== Auth::user()->company_id) {
@@ -283,3 +293,4 @@ class JobController extends Controller
         }
     }
 }
+

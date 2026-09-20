@@ -13,9 +13,7 @@ use Inertia\Inertia;
 
 class CompanyProfileController extends Controller
 {
-    /**
-     * Display the employer's company profile.
-     */
+
     public function show()
     {
         $user = Auth::user();
@@ -62,17 +60,11 @@ class CompanyProfileController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the company profile.
-     */
     public function edit()
     {
         return $this->show();
     }
 
-    /**
-     * Update the company profile in storage.
-     */
     public function update(Request $request)
     {
         $company = Auth::user()->company;
@@ -92,12 +84,10 @@ class CompanyProfileController extends Controller
             'socials.*'    => ['nullable', 'string', 'max:255'],
         ]);
 
-        // Auto format website URL
         if (!empty($validated['website']) && !preg_match("~^(?:f|ht)tps?://~i", $validated['website'])) {
             $validated['website'] = 'https://' . $validated['website'];
         }
 
-        // Handle logo upload
         if ($request->hasFile('logo')) {
             if ($company->logo && Storage::disk('public')->exists($company->logo)) {
                 Storage::disk('public')->delete($company->logo);
@@ -105,7 +95,6 @@ class CompanyProfileController extends Controller
             $validated['logo'] = $request->file('logo')->store('companies/logos', 'public');
         }
 
-        // Handle cover image upload
         if ($request->hasFile('cover_image')) {
             if ($company->cover_image && Storage::disk('public')->exists($company->cover_image)) {
                 Storage::disk('public')->delete($company->cover_image);
@@ -113,14 +102,12 @@ class CompanyProfileController extends Controller
             $validated['cover_image'] = $request->file('cover_image')->store('companies/covers', 'public');
         }
 
-        // Update company name and ensure unique slug if name changed
         if ($company->name !== $validated['name']) {
             $validated['slug'] = Str::slug($validated['name']) . '-' . $company->id;
         }
 
         $company->update($validated);
 
-        // Sync social media accounts
         if ($request->has('socials')) {
             $allowedPlatforms = ['linkedin', 'facebook', 'x', 'instagram', 'other'];
             foreach ($request->input('socials') as $platform => $url) {
@@ -145,9 +132,6 @@ class CompanyProfileController extends Controller
         return redirect()->back()->with('success', __('Company profile updated successfully.'));
     }
 
-    /**
-     * Delete the company logo.
-     */
     public function deleteLogo()
     {
         $company = Auth::user()->company;
@@ -161,9 +145,6 @@ class CompanyProfileController extends Controller
         return redirect()->back()->with('success', __('Company logo removed successfully.'));
     }
 
-    /**
-     * Delete the company cover photo.
-     */
     public function deleteCover()
     {
         $company = Auth::user()->company;
@@ -177,3 +158,4 @@ class CompanyProfileController extends Controller
         return redirect()->back()->with('success', __('Company cover image removed successfully.'));
     }
 }
+

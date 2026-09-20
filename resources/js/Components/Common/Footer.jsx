@@ -16,10 +16,8 @@ export default function Footer() {
     <footer className="bg-[#0B132B] text-gray-300 pt-16 pb-8 border-t border-gray-800">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
 
-        {/* Main Grid: Brand Column + Link Columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 pb-12">
 
-          {/* Brand Info Column */}
           <div className="lg:col-span-4 space-y-6">
             <Link href={`/${locale}`} className="inline-flex items-center">
               <img
@@ -33,7 +31,6 @@ export default function Footer() {
               {__('The modern recruitment platform connecting top talent with world-class companies. Find your next opportunity or hire the perfect candidate.')}
             </p>
 
-            {/* Social Icons */}
             <div className="flex items-center gap-3 pt-2">
               {socialLinks.map((social, index) => {
                 const Icon = social.icon;
@@ -51,7 +48,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Links Columns Grid */}
           <div className="lg:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-8">
             {footerSections.map((section, idx) => (
               <div key={idx} className="space-y-4">
@@ -76,7 +72,6 @@ export default function Footer() {
 
         </div>
 
-        {/* Bottom Bar Separator */}
         <div className="border-t border-slate-800/80 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
           <p>{__('© 2026 CareerX Inc. All rights reserved.')}</p>
 

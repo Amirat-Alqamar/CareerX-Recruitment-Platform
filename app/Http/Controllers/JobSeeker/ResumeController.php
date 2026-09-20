@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ResumeController extends Controller
 {
-    
+
     public function index()
     {
         return redirect()->route('seeker.profile', ['modal' => 'resumes']);
@@ -69,3 +69,4 @@ class ResumeController extends Controller
         return redirect()->back()->with('success', __('Resume deleted successfully.'));
     }
 }
+

@@ -7,9 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationController extends Controller
 {
-    /**
-     * Display a paginated listing of notifications with full details.
-     */
+
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -58,9 +56,6 @@ class NotificationController extends Controller
         ]);
     }
 
-    /**
-     * Mark a specific notification as read.
-     */
     public function markAsRead(Request $request, string $id)
     {
         $user = Auth::user();
@@ -78,9 +73,6 @@ class NotificationController extends Controller
         return redirect()->back();
     }
 
-    /**
-     * Mark all notifications as read.
-     */
     public function markAllAsRead(Request $request)
     {
         $user = Auth::user();
@@ -91,9 +83,6 @@ class NotificationController extends Controller
         return redirect()->back()->with('success', __('All notifications marked as read.'));
     }
 
-    /**
-     * Clear all notifications for the current user.
-     */
     public function clearAll(Request $request)
     {
         $user = Auth::user();
@@ -104,3 +93,4 @@ class NotificationController extends Controller
         return redirect()->back()->with('success', __('All notifications have been cleared.'));
     }
 }
+

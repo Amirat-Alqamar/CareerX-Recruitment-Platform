@@ -4,14 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Job;
-use Illuminate\Http\Request;
+use App\Notifications\JobModerationStatusNotification;
 use Inertia\Inertia;
 
 class PendingJobController extends Controller
 {
-    /**
-     * Display all job posts awaiting admin approval.
-     */
+
     public function index()
     {
         $pendingJobs = Job::where('status', 'pending')
@@ -23,9 +21,14 @@ class PendingJobController extends Controller
                 'creator:id,name,email',
                 'skills:id,name'
             ])
-            ->latest()
+            ->latest('updated_at')
             ->get()
             ->map(function ($job) {
+                $isUpdated = $job->updated_at && $job->created_at && ($job->updated_at->timestamp > ($job->created_at->timestamp + 60));
+                $displayTime = $isUpdated
+                    ? $job->updated_at->diffForHumans()
+                    : ($job->created_at ? $job->created_at->diffForHumans() : '');
+
                 return [
                     'id' => $job->id,
                     'title' => $job->title,
@@ -47,7 +50,9 @@ class PendingJobController extends Controller
                     'responsibilities' => $job->responsibilities,
                     'skills' => $job->skills->pluck('name'),
                     'created_at' => $job->created_at ? $job->created_at->format('Y-m-d H:i') : '',
-                    'time_ago' => $job->created_at ? $job->created_at->diffForHumans() : '',
+                    'updated_at' => $job->updated_at ? $job->updated_at->format('Y-m-d H:i') : '',
+                    'time_ago' => $displayTime,
+                    'is_updated' => $isUpdated,
                 ];
             });
 
@@ -57,9 +62,6 @@ class PendingJobController extends Controller
         ]);
     }
 
-    /**
-     * Approve pending job post.
-     */
     public function approve(Job $job)
     {
         $job->update([
@@ -69,15 +71,12 @@ class PendingJobController extends Controller
 
         $employer = $job->createdByUser ?? $job->company?->users()->first();
         if ($employer) {
-            $employer->notify(new \App\Notifications\JobModerationStatusNotification($job, 'approved'));
+            $employer->notify(new JobModerationStatusNotification($job, 'approved'));
         }
 
         return redirect()->back()->with('success', __('Job post approved and published successfully.'));
     }
 
-    /**
-     * Reject pending job post.
-     */
     public function reject(Job $job)
     {
         $job->update([
@@ -87,9 +86,10 @@ class PendingJobController extends Controller
 
         $employer = $job->createdByUser ?? $job->company?->users()->first();
         if ($employer) {
-            $employer->notify(new \App\Notifications\JobModerationStatusNotification($job, 'rejected'));
+            $employer->notify(new JobModerationStatusNotification($job, 'rejected'));
         }
 
         return redirect()->back()->with('success', __('Job post rejected.'));
     }
 }
+

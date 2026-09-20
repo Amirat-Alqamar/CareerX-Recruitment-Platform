@@ -10,25 +10,20 @@ use Inertia\Inertia;
 
 class JobManagementController extends Controller
 {
-    /**
-     * Display a listing of all platform jobs with filtering.
-     */
+
     public function index(Request $request)
     {
         $query = Job::with(['company:id,name,logo', 'category:id,name', 'city:id,name', 'country:id,name', 'creator:id,name,email'])
             ->withCount('applications');
 
-        // Filter by status
         if ($request->filled('status') && in_array($request->status, ['pending', 'published', 'closed', 'draft'])) {
             $query->where('status', $request->status);
         }
 
-        // Filter by category
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
-        // Search title or company name
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -84,9 +79,6 @@ class JobManagementController extends Controller
         ]);
     }
 
-    /**
-     * Approve a pending job post for publication.
-     */
     public function approve(Job $job)
     {
         $job->update([
@@ -102,9 +94,6 @@ class JobManagementController extends Controller
         return redirect()->back()->with('success', __('Job post has been approved and is now live.'));
     }
 
-    /**
-     * Reject a job post.
-     */
     public function reject(Job $job)
     {
         $job->update([
@@ -120,9 +109,6 @@ class JobManagementController extends Controller
         return redirect()->back()->with('success', __('Job post has been rejected and closed.'));
     }
 
-    /**
-     * Toggle status between published and closed.
-     */
     public function toggleStatus(Job $job)
     {
         if ($job->status === 'published') {
@@ -136,9 +122,6 @@ class JobManagementController extends Controller
         return redirect()->back()->with('success', $msg);
     }
 
-    /**
-     * Delete a job permanently.
-     */
     public function destroy(Job $job)
     {
         $job->delete();
@@ -146,3 +129,4 @@ class JobManagementController extends Controller
         return redirect()->back()->with('success', __('Job post deleted successfully.'));
     }
 }
+

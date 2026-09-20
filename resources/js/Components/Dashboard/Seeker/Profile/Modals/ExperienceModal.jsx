@@ -111,7 +111,6 @@ export default function ExperienceModal({ isOpen, onClose, experience = null }) 
       maxWidth="max-w-xl"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Job Title */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
             {__('Job Title')} <span className="text-red-500">*</span>
@@ -130,7 +129,6 @@ export default function ExperienceModal({ isOpen, onClose, experience = null }) 
           )}
         </div>
 
-        {/* Company Name */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
             {__('Company Name')} <span className="text-red-500">*</span>
@@ -149,7 +147,6 @@ export default function ExperienceModal({ isOpen, onClose, experience = null }) 
           )}
         </div>
 
-        {/* Dates Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
@@ -186,7 +183,6 @@ export default function ExperienceModal({ isOpen, onClose, experience = null }) 
           </div>
         </div>
 
-        {/* Currently Working Checkbox */}
         <div className="flex items-center gap-2 pt-1">
           <input
             type="checkbox"
@@ -201,7 +197,6 @@ export default function ExperienceModal({ isOpen, onClose, experience = null }) 
           </label>
         </div>
 
-        {/* Description */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
             {__('Responsibilities & Description')}
@@ -219,7 +214,6 @@ export default function ExperienceModal({ isOpen, onClose, experience = null }) 
           )}
         </div>
 
-        {/* Modal Actions */}
         <div className="flex items-center justify-between pt-4 border-t border-slate-100 mt-6">
           {isEdit ? (
             <button

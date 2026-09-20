@@ -28,7 +28,6 @@ export default function HeroSection() {
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
 
-          {/* Left Column - Text Content */}
           <div className="lg:col-span-6 space-y-8">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-light border border-gray-200 text-primary font-semibold text-xs">
               <span className="w-2 h-2 rounded-full bg-primary-accent animate-pulse"></span>
@@ -43,7 +42,6 @@ export default function HeroSection() {
               {__("CareerX connects top professionals with world-class companies. Whether you're launching a career or scaling a team, we make hiring simple, fast, and effective.")}
             </p>
 
-            {/* Search Box Card */}
             <form onSubmit={handleSearch} className="bg-white p-2.5 sm:p-3 rounded-2xl shadow-xl border border-gray-100 flex flex-col sm:flex-row items-center gap-3">
               <div className="flex items-center gap-3 px-3 w-full sm:w-1/2">
                 <Search className="w-5 h-5 text-gray-400 shrink-0" />
@@ -77,7 +75,6 @@ export default function HeroSection() {
               </button>
             </form>
 
-            {/* Popular Searches */}
             <div className="flex flex-wrap items-center gap-2 pt-2">
               <span className="text-xs font-semibold text-gray-400">{__('Popular:')}</span>
               {popularTags.map((tag) => (
@@ -93,7 +90,6 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Right Column - Image & Floating Cards */}
           <div className="lg:col-span-6 relative">
             <div className="relative rounded-3xl overflow-hidden border border-gray-100 shadow-2xl">
               <img
@@ -104,7 +100,6 @@ export default function HeroSection() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             </div>
 
-            {/* Floating Badge 1 - AI Match Rate */}
             <div className="absolute top-6 right-6 rtl:right-auto rtl:left-6 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-white/40 flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-primary-light text-primary-accent flex items-center justify-center font-bold text-sm">
                 98%
@@ -115,7 +110,6 @@ export default function HeroSection() {
               </div>
             </div>
 
-            {/* Floating Badge 2 - New Jobs */}
             <div className="absolute -bottom-6 start-6 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 flex items-center gap-3.5 hidden sm:flex z-10">
             <div className="w-12 h-12 rounded-xl bg-primary text-white flex items-center justify-center shadow-md shrink-0">
                 <Briefcase className="w-6 h-6" />

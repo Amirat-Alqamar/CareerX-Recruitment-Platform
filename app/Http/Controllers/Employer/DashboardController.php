@@ -11,9 +11,7 @@ use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display the employer dashboard overview.
-     */
+
     public function index(Request $request)
     {
         $user = Auth::user();
@@ -26,7 +24,6 @@ class DashboardController extends Controller
 
         $companyId = $company->id;
 
-        // Key hiring metrics
         $totalJobs = Job::where('company_id', $companyId)->count();
         $activeJobs = Job::where('company_id', $companyId)->where(function ($q) {
             $q->where('status', 'published')->orWhere('is_active', true);
@@ -54,7 +51,6 @@ class DashboardController extends Controller
 
         $hiringRate = $totalApplicants > 0 ? round(($hiredApplicants / $totalApplicants) * 100, 1) : 0;
 
-        // Recent posted jobs
         $recentJobs = Job::where('company_id', $companyId)
             ->withCount('applications')
             ->latest()
@@ -72,7 +68,6 @@ class DashboardController extends Controller
                 ];
             });
 
-        // Recent job applications received
         $recentApplicants = JobApplication::whereHas('jobPost', function ($q) use ($companyId) {
             $q->where('company_id', $companyId);
         })
@@ -132,3 +127,4 @@ class DashboardController extends Controller
         ]);
     }
 }
+

@@ -15,7 +15,6 @@ export default function FaqSection() {
     <section id="faq" className="py-20 bg-[#F8FAFC] scroll-mt-20">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
 
-        {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
           <span className="text-xs font-bold uppercase tracking-wider text-[#00BBA7]">
             {__('GOT QUESTIONS?')}
@@ -25,7 +24,6 @@ export default function FaqSection() {
           </h2>
         </div>
 
-        {/* Accordion Container */}
         <div className="max-w-3xl mx-auto space-y-4">
           {faqData.map((item) => {
             const isOpen = openId === item.id;
@@ -39,7 +37,6 @@ export default function FaqSection() {
                     : 'bg-white border-slate-100 hover:border-slate-200'
                 }`}
               >
-                {/* Accordion Header Button */}
                 <button
                   onClick={() => toggleFaq(item.id)}
                   className="w-full p-6 text-left flex items-center justify-between gap-4 cursor-pointer focus:outline-none"
@@ -58,7 +55,6 @@ export default function FaqSection() {
                   </div>
                 </button>
 
-                {/* Accordion Content */}
                 {isOpen && (
                   <div className="px-6 pb-6 pt-0 text-slate-500 text-sm sm:text-base leading-relaxed border-t border-slate-50 mt-1 animate-fade-in">
                     <p className="pt-4">{__(item.answer)}</p>

@@ -1,4 +1,3 @@
-// resources/js/Components/UI/Dashboard/StatusCard.jsx
 import React from 'react';
 import { TrendingUp } from 'lucide-react';
 
@@ -6,7 +5,7 @@ export default function StatusCard({
   title,
   value,
   icon: Icon,
-  variant = 'default', // default | success | warning | info | purple
+  variant = 'default', 
   badgeText,
 }) {
 

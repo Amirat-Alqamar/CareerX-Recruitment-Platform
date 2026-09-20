@@ -18,7 +18,6 @@ export default function ForgotPassword({ status }) {
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center relative" dir={direction}>
             <Head title={__('Forgot your password?')} />
-            {/* Language Switcher in top corner */}
             <div className="w-full max-w-md flex justify-end mb-4">
                 <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 shadow-xs text-xs font-semibold">
                     <Globe className="w-3.5 h-3.5 text-primary mx-1" />
@@ -41,7 +40,6 @@ export default function ForgotPassword({ status }) {
                 </div>
             </div>
 
-            {/* Logo & Header */}
             <div className="text-center mb-8">
                 <Link href={`/${locale}`} className="inline-block mb-2">
                     <img
@@ -56,10 +54,8 @@ export default function ForgotPassword({ status }) {
                 </p>
             </div>
 
-            {/* Main Form Card */}
             <div className="max-w-md w-full bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
 
-                {/* Success Status Alert */}
                 {status && (
                     <div className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-medium flex items-center gap-2.5 animate-fade-in">
                         <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
@@ -68,7 +64,6 @@ export default function ForgotPassword({ status }) {
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Email Input */}
                     <div>
                         <label className="block text-xs font-semibold text-gray-700 mb-1">{__('Email Address')}</label>
                         <div className="relative">
@@ -86,7 +81,6 @@ export default function ForgotPassword({ status }) {
                         {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
                     </div>
 
-                    {/* Submit Button */}
                     <button
                         type="submit"
                         disabled={processing}
@@ -97,7 +91,6 @@ export default function ForgotPassword({ status }) {
                     </button>
                 </form>
 
-                {/* Back to Login Link */}
                 <p className="text-center text-xs text-gray-500 mt-6 flex items-center justify-center gap-1.5">
                     <ArrowLeft className="w-3.5 h-3.5 rtl:rotate-180 text-gray-400" />
                     <Link

@@ -94,7 +94,6 @@ export default function CertificationModal({ isOpen, onClose, certification = nu
       maxWidth="max-w-lg"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Certificate Name */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
             {__('Certificate Name')} <span className="text-red-500">*</span>
@@ -113,7 +112,6 @@ export default function CertificationModal({ isOpen, onClose, certification = nu
           )}
         </div>
 
-        {/* Issuing Organization */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
             {__('Issuing Organization')} <span className="text-red-500">*</span>
@@ -132,7 +130,6 @@ export default function CertificationModal({ isOpen, onClose, certification = nu
           )}
         </div>
 
-        {/* Issue Date */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
             {__('Issue Date')}
@@ -149,7 +146,6 @@ export default function CertificationModal({ isOpen, onClose, certification = nu
           )}
         </div>
 
-        {/* Credential URL */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
             {__('Credential Link / Verification URL')}
@@ -167,7 +163,6 @@ export default function CertificationModal({ isOpen, onClose, certification = nu
           )}
         </div>
 
-        {/* Modal Actions */}
         <div className="flex items-center justify-between pt-4 border-t border-slate-100 mt-6">
           {isEdit ? (
             <button

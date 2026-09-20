@@ -12,9 +12,7 @@ use Inertia\Inertia;
 
 class JobListingController extends Controller
 {
-    /**
-     * عرض الصفحة الرئيسية مع أحدث 6 وظائف من قاعدة البيانات
-     */
+
     public function home()
     {
         $featuredJobs = Job::with(['company', 'category', 'city', 'skills'])
@@ -32,31 +30,39 @@ class JobListingController extends Controller
             $q->where('is_active', true)->where('status', 'published');
         }])->get();
 
+        $featuredCompanies = Company::with(['city'])
+            ->withCount(['jobs' => function ($q) {
+                $q->where('is_active', true)->where('status', 'published');
+            }])
+            ->latest()
+            ->take(6)
+            ->get();
+
+        $totalCompaniesCount = Company::count();
+
         $user = Auth::user();
         $savedJobIds = $user ? $user->savedJobs()->pluck('job_post_id')->toArray() : [];
         $appliedJobIds = $user?->profile ? $user->profile->applications()->pluck('job_post_id')->toArray() : [];
         $resumes = $user?->profile ? $user->profile->resumes()->latest()->get() : [];
 
         return Inertia::render('LandingPage', [
-            'featuredJobs'   => $featuredJobs,
-            'totalJobsCount' => $totalJobsCount,
-            'categories'     => $categories,
-            'savedJobIds'    => $savedJobIds,
-            'appliedJobIds'  => $appliedJobIds,
-            'resumes'        => $resumes,
+            'featuredJobs'        => $featuredJobs,
+            'totalJobsCount'      => $totalJobsCount,
+            'featuredCompanies'   => $featuredCompanies,
+            'totalCompaniesCount' => $totalCompaniesCount,
+            'categories'          => $categories,
+            'savedJobIds'         => $savedJobIds,
+            'appliedJobIds'       => $appliedJobIds,
+            'resumes'             => $resumes,
         ]);
     }
 
-    /**
-     * عرض صفحة جميع الوظائف مع الفلترة الشاملة
-     */
     public function index(Request $request)
     {
         $query = Job::with(['company', 'category', 'city', 'skills'])
             ->where('is_active', true)
             ->where('status', 'published');
 
-        // البحث بالكلمة المفتاحية في العنوان أو الوصف أو اسم الشركة
         if ($request->filled('keyword')) {
             $keyword = $request->keyword;
             $query->where(function ($q) use ($keyword) {
@@ -68,12 +74,10 @@ class JobListingController extends Controller
             });
         }
 
-        // الفلترة بالشركة
         if ($request->filled('company_id')) {
             $query->where('company_id', $request->company_id);
         }
 
-        // الفلترة بالتصنيف (الرقم أو الرابط slug)
         if ($request->filled('category')) {
             $cat = $request->category;
             $query->where(function ($q) use ($cat) {
@@ -89,7 +93,6 @@ class JobListingController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
-        // الفلترة بطبيعة العمل (remotely / remote / on_site / hybrid)
         if ($request->filled('work_type')) {
             $workType = $request->work_type;
             if ($workType === 'remote' || $workType === 'remotely') {
@@ -99,17 +102,14 @@ class JobListingController extends Controller
             }
         }
 
-        // الفلترة بنوع الوظيفة (full_time / part_time / internship / contract)
         if ($request->filled('job_type')) {
             $query->where('job_type', $request->job_type);
         }
 
-        // الفلترة بالمدينة
         if ($request->filled('city_id')) {
             $query->where('city_id', $request->city_id);
         }
 
-        // الفلترة بالموقع أو المدينة نصياً
         if ($request->filled('location')) {
             $loc = $request->location;
             $query->where(function ($q) use ($loc) {
@@ -140,7 +140,6 @@ class JobListingController extends Controller
             ? Company::find($request->company_id)
             : null;
 
-        // حساب عدد الوظائف لكل تصنيف بناءً على الشركة والبحث المحدد لمنع أي تناقض في الأعداد
         $categories = JobCategory::withCount(['jobs' => function ($q) use ($request) {
             $q->where('is_active', true)->where('status', 'published');
 
@@ -189,9 +188,6 @@ class JobListingController extends Controller
         ]);
     }
 
-    /**
-     * عرض دليل واستعراض الشركات المسجلة ديناميكياً
-     */
     public function companies(Request $request)
     {
         $query = Company::withCount(['jobs' => function ($q) {
@@ -217,3 +213,4 @@ class JobListingController extends Controller
         ]);
     }
 }
+

@@ -3,7 +3,6 @@ import { MapPin, Bookmark, BookmarkCheck, CheckCircle2, Eye } from 'lucide-react
 import { useTranslation } from '@/hooks/useTranslation';
 import { router, usePage } from '@inertiajs/react';
 
-// Background colors palette for company avatars
 const AVATAR_BG_COLORS = [
   'bg-teal-900',
   'bg-purple-600',
@@ -29,12 +28,10 @@ export default function JobCard({
   const [isSaved, setIsSaved] = useState(isSavedProp);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Sync state if prop changes
   React.useEffect(() => {
     setIsSaved(savedJobIds.includes(job.id));
   }, [savedJobIds, job.id]);
 
-  // Handle Save Bookmark
   const handleToggleSave = (e) => {
     e.stopPropagation();
     if (!auth?.user) {
@@ -58,10 +55,8 @@ export default function JobCard({
     );
   };
 
-  // Extract Company Name
   const companyName = job.company?.name || (typeof job.company === 'string' ? job.company : __('CareerX Partner'));
 
-  // Company Initials & BG
   const companyInitials = job.logoText || companyName
     .split(' ')
     .map((w) => w[0])
@@ -72,10 +67,8 @@ export default function JobCard({
   const colorIndex = Math.abs((job.id || 0) + companyName.length) % AVATAR_BG_COLORS.length;
   const avatarBg = job.logoBg || AVATAR_BG_COLORS[colorIndex];
 
-  // Location string
   const locationText = job.city?.name || job.location || __('Global');
 
-  // Job Type
   const formatJobType = (type) => {
     if (!type) return __('Full-time');
     if (type === 'full_time' || type === 'Full-time') return __('Full-time');
@@ -88,15 +81,12 @@ export default function JobCard({
 
   const jobType = formatJobType(job.job_type || job.type);
 
-  // Remote check
   const isRemote = job.work_type === 'remote' || job.work_type === 'remotely' || Boolean(job.isRemote);
 
-  // Skills list
   const skillsList = Array.isArray(job.skills)
     ? job.skills.map((s) => (typeof s === 'string' ? s : s.name))
     : [];
 
-  // Salary string
   const salaryText = (() => {
     if (job.salary_min && job.salary_max) {
       return `$${Number(job.salary_min).toLocaleString()} – $${Number(job.salary_max).toLocaleString()}`;
@@ -106,12 +96,10 @@ export default function JobCard({
     return __('Negotiable');
   })();
 
-  // Experience text
   const experienceText = job.experience_years
     ? `${job.experience_years} ${__('Years')}`
     : (job.experience ? __(job.experience) : __('Not specified'));
 
-  // Posted At
   const postedAtText = job.postedAt || (job.created_at ? new Date(job.created_at).toLocaleDateString() : '');
 
   return (
@@ -120,7 +108,6 @@ export default function JobCard({
       className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between h-full group cursor-pointer hover:border-teal-600/30"
     >
       <div className="space-y-4">
-        {/* Header: Logo, Title, Bookmark */}
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
             {job.company?.logo ? (
@@ -169,7 +156,6 @@ export default function JobCard({
           </button>
         </div>
 
-        {/* Location & Badges */}
         <div className="flex flex-wrap items-center gap-2 pt-1">
           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
             <MapPin className="w-3.5 h-3.5 text-gray-400" />
@@ -191,7 +177,6 @@ export default function JobCard({
           )}
         </div>
 
-        {/* Skills Tags */}
         {skillsList.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5 pt-1">
             {skillsList.slice(0, 4).map((skill, index) => (
@@ -211,7 +196,6 @@ export default function JobCard({
         )}
       </div>
 
-      {/* Footer: Salary, Details & Apply */}
       <div className="pt-6 mt-4 border-t border-gray-50 flex items-center justify-between gap-2">
         <div>
           <p className="text-base font-bold text-gray-900">{salaryText}</p>

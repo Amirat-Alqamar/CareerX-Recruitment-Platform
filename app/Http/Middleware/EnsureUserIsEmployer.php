@@ -13,6 +13,14 @@ class EnsureUserIsEmployer
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if ($request->user() && $request->user()->isAdmin()) {
+            return redirect()->to(
+                class_exists(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::class)
+                    ? \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl(route('admin.dashboard'))
+                    : route('admin.dashboard')
+            );
+        }
+
         if (!$request->user() || !$request->user()->isEmployer()) {
             abort(403, __('Unauthorized access. Only employers can access this area.'));
         }

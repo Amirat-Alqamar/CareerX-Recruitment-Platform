@@ -46,9 +46,7 @@ export default function DashboardHeader({ onToggleSidebar }) {
 
   return (
     <header className="w-full bg-white border-b border-slate-100 px-4 sm:px-8 py-3.5 flex items-center justify-between sticky top-0 z-20">
-      {/* Start / Left Actions (Menu Toggle + Home Link) */}
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* Mobile Menu Toggle Button */}
         <button
           type="button"
           onClick={onToggleSidebar}
@@ -67,9 +65,7 @@ export default function DashboardHeader({ onToggleSidebar }) {
         </Link>
       </div>
 
-      {/* Right Actions */}
       <div className="flex items-center gap-3 sm:gap-4">
-        {/* Language Switcher */}
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setLangDropdownOpen(!langDropdownOpen)}
@@ -105,7 +101,6 @@ export default function DashboardHeader({ onToggleSidebar }) {
           )}
         </div>
 
-        {/* 2FA Security Link */}
         <Link
           href={`/${locale}/2fa`}
           className={`p-2 rounded-full transition-colors ${
@@ -118,7 +113,6 @@ export default function DashboardHeader({ onToggleSidebar }) {
           <ShieldCheck className="w-5 h-5 stroke-[1.75]" />
         </Link>
 
-        {/* Direct Notifications Link with Counter Badge */}
         <Link
         href={`/${locale}/notifications`}
         className="relative p-2 text-slate-500 hover:text-[#008A7B] hover:bg-slate-100 rounded-full transition-colors focus:outline-none"
@@ -133,7 +127,6 @@ export default function DashboardHeader({ onToggleSidebar }) {
         )}
         </Link>
 
-        {/* User Avatar Circle */}
         <Link
           href={
             userRole === 'admin'

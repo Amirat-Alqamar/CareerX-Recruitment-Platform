@@ -12,7 +12,6 @@ export default function BlogSection() {
     <section id="blog" className="py-20 bg-white scroll-mt-20">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
 
-        {/* Centered Header Section */}
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
           <span className="text-xs font-bold uppercase tracking-wider text-[#00BBA7]">
             {__('CAREER RESOURCES')}
@@ -22,7 +21,6 @@ export default function BlogSection() {
           </h2>
         </div>
 
-        {/* Article Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
           {articlesData.map((article) => (
             <ArticleCard
@@ -35,7 +33,6 @@ export default function BlogSection() {
 
       </div>
 
-      {/* Reader Modal */}
       <ArticleModal
         article={selectedArticle}
         onClose={() => setSelectedArticle(null)}

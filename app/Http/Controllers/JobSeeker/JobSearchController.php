@@ -12,16 +12,13 @@ use Inertia\Inertia;
 
 class JobSearchController extends Controller
 {
-    /**
-     * تصفح الوظائف والبحث مع التصفية (Filters)
-     */
+
     public function index(Request $request)
     {
         $query = Job::with(['company', 'category', 'city', 'skills'])
             ->where('is_active', true)
             ->where('status', 'published');
 
-        // فلترة بالكلمة المفتاحية في العنوان أو الوصف
         if ($request->filled('keyword')) {
             $query->where(function ($q) use ($request) {
                 $q->where('title', 'like', '%' . $request->keyword . '%')
@@ -29,22 +26,18 @@ class JobSearchController extends Controller
             });
         }
 
-        // فلترة بالتصنيف / القسم
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
-        // فلترة بنوع العمل (remotely / on_site / hybrid)
         if ($request->filled('work_type')) {
             $query->where('work_type', $request->work_type);
         }
 
-        // فلترة بنوع الوظيفة (full_time / part_time / internship)
         if ($request->filled('job_type')) {
             $query->where('job_type', $request->job_type);
         }
 
-        // فلترة بالمدينة
         if ($request->filled('city_id')) {
             $query->where('city_id', $request->city_id);
         }
@@ -74,12 +67,10 @@ class JobSearchController extends Controller
         ]);
     }
 
-    /**
-     * عرض تفاصيل وظيفة محددة
-     */
     public function show(Job $job)
     {
         $job->increment('views_count');
         return redirect()->route('job-seeker.jobs.index', ['job_id' => $job->id]);
     }
 }
+

@@ -3,6 +3,7 @@ import { Head } from '@inertiajs/react';
 import MainLayout from '@/Layouts/MainLayout';
 import HeroSection from '@/Components/Landing/HeroSection';
 import FeaturedJobsSection from '@/Components/Landing/FeaturedJobsSection';
+import FeaturedCompaniesSection from '@/Components/Landing/FeaturedCompaniesSection';
 import CategoriesSection from '@/Components/Landing/CategoriesSection';
 import HowItWorksSection from '@/Components/Landing/HowItWorksSection';
 import TestimonialsSection from '@/Components/Landing/TestimonialsSection';
@@ -14,6 +15,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 export default function LandingPage({
   featuredJobs = [],
   totalJobsCount = 0,
+  featuredCompanies = [],
+  totalCompaniesCount = 0,
   categories = [],
   savedJobIds = [],
   appliedJobIds = [],
@@ -43,6 +46,10 @@ export default function LandingPage({
         savedJobIds={savedJobIds}
         appliedJobIds={appliedJobIds}
         resumes={resumes}
+      />
+      <FeaturedCompaniesSection
+        companies={featuredCompanies}
+        totalCompaniesCount={totalCompaniesCount}
       />
       <CategoriesSection categories={categories} />
       <HowItWorksSection />

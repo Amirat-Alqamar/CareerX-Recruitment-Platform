@@ -10,7 +10,5 @@ class Certification extends Model
 
     public function profile() { return $this->belongsTo(JobSeekerProfile::class, 'profile_id'); }
 
-
 }
-
 

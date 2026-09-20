@@ -21,16 +21,13 @@ export default function ArticleModal({ article, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 md:p-10 bg-slate-900/60 backdrop-blur-md">
-      {/* Backdrop overlay */}
       <div
         className="fixed inset-0"
         onClick={onClose}
       />
 
-      {/* Modal Container */}
       <div className="relative bg-white rounded-3xl w-full max-w-3xl max-h-[85vh] flex flex-col z-10 shadow-2xl overflow-hidden border border-slate-100">
 
-        {/* Sticky Header Actions */}
         <div className="absolute top-4 right-4 z-20">
           <button
             onClick={onClose}
@@ -41,10 +38,8 @@ export default function ArticleModal({ article, onClose }) {
           </button>
         </div>
 
-        {/* Scrollable Body Content */}
         <div className="overflow-y-auto p-6 sm:p-8 space-y-6 custom-scrollbar">
 
-          {/* Article Banner Image */}
           <div className="h-64 sm:h-80 w-full overflow-hidden rounded-2xl bg-slate-100">
             <img
               src={article.image}
@@ -53,7 +48,6 @@ export default function ArticleModal({ article, onClose }) {
             />
           </div>
 
-          {/* Metadata Badges */}
           <div className="flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-500">
             <span className="px-3 py-1 rounded-full bg-[#E6F8F6] text-[#008A7B]">
               {__(article.category)}
@@ -78,15 +72,12 @@ export default function ArticleModal({ article, onClose }) {
             )}
           </div>
 
-          {/* Title */}
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
             {__(article.title)}
           </h2>
 
-          {/* Divider */}
           <hr className="border-slate-100" />
 
-          {/* Article Full Content */}
           <div className="text-slate-600 text-base leading-relaxed space-y-4">
             {article.content ? (
               <div dangerouslySetInnerHTML={{ __html: __(article.content) }} />

@@ -3,7 +3,6 @@ import { Link } from '@inertiajs/react';
 import { ArrowRight, Briefcase } from 'lucide-react';
 import JobCard from '../ui/JobCard';
 import JobDetailsModal from '@/Components/Jobs/JobDetailsModal';
-import { featuredJobs as staticFeaturedJobs } from '@/Data/jobs';
 import { useTranslation } from '@/hooks/useTranslation';
 
 export default function FeaturedJobsSection({
@@ -16,8 +15,7 @@ export default function FeaturedJobsSection({
   const { __, locale } = useTranslation();
   const [selectedJob, setSelectedJob] = useState(null);
 
-  // If dynamic jobs are passed and non-empty, use them (limit to max 6 latest). Otherwise fallback to static data.
-  const displayJobs = (jobs && jobs.length > 0 ? jobs : staticFeaturedJobs).slice(0, 6);
+  const displayJobs = (jobs || []).slice(0, 6);
 
   const jobsRoute = `/${locale}/jobs`;
 
@@ -25,7 +23,6 @@ export default function FeaturedJobsSection({
     <section id="jobs" className="py-16 bg-gray-50/50 scroll-mt-20">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
 
-        {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-primary-accent">
@@ -44,7 +41,6 @@ export default function FeaturedJobsSection({
           </Link>
         </div>
 
-        {/* Cards Grid */}
         {displayJobs.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {displayJobs.map((job) => (
@@ -68,7 +64,6 @@ export default function FeaturedJobsSection({
           </div>
         )}
 
-        {/* Bottom Button */}
         <div className="mt-12 text-center">
           <Link
             href={jobsRoute}
@@ -85,7 +80,6 @@ export default function FeaturedJobsSection({
 
       </div>
 
-      {/* Job Details Modal */}
       <JobDetailsModal
         isOpen={Boolean(selectedJob)}
         onClose={() => setSelectedJob(null)}

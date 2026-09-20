@@ -30,10 +30,8 @@ export default function TwoFactorModal({ isOpen, onClose }) {
     const [copiedCodes, setCopiedCodes] = useState(false);
     const [copiedKey, setCopiedKey] = useState(false);
 
-    // State machine: 'status', 'enabling' (scanning qr & confirming), 'show_recovery', 'confirm_disable'
     const [step, setStep] = useState('status');
 
-    // 2FA Data
     const [qrCodeSvg, setQrCodeSvg] = useState('');
     const [secretKey, setSecretKey] = useState('');
     const [recoveryCodes, setRecoveryCodes] = useState([]);
@@ -107,7 +105,6 @@ export default function TwoFactorModal({ isOpen, onClose }) {
             await axios.post('/user/confirmed-two-factor-authentication', {
                 code: confirmationCode
             });
-            // Fetch latest recovery codes
             const codesRes = await axios.get('/user/two-factor-recovery-codes');
             setRecoveryCodes(Array.isArray(codesRes.data) ? codesRes.data : []);
             setStep('show_recovery');
@@ -196,7 +193,6 @@ export default function TwoFactorModal({ isOpen, onClose }) {
             <div className="fixed inset-0" onClick={onClose} />
 
             <div className="relative bg-white w-full max-w-xl rounded-3xl shadow-2xl overflow-hidden flex flex-col z-10 border border-slate-100 max-h-[90vh]">
-                {/* Header */}
                 <div className="flex items-center justify-between px-6 py-5 border-b border-slate-100 bg-slate-50/70">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-2xl bg-teal-50 border border-teal-100 text-[#00B7B5] flex items-center justify-center shadow-xs">
@@ -220,7 +216,6 @@ export default function TwoFactorModal({ isOpen, onClose }) {
                     </button>
                 </div>
 
-                {/* Body */}
                 <div className="overflow-y-auto p-6 space-y-6">
                     {error && (
                         <div className="p-3.5 bg-red-50 border border-red-200 rounded-2xl flex items-center gap-2.5 text-xs text-red-600">
@@ -236,7 +231,6 @@ export default function TwoFactorModal({ isOpen, onClose }) {
                         </div>
                     ) : (
                         <>
-                            {/* STEP 1: Status Overview (Not enabled or Already Enabled) */}
                             {step === 'status' && (
                                 <div className="space-y-6">
                                     <div className={`p-5 rounded-2xl border flex items-start gap-4 ${
@@ -316,7 +310,6 @@ export default function TwoFactorModal({ isOpen, onClose }) {
                                 </div>
                             )}
 
-                            {/* STEP 2: Enabling (QR Code Scan + Code Confirmation) */}
                             {step === 'enabling' && (
                                 <div className="space-y-5">
                                     <div className="text-center">
@@ -331,7 +324,6 @@ export default function TwoFactorModal({ isOpen, onClose }) {
                                         </p>
                                     </div>
 
-                                    {/* QR Code Container */}
                                     <div className="flex flex-col items-center justify-center p-5 bg-slate-50 rounded-2xl border border-slate-200">
                                         {qrCodeSvg ? (
                                             <div
@@ -362,7 +354,6 @@ export default function TwoFactorModal({ isOpen, onClose }) {
                                         )}
                                     </div>
 
-                                    {/* Confirmation Form */}
                                     <form onSubmit={handleConfirm2FA} className="space-y-4 pt-2">
                                         <div className="text-center">
                                             <span className="text-xs font-bold text-[#00B7B5] uppercase tracking-wider bg-teal-50 px-3 py-1 rounded-full border border-teal-100">
@@ -425,7 +416,6 @@ export default function TwoFactorModal({ isOpen, onClose }) {
                                 </div>
                             )}
 
-                            {/* STEP 3: Recovery Codes View */}
                             {step === 'show_recovery' && (
                                 <div className="space-y-5">
                                     <div className="p-4 bg-teal-50 border border-teal-100 rounded-2xl flex items-start gap-3 text-teal-950">
@@ -438,7 +428,6 @@ export default function TwoFactorModal({ isOpen, onClose }) {
                                         </div>
                                     </div>
 
-                                    {/* Codes Grid */}
                                     <div className="grid grid-cols-2 gap-2 bg-slate-50 p-4 rounded-2xl border border-slate-200">
                                         {recoveryCodes.map((code, idx) => (
                                             <div
@@ -450,7 +439,6 @@ export default function TwoFactorModal({ isOpen, onClose }) {
                                         ))}
                                     </div>
 
-                                    {/* Action Buttons */}
                                     <div className="flex flex-wrap items-center gap-2 justify-between pt-2">
                                         <div className="flex items-center gap-2">
                                             <button
@@ -495,7 +483,6 @@ export default function TwoFactorModal({ isOpen, onClose }) {
                                 </div>
                             )}
 
-                            {/* STEP 4: Confirm Disable */}
                             {step === 'confirm_disable' && (
                                 <div className="space-y-5 text-center py-2">
                                     <div className="w-14 h-14 bg-red-50 border border-red-100 text-red-600 rounded-2xl mx-auto flex items-center justify-center">

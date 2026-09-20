@@ -96,7 +96,6 @@ export default function LanguageModal({ isOpen, onClose, language = null, allLan
       maxWidth="max-w-lg"
     >
       <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Language Name */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-2">
             {__('Language Name')} <span className="text-red-500">*</span>
@@ -114,7 +113,6 @@ export default function LanguageModal({ isOpen, onClose, language = null, allLan
             <p className="text-xs text-red-500 mt-1 font-medium">{errors.language_name}</p>
           )}
 
-          {/* Popular Language Suggestions (Only in Add mode) */}
           {!isEdit && (
             <div className="mt-2.5 flex flex-wrap gap-1.5">
               {popularLanguages.map((lang) => (
@@ -135,7 +133,6 @@ export default function LanguageModal({ isOpen, onClose, language = null, allLan
           )}
         </div>
 
-        {/* Proficiency Level */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-2">
             {__('Proficiency Level')} <span className="text-red-500">*</span>
@@ -157,7 +154,6 @@ export default function LanguageModal({ isOpen, onClose, language = null, allLan
           )}
         </div>
 
-        {/* Modal Actions */}
         <div className="flex items-center justify-between pt-4 border-t border-slate-100">
           {isEdit ? (
             <button

@@ -3,26 +3,22 @@ import { Head, Link, router, usePage } from '@inertiajs/react';
 import {
   Users,
   Search,
-  UserX,
-  UserCheck,
   Trash2,
-  Shield,
   Briefcase,
   Building2,
+  Shield,
   CheckCircle2,
   AlertCircle,
   X,
   Lock,
   Unlock,
-  ChevronLeft,
-  ChevronRight,
-  Filter,
 } from 'lucide-react';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import useTranslation from '@/hooks/useTranslation';
+import DeleteConfirmModal from '@/Components/Common/DeleteConfirmModal';
 
 export default function AdminUsers({ users, stats = {}, filters = {} }) {
-  const { __, locale, isRtl } = useTranslation();
+  const { __, locale } = useTranslation();
   const { flash, auth } = usePage().props;
 
   const [search, setSearch] = useState(filters.search || '');
@@ -35,7 +31,6 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
       ...filters,
       ...newFilters,
     };
-    // remove empty
     Object.keys(updated).forEach((k) => !updated[k] && delete updated[k]);
 
     router.get(`/${locale}/admin/users`, updated, {
@@ -51,11 +46,9 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
 
   const handleToggleBan = (user) => {
     if (user.status) {
-      // User is currently active -> show modal to input ban reason
       setSelectedUserForBan(user);
       setBanReason('');
     } else {
-      // User is banned -> unban directly
       router.post(
         `/${locale}/admin/users/${user.id}/toggle-ban`,
         {},
@@ -117,7 +110,6 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
       <Head title={__('User Management') + ' - CareerX'} />
 
       <div className="space-y-6 max-w-7xl mx-auto pb-12 animate-fade-in">
-        {/* Flash notifications */}
         {flash?.success && (
           <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center gap-3">
             <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
@@ -131,7 +123,6 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
           </div>
         )}
 
-        {/* Header Section */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -143,7 +134,6 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
           </div>
         </div>
 
-        {/* Stats Overview */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           <button
             type="button"
@@ -163,7 +153,7 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
             onClick={() => handleFilter({ role: 'job_seeker', status: '' })}
             className={`p-4 rounded-2xl border text-start transition-all cursor-pointer ${
               filters.role === 'job_seeker'
-                ? 'bg-blue-600 text-white border-blue-600 shadow-md'
+                ? 'bg-amber-500 text-slate-950 border-amber-500 shadow-md font-black'
                 : 'bg-white text-slate-800 border-slate-100 hover:border-slate-200'
             }`}
           >
@@ -176,7 +166,7 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
             onClick={() => handleFilter({ role: 'employer', status: '' })}
             className={`p-4 rounded-2xl border text-start transition-all cursor-pointer ${
               filters.role === 'employer'
-                ? 'bg-indigo-600 text-white border-indigo-600 shadow-md'
+                ? 'bg-emerald-600 text-white border-emerald-600 shadow-md'
                 : 'bg-white text-slate-800 border-slate-100 hover:border-slate-200'
             }`}
           >
@@ -189,7 +179,7 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
             onClick={() => handleFilter({ role: 'admin', status: '' })}
             className={`p-4 rounded-2xl border text-start transition-all cursor-pointer ${
               filters.role === 'admin'
-                ? 'bg-rose-600 text-white border-rose-600 shadow-md'
+                ? 'bg-slate-700 text-white border-slate-700 shadow-md'
                 : 'bg-white text-slate-800 border-slate-100 hover:border-slate-200'
             }`}
           >
@@ -211,7 +201,6 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
           </button>
         </div>
 
-        {/* Search and Filters Bar */}
         <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-3">
           <form onSubmit={handleSearchSubmit} className="relative w-full md:max-w-md">
             <Search className="w-4 h-4 text-slate-400 absolute start-3.5 top-1/2 -translate-y-1/2" />
@@ -225,7 +214,6 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
           </form>
 
           <div className="flex items-center gap-2 w-full md:w-auto overflow-x-auto pb-1 md:pb-0">
-            {/* Role Filter */}
             <select
               value={filters.role || ''}
               onChange={(e) => handleFilter({ role: e.target.value })}
@@ -237,7 +225,6 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
               <option value="admin">{__('Administrator')}</option>
             </select>
 
-            {/* Status Filter */}
             <select
               value={filters.status || ''}
               onChange={(e) => handleFilter({ status: e.target.value })}
@@ -263,7 +250,6 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
           </div>
         </div>
 
-        {/* Users Table */}
         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-start border-collapse">
@@ -283,7 +269,6 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
                     const isCurrentUser = user.id === auth?.user?.id;
                     return (
                       <tr key={user.id} className="hover:bg-slate-50/60 transition-colors">
-                        {/* User Profile */}
                         <td className="py-4 px-5">
                           <div className="flex items-center gap-3">
                             {user.avatar ? (
@@ -308,17 +293,14 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
                           </div>
                         </td>
 
-                        {/* Role */}
                         <td className="py-4 px-5">
                           {getRoleBadge(user.role)}
                         </td>
 
-                        {/* Company / Title */}
                         <td className="py-4 px-5 text-slate-600">
                           {user.company_name || user.job_title || '—'}
                         </td>
 
-                        {/* Status */}
                         <td className="py-4 px-5">
                           {user.status ? (
                             <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200">
@@ -340,16 +322,13 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
                           )}
                         </td>
 
-                        {/* Joined Date */}
                         <td className="py-4 px-5 text-slate-400 text-[11px]">
                           {user.created_at}
                         </td>
 
-                        {/* Actions */}
                         <td className="py-4 px-5 text-end">
                           {!isCurrentUser && (
                             <div className="flex items-center justify-end gap-2">
-                              {/* Toggle Ban */}
                               <button
                                 type="button"
                                 onClick={() => handleToggleBan(user)}
@@ -363,7 +342,6 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
                                 {user.status ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
                               </button>
 
-                              {/* Delete User */}
                               <button
                                 type="button"
                                 onClick={() => setUserToDelete(user)}
@@ -390,7 +368,6 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
             </table>
           </div>
 
-          {/* Pagination */}
           {users.links && users.links.length > 3 && (
             <div className="p-4 border-t border-slate-100 flex items-center justify-between">
               <span className="text-xs text-slate-400 font-semibold">
@@ -418,7 +395,6 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
         </div>
       </div>
 
-      {/* Ban User Modal */}
       {selectedUserForBan && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 animate-fade-in">
           <div className="bg-white rounded-3xl border border-slate-100 shadow-2xl w-full max-w-md p-6 space-y-4 animate-scale-up">
@@ -476,48 +452,21 @@ export default function AdminUsers({ users, stats = {}, filters = {} }) {
         </div>
       )}
 
-      {/* Delete User Confirmation Modal */}
-      {userToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 animate-fade-in">
-          <div className="bg-white rounded-3xl border border-slate-100 shadow-2xl w-full max-w-md p-6 space-y-4 animate-scale-up">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="flex items-center gap-2 text-rose-600">
-                <Trash2 className="w-5 h-5" />
-                <h3 className="text-base font-black text-slate-900">{__('Delete User Permanently')}</h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setUserToDelete(null)}
-                className="text-slate-400 hover:text-slate-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <p className="text-xs text-slate-600 leading-relaxed">
-              {__('Are you sure you want to permanently delete')} <strong className="text-slate-900">{userToDelete.name}</strong>?{' '}
-              {__('This will delete all their applications, profile data, or company relationships. This action cannot be reversed.')}
-            </p>
-
-            <div className="flex items-center justify-end gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setUserToDelete(null)}
-                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
-              >
-                {__('Cancel')}
-              </button>
-              <button
-                type="button"
-                onClick={confirmDelete}
-                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors cursor-pointer"
-              >
-                {__('Yes, Delete Permanently')}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <DeleteConfirmModal
+        isOpen={!!userToDelete}
+        onClose={() => setUserToDelete(null)}
+        onConfirm={confirmDelete}
+        title={__('Delete User Permanently')}
+        message={
+          <>
+            {__('Are you sure you want to permanently delete')}{' '}
+            <strong className="text-slate-900">{userToDelete?.name}</strong>?{' '}
+            {__('This will delete all their applications, profile data, or company relationships. This action cannot be reversed.')}
+          </>
+        }
+        confirmText={__('Yes, Delete Permanently')}
+        cancelText={__('Cancel')}
+      />
     </DashboardLayout>
   );
 }

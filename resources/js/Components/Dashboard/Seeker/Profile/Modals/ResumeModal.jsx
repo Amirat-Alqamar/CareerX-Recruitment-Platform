@@ -55,7 +55,6 @@ export default function ResumeModal({ isOpen, onClose, resumes = [] }) {
       maxWidth="max-w-xl"
     >
       <div className="space-y-6">
-        {/* Upload Form */}
         <form onSubmit={handleUpload} className="space-y-3 p-4 bg-slate-50 border border-slate-200 rounded-2xl">
           <label className="block text-xs font-bold text-slate-700 uppercase">
             {__('Upload New CV / Resume')}
@@ -100,7 +99,6 @@ export default function ResumeModal({ isOpen, onClose, resumes = [] }) {
           </p>
         </form>
 
-        {/* Resumes List */}
         <div className="space-y-2">
           <label className="block text-xs font-bold text-slate-700 uppercase">
             {__('Your Uploaded Resumes')} ({resumes.length})
@@ -155,7 +153,6 @@ export default function ResumeModal({ isOpen, onClose, resumes = [] }) {
           )}
         </div>
 
-        {/* Done Button */}
         <div className="flex justify-end pt-4 border-t border-slate-100">
           <button
             type="button"

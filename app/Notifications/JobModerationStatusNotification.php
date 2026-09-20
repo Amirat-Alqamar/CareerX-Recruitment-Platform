@@ -35,3 +35,4 @@ class JobModerationStatusNotification extends Notification
         ];
     }
 }
+

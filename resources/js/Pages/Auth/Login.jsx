@@ -20,7 +20,6 @@ export default function Login() {
     return (
         <div className="min-h-screen flex bg-gray-100" dir={direction}>
             <Head title={__('Login')} />
-            {/* Left Hero Section */}
             <div className="hidden lg:flex lg:w-5/12 bg-[#00B7B5] p-12 flex-col justify-between text-white relative overflow-hidden">
                 <Link href={`/${locale}`} className="inline-flex items-center">
                     <img
@@ -61,9 +60,7 @@ export default function Login() {
                 </div>
             </div>
 
-            {/* Right Form Section */}
             <div className="flex-1 flex flex-col justify-between p-6 sm:p-12 relative">
-                {/* Language Switcher in top corner */}
                 <div className="self-end flex items-center gap-2">
                     <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 shadow-xs text-xs font-semibold">
                         <Globe className="w-3.5 h-3.5 text-primary mx-1" />
@@ -169,7 +166,6 @@ export default function Login() {
                         </Link>
                     </p>
                 </div>
-
 
             </div>
         </div>

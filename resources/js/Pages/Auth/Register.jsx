@@ -5,10 +5,10 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 export default function Register() {
     const { __, direction, locale, locales } = useTranslation();
-    const [accountType, setAccountType] = useState('job_seeker'); // 'job_seeker' or 'employer'
+    const [accountType, setAccountType] = useState('job_seeker'); 
     const [showPassword, setShowPassword] = useState(false);
 
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, setError } = useForm({
         role: 'job_seeker',
         name: '',
         company_name: '',
@@ -24,13 +24,16 @@ export default function Register() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (!data.terms) {
+            setError('terms', __('You must agree to the Terms of Service and Privacy Policy.'));
+            return;
+        }
         post('/register');
     };
 
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center relative" dir={direction}>
             <Head title={__('Register')} />
-            {/* Language Switcher in top corner */}
             <div className="w-full max-w-2xl flex justify-end mb-4">
                 <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1 shadow-xs text-xs font-semibold">
                     <Globe className="w-3.5 h-3.5 text-primary mx-1" />
@@ -53,7 +56,6 @@ export default function Register() {
                 </div>
             </div>
 
-            {/* Logo & Header */}
             <div className="text-center mb-8">
                 <Link href={`/${locale}`} className="inline-block mb-2">
                     <img
@@ -66,12 +68,9 @@ export default function Register() {
                 <p className="text-sm text-gray-500 mt-1">{__('Join 850,000+ professionals on CareerX')}</p>
             </div>
 
-            {/* Main Form Card */}
             <div className="max-w-2xl w-full bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
 
-                {/* Account Type Selection Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                    {/* Job Seeker Option */}
                     <div
                         onClick={() => handleRoleChange('job_seeker')}
                         className={`p-5 rounded-xl border-2 cursor-pointer transition relative flex flex-col justify-between ${
@@ -101,7 +100,6 @@ export default function Register() {
                         </ul>
                     </div>
 
-                    {/* Company Option */}
                     <div
                         onClick={() => handleRoleChange('employer')}
                         className={`p-5 rounded-xl border-2 cursor-pointer transition relative flex flex-col justify-between ${
@@ -132,10 +130,8 @@ export default function Register() {
                     </div>
                 </div>
 
-                {/* Form Fields */}
                 <form onSubmit={handleSubmit} className="space-y-4 max-w-md mx-auto">
 
-                    {/* Dynamic Field Name */}
                     {accountType === 'job_seeker' ? (
                         <div>
                             <label className="block text-xs font-semibold text-gray-700 mb-1">{__('Full Name')}</label>
@@ -168,7 +164,6 @@ export default function Register() {
                         </div>
                     )}
 
-                    {/* Email */}
                     <div>
                         <label className="block text-xs font-semibold text-gray-700 mb-1">{__('Email Address')}</label>
                         <div className="relative">
@@ -184,7 +179,6 @@ export default function Register() {
                         {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
                     </div>
 
-                    {/* Password */}
                     <div>
                         <label className="block text-xs font-semibold text-gray-700 mb-1">{__('Password')}</label>
                         <div className="relative">
@@ -207,24 +201,26 @@ export default function Register() {
                         {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password}</p>}
                     </div>
 
-                    {/* Terms */}
-                    <div className="flex items-center gap-2 pt-2">
-                        <input
-                            type="checkbox"
-                            id="terms"
-                            checked={data.terms}
-                            onChange={e => setData('terms', e.target.checked)}
-                            className="rounded border-gray-300 text-[#00B7B5] focus:ring-[#00B7B5]"
-                        />
-                        <label htmlFor="terms" className="text-xs text-gray-600">
-                            {__("I agree to CareerX's")}{' '}
-                            <Link href={`/${locale}/terms`} className="font-semibold text-gray-800 hover:underline">{__('Terms of Service')}</Link>{' '}
-                            {__('and')}{' '}
-                            <Link href={`/${locale}/privacy`} className="font-semibold text-gray-800 hover:underline">{__('Privacy Policy')}</Link>
-                        </label>
+                    <div className="pt-2">
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                required
+                                checked={data.terms}
+                                onChange={e => setData('terms', e.target.checked)}
+                                className="rounded border-gray-300 text-[#00B7B5] focus:ring-[#00B7B5] cursor-pointer"
+                            />
+                            <label htmlFor="terms" className="text-xs text-gray-600 cursor-pointer select-none">
+                                {__("I agree to CareerX's")}{' '}
+                                <Link href={`/${locale}/terms`} className="font-semibold text-gray-800 hover:underline">{__('Terms of Service')}</Link>{' '}
+                                {__('and')}{' '}
+                                <Link href={`/${locale}/privacy`} className="font-semibold text-gray-800 hover:underline">{__('Privacy Policy')}</Link>
+                            </label>
+                        </div>
+                        {errors.terms && <p className="text-xs text-rose-500 font-medium mt-1.5">{errors.terms}</p>}
                     </div>
 
-                    {/* Submit Button */}
                     <button
                         type="submit"
                         disabled={processing}

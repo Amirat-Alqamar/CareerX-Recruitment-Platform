@@ -68,3 +68,4 @@ class LanguageController extends Controller
         return redirect()->back()->with('success', __('Language removed successfully.'));
     }
 }
+

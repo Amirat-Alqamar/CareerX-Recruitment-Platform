@@ -29,7 +29,6 @@ export default function PortfolioSection({ portfolio = [], onAdd, onEdit }) {
               key={item.id || index}
               className="group rounded-2xl border border-slate-100 overflow-hidden bg-white hover:shadow-md transition-all flex flex-col justify-between"
             >
-              {/* Image Preview or Pattern */}
               <div className="h-32 bg-slate-100 relative overflow-hidden flex items-center justify-center">
                 {item.file_path ? (
                   <img
@@ -46,7 +45,6 @@ export default function PortfolioSection({ portfolio = [], onAdd, onEdit }) {
                   </div>
                 )}
 
-                {/* Edit Button Overlay */}
                 <button
                   type="button"
                   onClick={() => onEdit(item)}
@@ -57,7 +55,6 @@ export default function PortfolioSection({ portfolio = [], onAdd, onEdit }) {
                 </button>
               </div>
 
-              {/* Card Details */}
               <div className="p-4 space-y-2 flex-1 flex flex-col justify-between">
                 <div>
                   <div className="flex items-center gap-2 mb-1">

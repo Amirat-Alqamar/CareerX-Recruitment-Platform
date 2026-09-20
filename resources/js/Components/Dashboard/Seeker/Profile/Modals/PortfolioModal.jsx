@@ -56,7 +56,6 @@ export default function PortfolioModal({ isOpen, onClose, item = null }) {
     if (file) formData.append('file', file);
 
     if (isEdit) {
-      // Use method spoofing for Laravel PUT with multipart/form-data
       formData.append('_method', 'PUT');
       router.post(`/${locale}/job-seeker/portfolio/${item.id}`, formData, {
         preserveScroll: true,
@@ -105,7 +104,6 @@ export default function PortfolioModal({ isOpen, onClose, item = null }) {
       maxWidth="max-w-xl"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Project Title */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
             {__('Project Title')} <span className="text-red-500">*</span>
@@ -123,7 +121,6 @@ export default function PortfolioModal({ isOpen, onClose, item = null }) {
           )}
         </div>
 
-        {/* Project Type / Category */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
             {__('Category / Type')}
@@ -144,7 +141,6 @@ export default function PortfolioModal({ isOpen, onClose, item = null }) {
           )}
         </div>
 
-        {/* Project URL */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
             {__('Project URL / Live Link')}
@@ -161,7 +157,6 @@ export default function PortfolioModal({ isOpen, onClose, item = null }) {
           )}
         </div>
 
-        {/* Project Preview Image / File */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
             {__('Project Screenshot / Image (Optional)')}
@@ -188,7 +183,6 @@ export default function PortfolioModal({ isOpen, onClose, item = null }) {
           )}
         </div>
 
-        {/* Modal Actions */}
         <div className="flex items-center justify-between pt-4 border-t border-slate-100 mt-6">
           {isEdit ? (
             <button

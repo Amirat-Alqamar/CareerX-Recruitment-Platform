@@ -88,7 +88,6 @@ export default function EmployerDashboard({
       <Head title={__('Dashboard')} />
 
       <div className="space-y-8">
-        {/* Welcome Banner */}
         <div className="bg-gradient-to-r from-[#014D55] to-[#008A7B] text-white rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex items-center gap-3">
@@ -132,7 +131,6 @@ export default function EmployerDashboard({
           </div>
         </div>
 
-        {/* 4 Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {statCards.map((stat, idx) => {
             const Icon = stat.icon;
@@ -160,7 +158,6 @@ export default function EmployerDashboard({
           })}
         </div>
 
-        {/* Most Popular Job Highlight Banner */}
         {mostAppliedJob && (
           <div className="bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-emerald-500/10 border border-amber-200/70 rounded-3xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-5">
             <div className="flex items-center gap-4">
@@ -200,9 +197,7 @@ export default function EmployerDashboard({
           </div>
         )}
 
-        {/* Two-Column Grid: Recent Jobs & Recent Applicants */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Recent Jobs (7 columns) */}
           <div className="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-sm space-y-6">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div>
@@ -292,7 +287,6 @@ export default function EmployerDashboard({
             )}
           </div>
 
-          {/* Recent Applicants (5 columns) */}
           <div className="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-sm space-y-6">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div>

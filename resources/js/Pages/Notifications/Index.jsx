@@ -78,6 +78,8 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
       case 'job_pending_approval':
       case 'admin_pending':
         return <ShieldCheck className="w-5 h-5 text-amber-600" />;
+      case 'job_updated':
+        return <Sparkles className="w-5 h-5 text-teal-600" />;
       case 'job_approved':
         return <CheckCircle2 className="w-5 h-5 text-emerald-600" />;
       case 'job_rejected':
@@ -99,6 +101,8 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
       case 'job_pending_approval':
       case 'admin_pending':
         return 'bg-amber-50 text-amber-700 border-amber-200';
+      case 'job_updated':
+        return 'bg-teal-50 text-teal-700 border-teal-200';
       case 'job_approved':
         return 'bg-emerald-50 text-emerald-700 border-emerald-200';
       case 'job_rejected':
@@ -118,7 +122,6 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
       <Head title={__('Notifications Center') + ' - CareerX'} />
 
       <div className="space-y-6 max-w-7xl mx-auto pb-12 animate-fade-in">
-        {/* Floating Flash Message Toast */}
         {showFlash && (flash?.success || flash?.error) && (
           <div className="fixed top-20 right-6 rtl:right-auto rtl:left-6 z-50 max-w-md animate-fade-in shadow-xl rounded-2xl overflow-hidden border border-slate-200">
             <div
@@ -147,7 +150,6 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
           </div>
         )}
 
-        {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
@@ -193,7 +195,6 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
           </div>
         </div>
 
-        {/* Notifications Table */}
         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
           {items.length > 0 ? (
             <div className="overflow-x-auto">
@@ -217,7 +218,6 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
                           : 'bg-white hover:bg-slate-50/80'
                       }`}
                     >
-                      {/* Status Indicator: Read / Unread */}
                       <td className="px-6 py-4 text-center whitespace-nowrap">
                         {item.is_read ? (
                           <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-500 border border-slate-200">
@@ -232,7 +232,6 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
                         )}
                       </td>
 
-                      {/* Content */}
                       <td className="px-6 py-4">
                         <div className="space-y-0.5 min-w-0">
                           <h4 className={`text-sm text-slate-900 line-clamp-1 group-hover:text-[#008A7B] transition-colors ${!item.is_read ? 'font-black' : 'font-bold'}`}>
@@ -244,7 +243,6 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
                         </div>
                       </td>
 
-                      {/* Date & Time */}
                       <td className="px-6 py-4 text-xs text-slate-500 whitespace-nowrap">
                         <div className="space-y-0.5">
                           <span className="font-bold text-slate-700 block">{item.time_ago}</span>
@@ -252,7 +250,6 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
                         </div>
                       </td>
 
-                      {/* Single Action: View */}
                       <td className="px-6 py-4 text-center" onClick={(e) => e.stopPropagation()}>
                         <button
                           type="button"
@@ -280,7 +277,6 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
             </div>
           )}
 
-          {/* Pagination Footer */}
           {notifications.links && notifications.links.length > 3 && (
             <div className="px-6 py-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50/50">
               <div className="text-xs text-slate-500 font-medium">
@@ -321,14 +317,12 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
         </div>
       </div>
 
-      {/* View Details Modal */}
       {selectedNotification && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in">
           <div
             className="bg-white w-full max-w-lg rounded-3xl shadow-2xl border border-slate-100 overflow-hidden animate-scale-up"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header */}
             <div className="p-6 border-b border-slate-100 flex items-start justify-between gap-4 bg-slate-50/50">
               <div className="flex items-start gap-3">
                 <div className={`w-11 h-11 rounded-2xl flex items-center justify-center border shrink-0 ${getBadgeStyle(selectedNotification.type)}`}>
@@ -353,7 +347,6 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
               </button>
             </div>
 
-            {/* Modal Body */}
             <div className="p-6 space-y-4">
               <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100">
                 <p className="text-sm text-slate-700 leading-relaxed">
@@ -373,7 +366,6 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
               </div>
             </div>
 
-            {/* Modal Footer */}
             <div className="p-6 pt-2 border-t border-slate-100 flex items-center justify-end gap-3 bg-slate-50/30">
               <button
                 type="button"

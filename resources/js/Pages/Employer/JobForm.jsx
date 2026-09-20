@@ -13,6 +13,7 @@ import {
   Send,
   X,
   Plus,
+  AlertCircle,
 } from 'lucide-react';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import useTranslation from '@/hooks/useTranslation';
@@ -105,7 +106,6 @@ export default function JobForm({
       <Head title={isEditing ? __('Edit Job Posting') : __('Post a New Job')} />
 
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Top Header */}
         <div className="flex items-center justify-between">
           <Link
             href={`/${locale}/employer/jobs`}
@@ -117,7 +117,6 @@ export default function JobForm({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Main Details Card */}
           <div className="bg-white rounded-3xl border border-slate-100 p-6 sm:p-8 shadow-sm space-y-5">
             <div>
               <h2 className="text-xl font-black text-slate-900">
@@ -128,15 +127,29 @@ export default function JobForm({
               </p>
             </div>
 
-            {/* Moderation notice banner */}
-            <div className="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200 text-amber-900 text-xs font-semibold flex items-center gap-2.5">
-              <Clock className="w-4 h-4 text-amber-600 shrink-0" />
-              <span>
-                {__('All submitted job posts are reviewed and approved by the CareerX administration before going live to job seekers.')}
-              </span>
-            </div>
+            {isEditing && job?.status === 'published' ? (
+              <div className="p-3.5 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 text-xs font-semibold flex items-center gap-2.5 shadow-xs">
+                <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>
+                  {__('Editing a published job will submit it for administrator re-approval before updates go live.')}
+                </span>
+              </div>
+            ) : isEditing && job?.status === 'pending' ? (
+              <div className="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200 text-amber-900 text-xs font-semibold flex items-center gap-2.5">
+                <Clock className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>
+                  {__('This job posting is currently pending administrator review and approval.')}
+                </span>
+              </div>
+            ) : (
+              <div className="p-3.5 rounded-2xl bg-amber-50/90 border border-amber-200 text-amber-900 text-xs font-semibold flex items-center gap-2.5">
+                <Clock className="w-4 h-4 text-amber-600 shrink-0" />
+                <span>
+                  {__('All submitted job posts are reviewed and approved by the CareerX administration before going live to job seekers.')}
+                </span>
+              </div>
+            )}
 
-            {/* Title */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
                 {__('Job Title')} *
@@ -153,7 +166,6 @@ export default function JobForm({
               {errors.title && <p className="text-rose-600 text-xs mt-1">{errors.title}</p>}
             </div>
 
-            {/* Category & Employment Types */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
@@ -211,7 +223,6 @@ export default function JobForm({
               </div>
             </div>
 
-            {/* Experience & Salary */}
             <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
@@ -275,7 +286,6 @@ export default function JobForm({
               </div>
             </div>
 
-            {/* Location (Country & City) */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
@@ -317,7 +327,6 @@ export default function JobForm({
             </div>
           </div>
 
-          {/* Description & Requirements Card */}
           <div className="bg-white rounded-3xl border border-slate-100 p-6 sm:p-8 shadow-sm space-y-5">
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
@@ -363,7 +372,6 @@ export default function JobForm({
               />
             </div>
 
-            {/* Skills Selection */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-2">
                 {__('Required Skills')}
@@ -390,7 +398,6 @@ export default function JobForm({
               </div>
             </div>
 
-            {/* Publication Status */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1">
                 {__('Publication Status')} *
@@ -403,17 +410,20 @@ export default function JobForm({
               >
                 <option value="pending">{__('Submit for Administrator Approval')}</option>
                 <option value="draft">{__('Save as Draft')}</option>
-                {isEditing && job?.status === 'published' && (
-                  <option value="published">{__('Published (Active)')}</option>
-                )}
                 {isEditing && (
                   <option value="closed">{__('Closed')}</option>
                 )}
               </select>
+
+              {isEditing && job?.status === 'published' && form.status !== 'closed' && form.status !== 'draft' && (
+                <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-start gap-2.5 text-xs text-amber-800 leading-relaxed max-w-xl">
+                  <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <span>{__('Editing a published job will submit it for administrator re-approval before updates go live.')}</span>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Submit Actions */}
           <div className="flex items-center justify-end gap-3">
             <Link
               href={`/${locale}/employer/jobs`}

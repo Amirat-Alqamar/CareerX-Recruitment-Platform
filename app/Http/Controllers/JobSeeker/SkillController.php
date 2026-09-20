@@ -29,7 +29,6 @@ class SkillController extends Controller
 
         $skillName = trim($validated['skill_name']);
 
-        // البحث عن المهارة أو إنشاؤها إن لم تكن موجودة مسبقاً
         $skill = Skill::firstOrCreate([
             'name' => $skillName,
         ]);
@@ -69,3 +68,4 @@ class SkillController extends Controller
         return redirect()->back()->with('success', __('Skill removed successfully.'));
     }
 }
+

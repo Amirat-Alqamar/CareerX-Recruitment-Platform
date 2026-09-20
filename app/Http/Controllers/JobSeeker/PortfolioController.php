@@ -17,7 +17,7 @@ class PortfolioController extends Controller
 
     public function store(Request $request)
     {
-        // إذا أدخل المستخدم الرابط بدون http/https نضيف https تلقائياً
+
         if ($request->filled('url')) {
             $url = trim($request->url);
             if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
@@ -59,7 +59,6 @@ class PortfolioController extends Controller
     {
         $this->checkAuthorization($portfolio);
 
-        // تنسيق الرابط تلقائياً
         if ($request->filled('url')) {
             $url = trim($request->url);
             if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
@@ -76,7 +75,7 @@ class PortfolioController extends Controller
         ]);
 
         if ($request->hasFile('file')) {
-            // حذف الملف القديم إن وجد
+
             if ($portfolio->file_path && Storage::disk('public')->exists($portfolio->file_path)) {
                 Storage::disk('public')->delete($portfolio->file_path);
             }
@@ -101,3 +100,4 @@ class PortfolioController extends Controller
         return redirect()->back()->with('success', __('Portfolio item deleted successfully.'));
     }
 }
+

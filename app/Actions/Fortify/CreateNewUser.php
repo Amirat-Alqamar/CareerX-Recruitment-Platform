@@ -33,6 +33,8 @@ class CreateNewUser implements CreatesNewUsers
             'email.unique' => __('The email address is already in use.'),
             'password.required' => __('Please enter a password.'),
             'password.confirmed' => __('Password confirmation does not match.'),
+            'terms.accepted' => __('You must agree to the Terms of Service and Privacy Policy.'),
+            'terms.required' => __('You must agree to the Terms of Service and Privacy Policy.'),
         ];
 
         $passwordRules = !empty($input['password_confirmation'])
@@ -52,6 +54,7 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $passwordRules,
             'role'     => ['required', 'in:job_seeker,employer'],
             'phone'    => ['nullable', 'string', 'max:20'],
+            'terms'    => ['accepted', 'required'],
         ], $messages)->validate();
 
         $companyId = null;

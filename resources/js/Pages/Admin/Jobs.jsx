@@ -9,18 +9,15 @@ import {
   Archive,
   Eye,
   Trash2,
-  Building2,
-  MapPin,
-  DollarSign,
   AlertCircle,
   X,
   Check,
   Power,
-  Layers,
   FileText,
 } from 'lucide-react';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import useTranslation from '@/hooks/useTranslation';
+import DeleteConfirmModal from '@/Components/Common/DeleteConfirmModal';
 
 export default function AdminJobs({
   jobs,
@@ -28,7 +25,7 @@ export default function AdminJobs({
   stats = {},
   filters = {},
 }) {
-  const { __, locale, isRtl } = useTranslation();
+  const { __, locale } = useTranslation();
   const { flash } = usePage().props;
 
   const [search, setSearch] = useState(filters.search || '');
@@ -123,7 +120,6 @@ export default function AdminJobs({
       <Head title={__('Job Management') + ' - CareerX'} />
 
       <div className="space-y-6 max-w-7xl mx-auto pb-12 animate-fade-in">
-        {/* Flash messages */}
         {flash?.success && (
           <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center gap-3">
             <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
@@ -137,7 +133,6 @@ export default function AdminJobs({
           </div>
         )}
 
-        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -161,7 +156,6 @@ export default function AdminJobs({
           </Link>
         </div>
 
-        {/* Stats Filter Buttons */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
           <button
             type="button"
@@ -229,7 +223,6 @@ export default function AdminJobs({
           </button>
         </div>
 
-        {/* Filter & Search Toolbar */}
         <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm flex flex-col md:flex-row items-center justify-between gap-3">
           <form onSubmit={handleSearchSubmit} className="relative w-full md:max-w-md">
             <Search className="w-4 h-4 text-slate-400 absolute start-3.5 top-1/2 -translate-y-1/2" />
@@ -271,7 +264,6 @@ export default function AdminJobs({
           </div>
         </div>
 
-        {/* Jobs Table */}
         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-start border-collapse">
@@ -289,7 +281,6 @@ export default function AdminJobs({
                 {jobs.data && jobs.data.length > 0 ? (
                   jobs.data.map((job) => (
                     <tr key={job.id} className="hover:bg-slate-50/60 transition-colors">
-                      {/* Job Title & Company */}
                       <td className="py-4 px-5">
                         <div className="flex items-center gap-3">
                           {job.company_logo ? (
@@ -314,7 +305,6 @@ export default function AdminJobs({
                         </div>
                       </td>
 
-                      {/* Category & Type */}
                       <td className="py-4 px-5">
                         <span className="font-bold text-slate-800 block truncate">
                           {job.category}
@@ -324,27 +314,22 @@ export default function AdminJobs({
                         </span>
                       </td>
 
-                      {/* Applications */}
                       <td className="py-4 px-5">
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-blue-50 text-blue-700 font-bold text-xs">
                           {job.applications_count} {__('Candidates')}
                         </span>
                       </td>
 
-                      {/* Status */}
                       <td className="py-4 px-5">
                         {getStatusBadge(job)}
                       </td>
 
-                      {/* Date */}
                       <td className="py-4 px-5 text-slate-400 text-[11px]">
                         {job.created_at}
                       </td>
 
-                      {/* Actions */}
                       <td className="py-4 px-5 text-end">
                         <div className="flex items-center justify-end gap-1.5">
-                          {/* If pending, show quick approve/reject */}
                           {job.status === 'pending' && (
                             <>
                               <button
@@ -366,7 +351,6 @@ export default function AdminJobs({
                             </>
                           )}
 
-                          {/* Toggle Status (Publish/Close) */}
                           {job.status !== 'pending' && (
                             <button
                               type="button"
@@ -382,7 +366,6 @@ export default function AdminJobs({
                             </button>
                           )}
 
-                          {/* View Details */}
                           <button
                             type="button"
                             onClick={() => setSelectedJobDetails(job)}
@@ -392,7 +375,6 @@ export default function AdminJobs({
                             <Eye className="w-4 h-4" />
                           </button>
 
-                          {/* Delete Job */}
                           <button
                             type="button"
                             onClick={() => setJobToDelete(job)}
@@ -417,7 +399,6 @@ export default function AdminJobs({
             </table>
           </div>
 
-          {/* Pagination */}
           {jobs.links && jobs.links.length > 3 && (
             <div className="p-4 border-t border-slate-100 flex items-center justify-between">
               <span className="text-xs text-slate-400 font-semibold">
@@ -445,7 +426,6 @@ export default function AdminJobs({
         </div>
       </div>
 
-      {/* View Job Details Modal */}
       {selectedJobDetails && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 animate-fade-in">
           <div className="bg-white rounded-3xl border border-slate-100 shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6 sm:p-7 space-y-5 animate-scale-up">
@@ -557,49 +537,22 @@ export default function AdminJobs({
         </div>
       )}
 
-      {/* Delete Job Modal */}
-      {jobToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 animate-fade-in">
-          <div className="bg-white rounded-3xl border border-slate-100 shadow-2xl w-full max-w-md p-6 space-y-4 animate-scale-up">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="flex items-center gap-2 text-rose-600">
-                <Trash2 className="w-5 h-5" />
-                <h3 className="text-base font-black text-slate-900">{__('Delete Job Posting')}</h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setJobToDelete(null)}
-                className="text-slate-400 hover:text-slate-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <p className="text-xs text-slate-600 leading-relaxed">
-              {__('Are you sure you want to delete the job post')} <strong className="text-slate-900">{jobToDelete.title}</strong>{' '}
-              {__('by')} <strong>{jobToDelete.company_name}</strong>?{' '}
-              {__('All applicant applications for this post will also be removed. This cannot be undone.')}
-            </p>
-
-            <div className="flex items-center justify-end gap-2 pt-2">
-              <button
-                type="button"
-                onClick={() => setJobToDelete(null)}
-                className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
-              >
-                {__('Cancel')}
-              </button>
-              <button
-                type="button"
-                onClick={confirmDelete}
-                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-colors cursor-pointer"
-              >
-                {__('Yes, Delete Job')}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <DeleteConfirmModal
+        isOpen={!!jobToDelete}
+        onClose={() => setJobToDelete(null)}
+        onConfirm={confirmDelete}
+        title={__('Delete Job Posting')}
+        message={
+          <>
+            {__('Are you sure you want to permanently delete')}{' '}
+            <strong className="text-slate-900">{jobToDelete?.title}</strong>{' '}
+            {__('by')} <strong>{jobToDelete?.company_name}</strong>?{' '}
+            {__('All applicant applications for this post will also be removed. This cannot be undone.')}
+          </>
+        }
+        confirmText={__('Yes, Delete Job')}
+        cancelText={__('Cancel')}
+      />
     </DashboardLayout>
   );
 }

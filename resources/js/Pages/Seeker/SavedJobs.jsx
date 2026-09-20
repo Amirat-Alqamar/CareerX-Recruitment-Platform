@@ -30,7 +30,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
   const [applying, setApplying] = useState(false);
   const [removingId, setRemovingId] = useState(null);
 
-  // Flash notification toast
   const [showFlash, setShowFlash] = useState(false);
   useEffect(() => {
     if (flash?.success || flash?.error) {
@@ -40,7 +39,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
     }
   }, [flash]);
 
-  // Remove from saved
   const handleRemove = (jobId, e) => {
     if (e) e.stopPropagation();
     setRemovingId(jobId);
@@ -54,7 +52,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
     );
   };
 
-  // Handle direct apply
   const handleApply = (e) => {
     e.preventDefault();
     if (!selectedJob) return;
@@ -93,7 +90,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
     <DashboardLayout userRole="seeker">
       <Head title={__('Saved Jobs')} />
 
-      {/* Floating Flash Message Toast */}
       {showFlash && (flash?.success || flash?.error) && (
         <div className="fixed top-20 right-6 rtl:right-auto rtl:left-6 z-50 max-w-md animate-fade-in shadow-xl rounded-2xl overflow-hidden border border-slate-200">
           <div
@@ -119,7 +115,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
       )}
 
       <div className="max-w-6xl mx-auto space-y-6 pb-12">
-        {/* Header Banner */}
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 rtl:right-auto rtl:left-0 w-80 h-full bg-gradient-to-l rtl:bg-gradient-to-r from-[#008A7B]/10 to-transparent pointer-events-none" />
           <div className="relative z-10">
@@ -136,7 +131,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
           </div>
         </div>
 
-        {/* Count Bar */}
         <div className="flex items-center justify-between px-2 text-xs font-bold text-slate-500">
           <div className="flex items-center gap-2">
             <Briefcase className="w-4 h-4 text-[#008A7B]" />
@@ -152,7 +146,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
           </Link>
         </div>
 
-        {/* Saved Jobs Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {savedJobs.length > 0 ? (
             savedJobs.map((saved) => {
@@ -165,7 +158,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
                   className="bg-white rounded-3xl p-6 border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all flex flex-col justify-between space-y-4 group"
                 >
                   <div className="space-y-2.5">
-                    {/* Header: Title & Badges */}
                     <div className="flex items-start justify-between gap-2">
                       <div className="space-y-1">
                         <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-[#008A7B] text-[11px] font-extrabold inline-block">
@@ -176,7 +168,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
                         </h2>
                       </div>
 
-                      {/* Remove from saved */}
                       <button
                         type="button"
                         onClick={(e) => handleRemove(job.id, e)}
@@ -188,7 +179,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
                       </button>
                     </div>
 
-                    {/* Company and Location */}
                     <div className="flex items-center gap-3 flex-wrap text-xs font-semibold text-slate-500">
                       <div className="flex items-center gap-1.5">
                         <Building2 className="w-3.5 h-3.5 text-slate-400" />
@@ -202,7 +192,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
                       )}
                     </div>
 
-                    {/* Salary */}
                     {job.salary_min && job.salary_max && (
                       <div className="text-xs font-extrabold text-[#008A7B] flex items-center gap-1">
                         <DollarSign className="w-3.5 h-3.5" />
@@ -212,7 +201,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
                       </div>
                     )}
 
-                    {/* Snippet */}
                     {job.description && (
                       <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
                         {job.description}
@@ -220,7 +208,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
                     )}
                   </div>
 
-                  {/* Footer Actions */}
                   <div className="flex items-center gap-2 pt-3 border-t border-slate-100">
                     {appliedJobIds.includes(job.id) ? (
                       <button
@@ -278,7 +265,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
         </div>
       </div>
 
-      {/* Quick Apply Modal */}
       <ModalWrapper
         isOpen={Boolean(selectedJob)}
         onClose={() => setSelectedJob(null)}
@@ -321,7 +307,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
                 </p>
               </div>
 
-              {/* Resume Selection */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-slate-600 block">
                   {__('Select Resume / CV')}
@@ -351,7 +336,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
                 )}
               </div>
 
-              {/* Cover Letter */}
               <div className="space-y-1.5">
                 <label className="text-xs font-bold text-slate-600 block">
                   {__('Cover Letter (Optional)')}
@@ -365,7 +349,6 @@ export default function SavedJobs({ savedJobs = [], resumes = [], appliedJobIds 
                 />
               </div>
 
-              {/* Actions */}
               <div className="flex items-center justify-end gap-3 pt-2">
                 <button
                   type="button"

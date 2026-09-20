@@ -15,19 +15,16 @@ use Inertia\Inertia;
 
 class ReportController extends Controller
 {
-    /**
-     * Display comprehensive platform reports and analytics.
-     */
+
     public function index()
     {
-        // 1. Overall System Summary
+
         $totalJobs = Job::count();
         $totalApplications = JobApplication::count();
         $totalCompanies = Company::count();
         $totalSeekers = User::where('role', 'job_seeker')->count();
         $totalEmployers = User::where('role', 'employer')->count();
 
-        // 2. Job Statistics Breakdown
         $jobsByStatus = [
             'published' => Job::where('status', 'published')->count(),
             'pending'   => Job::where('status', 'pending')->count(),
@@ -48,7 +45,6 @@ class ReportController extends Controller
             'internship' => Job::where('job_type', 'internship')->count(),
         ];
 
-        // 3. Top in-demand Job Categories (أكثر الأعمال المطلوبة)
         $topCategories = JobCategory::withCount('jobs')
             ->orderByDesc('jobs_count')
             ->get()
@@ -65,7 +61,6 @@ class ReportController extends Controller
                 ];
             });
 
-        // 4. Top in-demand Skills
         $topSkills = Skill::withCount('jobs')
             ->orderByDesc('jobs_count')
             ->take(12)
@@ -78,7 +73,6 @@ class ReportController extends Controller
                 ];
             });
 
-        // 5. Company Statistics (Top active hiring companies)
         $topCompanies = Company::withCount(['jobs', 'users'])
             ->orderByDesc('jobs_count')
             ->take(8)
@@ -98,7 +92,6 @@ class ReportController extends Controller
                 ];
             });
 
-        // 6. Application Status Breakdown
         $applicationsByStatus = [
             'applied'           => JobApplication::whereIn('status', ['applied', 'pending'])->count(),
             'reviewed'          => JobApplication::where('status', 'reviewed')->count(),
@@ -108,7 +101,6 @@ class ReportController extends Controller
             'rejected'          => JobApplication::where('status', 'rejected')->count(),
         ];
 
-        // 7. Seeker Profiles Breakdown
         $totalProfiles = JobSeekerProfile::count();
         $profilesWithTitle = JobSeekerProfile::whereNotNull('job_title')->count();
         $profilesWithBio = JobSeekerProfile::whereNotNull('bio')->count();
@@ -136,3 +128,4 @@ class ReportController extends Controller
         ]);
     }
 }
+

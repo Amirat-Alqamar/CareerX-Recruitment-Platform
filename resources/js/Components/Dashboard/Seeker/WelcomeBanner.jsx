@@ -26,7 +26,6 @@ export default function WelcomeBanner({ userName = '', profileCompletion = 20, s
         </p>
       </div>
 
-      {/* Profile Strength Card */}
       <div className="bg-[#014D55] rounded-2xl p-6 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm">
         <div className="space-y-3 flex-1 w-full">
           <div className="flex items-center justify-between text-xs font-bold tracking-wider uppercase text-teal-200">
@@ -36,7 +35,6 @@ export default function WelcomeBanner({ userName = '', profileCompletion = 20, s
             {__('Your profile is :percent% complete', { percent: profileCompletion })}
           </h3>
 
-          {/* Progress Bar */}
           <div className="w-full bg-white/10 rounded-full h-2 overflow-hidden flex items-center">
             <div
               className="bg-[#00BBA7] h-full rounded-full transition-all duration-500"
@@ -72,5 +70,4 @@ export default function WelcomeBanner({ userName = '', profileCompletion = 20, s
     </div>
   );
 }
-
 

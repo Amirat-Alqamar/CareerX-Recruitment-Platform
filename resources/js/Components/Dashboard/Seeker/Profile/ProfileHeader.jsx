@@ -95,7 +95,6 @@ export default function ProfileHeader({
 
   return (
     <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
-      {/* Cover Banner */}
       <div className="h-44 sm:h-52 bg-[#008A7B] relative overflow-hidden group">
         <input
           type="file"
@@ -141,10 +140,8 @@ export default function ProfileHeader({
         </div>
       </div>
 
-      {/* User Basic Info Container */}
       <div className="px-4 sm:px-8 pb-6 relative">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-16 mb-6">
-          {/* Avatar with Camera & Delete Overlay */}
           <div className="relative inline-block w-28 h-28 shrink-0">
             <input
               type="file"
@@ -164,7 +161,6 @@ export default function ProfileHeader({
                 {initials}
               </div>
             )}
-            {/* Delete Avatar Button */}
             {avatarUrl && (
               <button
                 type="button"
@@ -181,7 +177,6 @@ export default function ProfileHeader({
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
             )}
-            {/* Upload Avatar Button */}
             <button
               type="button"
               disabled={uploadingAvatar}
@@ -198,7 +193,6 @@ export default function ProfileHeader({
             </button>
           </div>
 
-          {/* Right Action Buttons */}
           <div className="flex items-center gap-2.5 flex-wrap w-full sm:w-auto">
             <button
               type="button"
@@ -219,7 +213,6 @@ export default function ProfileHeader({
           </div>
         </div>
 
-        {/* Name & Subtitle */}
         <div className="space-y-3">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
@@ -243,7 +236,6 @@ export default function ProfileHeader({
               </div>
             </div>
 
-            {/* Quick Actions / Links */}
             <div className="flex items-center gap-2">
               {website ? (
                 <a
@@ -298,7 +290,6 @@ export default function ProfileHeader({
             </div>
           </div>
 
-          {/* Contact Badges */}
           <div className="flex items-center gap-5 flex-wrap text-xs font-semibold text-slate-500">
             {location && (
               <div className="flex items-center gap-1.5">
@@ -320,7 +311,6 @@ export default function ProfileHeader({
             )}
           </div>
 
-          {/* Job Preference Badges */}
           <div className="flex items-center gap-2 pt-1 flex-wrap">
             <span className="px-3 py-1 rounded-full bg-emerald-50 text-[#008A7B] text-xs font-extrabold">{__('Open to Work')}</span>
             <span className="px-3 py-1 rounded-full bg-emerald-50 text-[#008A7B] text-xs font-extrabold">{__('Remote Friendly')}</span>
@@ -329,7 +319,6 @@ export default function ProfileHeader({
         </div>
       </div>
 
-      {/* Tabs Layout */}
       <div className="border-t border-slate-100 px-4 sm:px-8 flex gap-4 sm:gap-8 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {tabs.map((tab) => (
           <button

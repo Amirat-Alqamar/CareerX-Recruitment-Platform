@@ -59,3 +59,4 @@ class SavedJobController extends Controller
         return redirect()->back()->with('success', __('Job saved successfully.'));
     }
 }
+

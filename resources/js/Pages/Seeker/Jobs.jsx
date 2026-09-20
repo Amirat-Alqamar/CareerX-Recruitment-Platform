@@ -38,20 +38,17 @@ export default function Jobs({
   const { __, locale } = useTranslation();
   const { flash } = usePage().props;
 
-  // Local state for search & filters
   const [keyword, setKeyword] = useState(filters.keyword || '');
   const [categoryId, setCategoryId] = useState(filters.category_id || '');
   const [cityId, setCityId] = useState(filters.city_id || '');
   const [workType, setWorkType] = useState(filters.work_type || '');
 
-  // Modal states
   const [selectedJob, setSelectedJob] = useState(null);
   const [applyResumeId, setApplyResumeId] = useState(resumes[0]?.id || '');
   const [applyCoverLetter, setApplyCoverLetter] = useState('');
   const [applying, setApplying] = useState(false);
   const [savingJobId, setSavingJobId] = useState(null);
 
-  // Flash notification banner
   const [showFlash, setShowFlash] = useState(false);
   useEffect(() => {
     if (flash?.success || flash?.error) {
@@ -61,7 +58,6 @@ export default function Jobs({
     }
   }, [flash]);
 
-  // Open modal if selectedJobId is in props or query params
   useEffect(() => {
     if (selectedJobId && jobs?.data) {
       const match = jobs.data.find((j) => String(j.id) === String(selectedJobId));
@@ -71,7 +67,6 @@ export default function Jobs({
     }
   }, [selectedJobId, jobs]);
 
-  // Handle Search & Filter Submission
   const handleSearch = (e) => {
     if (e) e.preventDefault();
     router.get(
@@ -94,7 +89,6 @@ export default function Jobs({
     router.get(`/${locale}/job-seeker/jobs`, {}, { preserveState: false, preserveScroll: true });
   };
 
-  // Toggle Save Job
   const handleToggleSave = (jobId, e) => {
     if (e) e.stopPropagation();
     setSavingJobId(jobId);
@@ -108,7 +102,6 @@ export default function Jobs({
     );
   };
 
-  // Handle Apply
   const handleApply = (e) => {
     e.preventDefault();
     if (!selectedJob) return;
@@ -149,7 +142,6 @@ export default function Jobs({
     <DashboardLayout userRole="seeker">
       <Head title={__('Browse Jobs')} />
 
-      {/* Floating Flash Message Toast */}
       {showFlash && (flash?.success || flash?.error) && (
         <div className="fixed top-20 right-6 rtl:right-auto rtl:left-6 z-50 max-w-md animate-fade-in shadow-xl rounded-2xl overflow-hidden border border-slate-200">
           <div
@@ -175,7 +167,6 @@ export default function Jobs({
       )}
 
       <div className="max-w-6xl mx-auto space-y-6 pb-12">
-        {/* Page Header Banner */}
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 rtl:right-auto rtl:left-0 w-80 h-full bg-gradient-to-l rtl:bg-gradient-to-r from-[#008A7B]/10 to-transparent pointer-events-none" />
           <div className="relative z-10">
@@ -192,10 +183,8 @@ export default function Jobs({
           </div>
         </div>
 
-        {/* Search & Filters Bar */}
         <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm">
           <form onSubmit={handleSearch} className="grid grid-cols-1 md:grid-cols-12 gap-3">
-            {/* Keyword Search */}
             <div className="md:col-span-4 relative">
               <Search className="w-4 h-4 absolute top-3.5 left-3.5 rtl:left-auto rtl:right-3.5 text-slate-400" />
               <input
@@ -207,7 +196,6 @@ export default function Jobs({
               />
             </div>
 
-            {/* Category Dropdown */}
             <div className="md:col-span-3">
               <select
                 value={categoryId}
@@ -235,7 +223,6 @@ export default function Jobs({
               </select>
             </div>
 
-            {/* City Dropdown */}
             <div className="md:col-span-2">
               <select
                 value={cityId}
@@ -263,7 +250,6 @@ export default function Jobs({
               </select>
             </div>
 
-            {/* Work Type Dropdown */}
             <div className="md:col-span-2">
               <select
                 value={workType}
@@ -289,7 +275,6 @@ export default function Jobs({
               </select>
             </div>
 
-            {/* Submit Button */}
             <div className="md:col-span-1 flex items-center gap-2">
               <button
                 type="submit"
@@ -311,7 +296,6 @@ export default function Jobs({
             </div>
           </form>
 
-          {/* Quick Filter Info & Count */}
           <div className="flex items-center justify-between flex-wrap gap-2 mt-4 pt-3 border-t border-slate-100 text-xs font-bold text-slate-500">
             <div className="flex items-center gap-2">
               <Briefcase className="w-4 h-4 text-[#008A7B]" />
@@ -331,7 +315,6 @@ export default function Jobs({
           </div>
         </div>
 
-        {/* Job Cards Grid */}
         <div className="space-y-4">
           {jobs?.data?.length > 0 ? (
             jobs.data.map((job) => {
@@ -345,7 +328,6 @@ export default function Jobs({
                   className="bg-white rounded-3xl p-6 border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all cursor-pointer group"
                 >
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    {/* Job Details Left */}
                     <div className="space-y-2 flex-1">
                       <div className="flex items-center gap-3 flex-wrap">
                         <h2 className="text-lg font-black text-slate-900 group-hover:text-[#008A7B] transition-colors">
@@ -367,7 +349,6 @@ export default function Jobs({
                         )}
                       </div>
 
-                      {/* Company & Location Details */}
                       <div className="flex items-center gap-4 flex-wrap text-xs font-semibold text-slate-500">
                         <div className="flex items-center gap-1.5">
                           <Building2 className="w-3.5 h-3.5 text-slate-400" />
@@ -392,14 +373,12 @@ export default function Jobs({
                         )}
                       </div>
 
-                      {/* Brief description */}
                       {job.description && (
                         <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
                           {job.description}
                         </p>
                       )}
 
-                      {/* Skills tags */}
                       {job.skills && job.skills.length > 0 && (
                         <div className="flex items-center gap-1.5 flex-wrap pt-1">
                           {job.skills.slice(0, 5).map((skill) => (
@@ -419,7 +398,6 @@ export default function Jobs({
                       )}
                     </div>
 
-                    {/* Actions Right */}
                     <div className="flex items-center gap-3 shrink-0 self-end md:self-center">
                       <button
                         type="button"
@@ -491,7 +469,6 @@ export default function Jobs({
           )}
         </div>
 
-        {/* Pagination */}
         {jobs?.links && jobs.links.length > 3 && (
           <div className="flex items-center justify-center gap-1.5 pt-4">
             {jobs.links.map((link, idx) => {
@@ -526,7 +503,6 @@ export default function Jobs({
         )}
       </div>
 
-      {/* Job Details & Apply Modal */}
       <ModalWrapper
         isOpen={Boolean(selectedJob)}
         onClose={() => setSelectedJob(null)}
@@ -535,7 +511,6 @@ export default function Jobs({
       >
         {selectedJob && (
           <div className="space-y-6">
-            {/* Header badges */}
             <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-slate-100">
               <div>
                 <div className="flex items-center gap-2">
@@ -571,7 +546,6 @@ export default function Jobs({
               </button>
             </div>
 
-            {/* Quick Metrics */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-slate-50/70 p-4 rounded-2xl border border-slate-100 text-xs">
               <div>
                 <p className="text-slate-400 font-semibold">{__('Salary')}</p>
@@ -595,7 +569,6 @@ export default function Jobs({
               </div>
             </div>
 
-            {/* Description */}
             <div className="space-y-2">
               <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
                 {__('Job Description')}
@@ -605,7 +578,6 @@ export default function Jobs({
               </p>
             </div>
 
-            {/* Responsibilities */}
             {selectedJob.responsibilities && (
               <div className="space-y-2">
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
@@ -617,7 +589,6 @@ export default function Jobs({
               </div>
             )}
 
-            {/* Requirements */}
             {selectedJob.requirements && (
               <div className="space-y-2">
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
@@ -629,7 +600,6 @@ export default function Jobs({
               </div>
             )}
 
-            {/* Skills */}
             {selectedJob.skills && selectedJob.skills.length > 0 && (
               <div className="space-y-2">
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
@@ -648,7 +618,6 @@ export default function Jobs({
               </div>
             )}
 
-            {/* Apply Section */}
             <div className="pt-4 border-t border-slate-100">
               {appliedJobIds.includes(selectedJob.id) ? (
                 <div className="p-4 bg-emerald-50 text-[#008A7B] rounded-2xl flex items-center gap-3 font-bold text-sm">
@@ -662,7 +631,6 @@ export default function Jobs({
                     <span>{__('Apply for this position')}</span>
                   </h4>
 
-                  {/* Select Resume */}
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-600 block">
                       {__('Select Resume / CV')}
@@ -692,7 +660,6 @@ export default function Jobs({
                     )}
                   </div>
 
-                  {/* Cover Letter */}
                   <div className="space-y-1.5">
                     <label className="text-xs font-bold text-slate-600 block">
                       {__('Cover Letter (Optional)')}
@@ -706,7 +673,6 @@ export default function Jobs({
                     />
                   </div>
 
-                  {/* Action Buttons */}
                   <div className="flex items-center justify-end gap-3 pt-2">
                     <button
                       type="button"

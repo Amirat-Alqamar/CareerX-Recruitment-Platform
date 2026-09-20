@@ -77,7 +77,6 @@ const DEFAULT_STYLE = {
 export default function CategoriesSection({ categories = [] }) {
   const { __ } = useTranslation();
 
-  // If dynamic categories are passed from database, format them with icons and color styles
   const displayCategories = categories && categories.length > 0
     ? categories.map((cat) => {
         const style = CATEGORY_STYLES[cat.slug] || DEFAULT_STYLE;
@@ -97,7 +96,6 @@ export default function CategoriesSection({ categories = [] }) {
     <section id="categories" className="py-16 sm:py-20 bg-white scroll-mt-20">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
 
-        {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16 space-y-3">
           <span className="text-xs font-bold uppercase tracking-wider text-primary-accent">
             {__('EXPLORE BY FIELD')}
@@ -110,7 +108,6 @@ export default function CategoriesSection({ categories = [] }) {
           </p>
         </div>
 
-        {/* Categories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayCategories.map((category) => (
             <CategoryCard key={category.id} category={category} />

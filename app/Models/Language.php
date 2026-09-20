@@ -12,3 +12,4 @@ class Language extends Model
         return $this->belongsToMany(JobSeekerProfile::class, 'profiles_languages', 'language_id', 'profile_id')->withPivot('level');
     }
 }
+

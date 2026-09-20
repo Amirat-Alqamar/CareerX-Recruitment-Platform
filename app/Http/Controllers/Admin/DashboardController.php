@@ -14,12 +14,10 @@ use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display the Admin Overview Dashboard.
-     */
+
     public function index()
     {
-        // System-wide counts
+
         $totalUsers = User::count();
         $totalSeekers = User::where('role', 'job_seeker')->count();
         $totalEmployers = User::where('role', 'employer')->count();
@@ -34,11 +32,10 @@ class DashboardController extends Controller
         $hiredApplications = JobApplication::whereIn('status', ['interview_success', 'accepted'])->count();
         $hiringRate = $totalApplications > 0 ? round(($hiredApplications / $totalApplications) * 100, 1) : 0;
 
-        // Pending job approvals queue (max 5 for quick action)
         $pendingApprovals = Job::where('status', 'pending')
             ->with(['company:id,name,logo', 'category:id,name', 'creator:id,name,email'])
             ->latest()
-            ->take(5)
+            ->take(10)
             ->get()
             ->map(function ($job) {
                 return [
@@ -55,7 +52,6 @@ class DashboardController extends Controller
                 ];
             });
 
-        // Top In-Demand Job Categories (أكثر الأعمال المطلوبة)
         $topCategories = JobCategory::withCount('jobs')
             ->orderByDesc('jobs_count')
             ->take(6)
@@ -74,7 +70,6 @@ class DashboardController extends Controller
                 ];
             });
 
-        // Most In-Demand Skills
         $topSkills = Skill::withCount('jobs')
             ->orderByDesc('jobs_count')
             ->take(8)
@@ -87,11 +82,10 @@ class DashboardController extends Controller
                 ];
             });
 
-        // Recent Job Postings
         $recentJobs = Job::with(['company:id,name,logo', 'category:id,name'])
             ->withCount('applications')
             ->latest()
-            ->take(5)
+            ->take(10)
             ->get()
             ->map(function ($job) {
                 return [
@@ -107,7 +101,6 @@ class DashboardController extends Controller
                 ];
             });
 
-        // Recent Users Joined
         $recentUsers = User::latest()
             ->take(5)
             ->get()
@@ -145,3 +138,4 @@ class DashboardController extends Controller
         ]);
     }
 }
+

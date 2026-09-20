@@ -48,7 +48,6 @@ export default function Index({ companies = { data: [], links: [], total: 0 }, f
     <MainLayout>
       <Head title={__('Top Hiring Companies')} />
 
-      {/* Header Banner */}
       <section className="bg-gradient-to-b from-primary-light/40 via-gray-50/50 to-gray-50/50 pt-12 pb-16 border-b border-gray-100">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
           <div className="text-center max-w-3xl mx-auto space-y-3">
@@ -64,7 +63,6 @@ export default function Index({ companies = { data: [], links: [], total: 0 }, f
             </p>
           </div>
 
-          {/* Search Toolbar */}
           <div className="mt-8 max-w-2xl mx-auto">
             <form
               onSubmit={handleSearch}
@@ -102,7 +100,6 @@ export default function Index({ companies = { data: [], links: [], total: 0 }, f
         </div>
       </section>
 
-      {/* Companies Grid Section */}
       <section className="py-12 bg-gray-50/30 min-h-[600px]">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 space-y-8">
 
@@ -128,7 +125,6 @@ export default function Index({ companies = { data: [], links: [], total: 0 }, f
                     className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md hover:border-teal-600/30 transition-all duration-200 flex flex-col justify-between group"
                   >
                     <div className="space-y-4">
-                      {/* Card Header: Avatar & Info */}
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-center gap-3.5">
                           {company.logo ? (
@@ -165,12 +161,10 @@ export default function Index({ companies = { data: [], links: [], total: 0 }, f
                         )}
                       </div>
 
-                      {/* Description */}
                       <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed">
                         {company.description || __('No description provided.')}
                       </p>
 
-                      {/* Badges / Metrics */}
                       <div className="flex flex-wrap items-center gap-2 pt-1 text-xs text-gray-500 font-medium">
                         {company.company_size && (
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-gray-100 text-gray-700">
@@ -192,7 +186,6 @@ export default function Index({ companies = { data: [], links: [], total: 0 }, f
                       </div>
                     </div>
 
-                    {/* Footer: View Jobs */}
                     <div className="pt-5 mt-4 border-t border-gray-50 flex items-center justify-between">
                       <Link
                         href={`/${locale}/jobs?company_id=${company.id}`}
@@ -224,7 +217,6 @@ export default function Index({ companies = { data: [], links: [], total: 0 }, f
             </div>
           )}
 
-          {/* Pagination */}
           {companies?.links && companies.links.length > 3 && (
             <div className="flex items-center justify-center gap-1.5 pt-6">
               {companies.links.map((link, idx) => {

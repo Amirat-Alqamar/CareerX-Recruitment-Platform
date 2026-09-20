@@ -138,11 +138,9 @@ export default function ApplicantDetail({ application }) {
   const [activeTab, setActiveTab] = useState('experience');
   const [copiedLink, setCopiedLink] = useState(false);
 
-  // Status state
   const [currentStatus, setCurrentStatus] = useState(application.status || 'applied');
   const [updatingStatus, setUpdatingStatus] = useState(false);
 
-  // Interview Modal / Form state
   const [showInterviewModal, setShowInterviewModal] = useState(false);
   const [interviewDate, setInterviewDate] = useState(
     application.interview_date ? application.interview_date.replace(' ', 'T') : ''
@@ -230,7 +228,6 @@ export default function ApplicantDetail({ application }) {
     setTimeout(() => setCopiedLink(false), 2000);
   };
 
-  // 5 clear status options for Employer dropdown
   const statusOptions = [
     { value: 'reviewed', label: __('Review') },
     { value: 'accepted', label: __('Accept') },
@@ -292,7 +289,6 @@ export default function ApplicantDetail({ application }) {
       <Head title={`${candidate.name || __('Candidate')} - ${__('Application Review')}`} />
 
       <div className="space-y-6 max-w-6xl mx-auto">
-        {/* Top Back Navigation */}
         <div className="flex items-center justify-between">
           <Link
             href={`/${locale}/employer/applicants`}
@@ -307,7 +303,6 @@ export default function ApplicantDetail({ application }) {
           </span>
         </div>
 
-        {/* Position Applied & Quick Status Banner */}
         <div className="bg-white rounded-3xl border border-slate-100 p-6 sm:p-7 shadow-sm space-y-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-5">
             <div>
@@ -324,7 +319,6 @@ export default function ApplicantDetail({ application }) {
               </div>
             </div>
 
-            {/* Status Select & Quick Actions */}
             <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-2xl px-3 py-1.5">
                 <span className="text-xs font-bold text-slate-500">{__('Status:')}</span>
@@ -342,7 +336,6 @@ export default function ApplicantDetail({ application }) {
                 </select>
               </div>
 
-              {/* Schedule Google Meet Interview Button */}
               <button
                 type="button"
                 onClick={handleOpenInterviewModal}
@@ -354,7 +347,6 @@ export default function ApplicantDetail({ application }) {
             </div>
           </div>
 
-          {/* 3-Stage Visual Application Stepper */}
           <ApplicationStepper
             status={currentStatus}
             meetingLink={application.meeting_link}
@@ -362,7 +354,6 @@ export default function ApplicantDetail({ application }) {
           />
         </div>
 
-        {/* Interview Scheduled Alert / Banner (If scheduled) */}
         {application.meeting_link && (
           <div className="bg-gradient-to-r from-blue-500/10 via-indigo-500/5 to-teal-500/10 border border-blue-200 rounded-3xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
@@ -408,7 +399,6 @@ export default function ApplicantDetail({ application }) {
           </div>
         )}
 
-        {/* Candidate Profile Info Header */}
         <div className="bg-white rounded-3xl border border-slate-100 p-6 sm:p-8 shadow-sm">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
@@ -449,7 +439,6 @@ export default function ApplicantDetail({ application }) {
               </div>
             </div>
 
-            {/* CV Download button */}
             {application.resume ? (
               <a
                 href={application.resume.download_url}
@@ -465,7 +454,6 @@ export default function ApplicantDetail({ application }) {
             )}
           </div>
 
-          {/* Cover Letter Section if exists */}
           {application.cover_letter && (
             <div className="mt-6 pt-6 border-t border-slate-100">
               <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
@@ -478,7 +466,6 @@ export default function ApplicantDetail({ application }) {
           )}
         </div>
 
-        {/* Candidate Profile Tabs (Experiences, Education, Skills, Languages, Portfolio) */}
         <div className="bg-white rounded-3xl border border-slate-100 p-6 sm:p-8 shadow-sm space-y-6">
           <div className="flex items-center gap-2 border-b border-slate-100 pb-3 overflow-x-auto scrollbar-none">
             {[
@@ -513,9 +500,7 @@ export default function ApplicantDetail({ application }) {
             })}
           </div>
 
-          {/* Tab Content */}
           <div>
-            {/* Experience */}
             {activeTab === 'experience' && (
               <div className="space-y-4">
                 {candidate.experiences && candidate.experiences.length > 0 ? (
@@ -539,7 +524,6 @@ export default function ApplicantDetail({ application }) {
               </div>
             )}
 
-            {/* Education */}
             {activeTab === 'education' && (
               <div className="space-y-4">
                 {candidate.educations && candidate.educations.length > 0 ? (
@@ -558,7 +542,6 @@ export default function ApplicantDetail({ application }) {
               </div>
             )}
 
-            {/* Skills */}
             {activeTab === 'skills' && (
               <div className="flex flex-wrap gap-2">
                 {candidate.skills && candidate.skills.length > 0 ? (
@@ -576,7 +559,6 @@ export default function ApplicantDetail({ application }) {
               </div>
             )}
 
-            {/* Languages */}
             {activeTab === 'languages' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {candidate.languages && candidate.languages.length > 0 ? (
@@ -597,7 +579,6 @@ export default function ApplicantDetail({ application }) {
               </div>
             )}
 
-            {/* Portfolio */}
             {activeTab === 'portfolio' && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {candidate.portfolio && candidate.portfolio.length > 0 ? (
@@ -629,7 +610,6 @@ export default function ApplicantDetail({ application }) {
         </div>
       </div>
 
-      {/* Schedule Interview Modal */}
       {showInterviewModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4 animate-fade-in">
           <div className="bg-white rounded-3xl border border-slate-100 shadow-2xl w-full max-w-md p-6 sm:p-7 space-y-5 animate-scale-up">
@@ -657,7 +637,6 @@ export default function ApplicantDetail({ application }) {
             </div>
 
             <form onSubmit={handleScheduleInterview} className="space-y-4">
-              {/* Interview Date & Time */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
                   {__('Interview Date & Time')} *
@@ -672,7 +651,6 @@ export default function ApplicantDetail({ application }) {
                 />
               </div>
 
-              {/* Notes or agenda */}
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">
                   {__('Interview Notes / Agenda (Optional)')}
@@ -686,7 +664,6 @@ export default function ApplicantDetail({ application }) {
                 />
               </div>
 
-              {/* Meeting Link Field */}
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="block text-xs font-bold text-slate-700">
@@ -715,7 +692,6 @@ export default function ApplicantDetail({ application }) {
                 </p>
               </div>
 
-              {/* Quick Info Box */}
               <div className="p-3 bg-blue-50 rounded-2xl border border-blue-100 flex items-start gap-2.5">
                 <Video className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                 <div className="text-[11px] text-blue-800 font-medium leading-relaxed">

@@ -35,3 +35,4 @@ class NewJobApplicationNotification extends Notification
         ];
     }
 }
+

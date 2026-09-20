@@ -35,7 +35,6 @@ class EducationController extends Controller
         return redirect()->back()->with('success', __('Education added successfully.'));
     }
 
-
     private function checkAuthorization(Education $education)
     {
         if ($education->profile_id !== Auth::user()->profile?->id) {
@@ -59,14 +58,13 @@ class EducationController extends Controller
         return redirect()->back()->with('success', __('Education updated successfully.'));
     }
 
-
     public function destroy(Education $education)
     {
         $this->checkAuthorization($education);
-
 
         $education->delete();
 
         return redirect()->back()->with('success', __('Education deleted successfully.'));
     }
 }
+

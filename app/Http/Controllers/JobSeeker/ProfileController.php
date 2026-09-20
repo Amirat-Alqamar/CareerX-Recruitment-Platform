@@ -16,7 +16,6 @@ class ProfileController extends Controller
         return redirect()->route('seeker.profile', ['modal' => 'profile']);
     }
 
-
     public function update(Request $request)
     {
         $validated = $request->validate([
@@ -84,7 +83,7 @@ class ProfileController extends Controller
         $user->save();
 
         return redirect
-        
+
         ()->back()->with('success', __('Cover photo updated successfully.'));
     }
 
@@ -116,3 +115,4 @@ class ProfileController extends Controller
         return redirect()->back()->with('success', __('Cover photo removed successfully.'));
     }
 }
+

@@ -32,7 +32,6 @@ export default function Index({
 }) {
   const { __, locale } = useTranslation();
 
-  // Filter state
   const [keyword, setKeyword] = useState(filters.keyword || '');
   const [selectedCategory, setSelectedCategory] = useState(filters.category || filters.category_id || '');
   const [workType, setWorkType] = useState(filters.work_type || '');
@@ -40,7 +39,6 @@ export default function Index({
   const [cityId, setCityId] = useState(filters.city_id || '');
   const [selectedJob, setSelectedJob] = useState(null);
 
-  // Auto sync filters when URL changes
   useEffect(() => {
     setKeyword(filters.keyword || '');
     setSelectedCategory(filters.category || filters.category_id || '');
@@ -49,7 +47,6 @@ export default function Index({
     setCityId(filters.city_id || '');
   }, [filters]);
 
-  // Auto open modal if selectedJobId provided
   useEffect(() => {
     if (selectedJobId && jobs?.data) {
       const found = jobs.data.find((j) => String(j.id) === String(selectedJobId));
@@ -57,7 +54,6 @@ export default function Index({
     }
   }, [selectedJobId, jobs]);
 
-  // Submit filter changes
   const applyFilters = (newFilters = {}) => {
     const query = {
       keyword: keyword || undefined,
@@ -69,7 +65,6 @@ export default function Index({
       ...newFilters,
     };
 
-    // Remove empty/undefined
     Object.keys(query).forEach((key) => {
       if (!query[key]) delete query[key];
     });
@@ -102,7 +97,6 @@ export default function Index({
 
   const hasActiveFilters = Boolean(keyword || selectedCategory || workType || jobType || cityId || filters.company_id);
 
-  // Work type options
   const workTypeOptions = [
     { value: '', label: __('All Types') },
     { value: 'remote', label: __('Remote') },
@@ -110,7 +104,6 @@ export default function Index({
     { value: 'hybrid', label: __('Hybrid') },
   ];
 
-  // Job type options
   const jobTypeOptions = [
     { value: '', label: __('All Types') },
     { value: 'full_time', label: __('Full-time') },
@@ -123,7 +116,6 @@ export default function Index({
     <MainLayout>
       <Head title={__('Featured Job Listings')} />
 
-      {/* Hero / Section Header (Identical branding & titles to section on Landing Page) */}
       <section className="bg-gradient-to-b from-primary-light/40 via-gray-50/50 to-gray-50/50 pt-12 pb-16 border-b border-gray-100">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
           <div className="text-center max-w-3xl mx-auto space-y-3">
@@ -139,7 +131,6 @@ export default function Index({
             </p>
           </div>
 
-          {/* Search Toolbar */}
           <div className="mt-8 max-w-4xl mx-auto">
             <form
               onSubmit={handleSearchSubmit}
@@ -201,11 +192,9 @@ export default function Index({
         </div>
       </section>
 
-      {/* Main Content Area */}
       <section className="py-12 bg-gray-50/30 min-h-[600px]">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 space-y-8">
 
-          {/* Categories Navigation Bar (All types from categories section) */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold uppercase tracking-wider text-gray-500 flex items-center gap-1.5">
@@ -225,7 +214,6 @@ export default function Index({
               )}
             </div>
 
-            {/* Category Pills Slider */}
             <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
               <button
                 type="button"
@@ -267,7 +255,6 @@ export default function Index({
               })}
             </div>
 
-            {/* Active Filters Badges */}
             <div className="flex flex-wrap items-center gap-2 pt-1">
               {keyword && (
                 <div className="flex items-center gap-1.5 bg-gray-100 border border-gray-200 px-3 py-1 rounded-xl text-xs font-bold text-gray-700 shadow-2xs">
@@ -329,10 +316,8 @@ export default function Index({
             </div>
           </div>
 
-          {/* Secondary Filters: Work Type & Job Type Tabs */}
           <div className="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-gray-100">
             <div className="flex flex-wrap items-center gap-3">
-              {/* Work Type Dropdown */}
               <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold text-gray-500">{__('Work Type:')}</span>
                 <select
@@ -351,7 +336,6 @@ export default function Index({
                 </select>
               </div>
 
-              {/* Job Type Dropdown */}
               <div className="flex items-center gap-2">
                 <span className="text-xs font-semibold text-gray-500">{__('Job Type:')}</span>
                 <select
@@ -371,7 +355,6 @@ export default function Index({
               </div>
             </div>
 
-            {/* Results Count */}
             <div className="text-xs font-semibold text-gray-500">
               {jobs?.total > 0 ? (
                 <span>
@@ -386,7 +369,6 @@ export default function Index({
             </div>
           </div>
 
-          {/* Jobs Grid */}
           {jobs?.data && jobs.data.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {jobs.data.map((job) => (
@@ -400,7 +382,6 @@ export default function Index({
               ))}
             </div>
           ) : (
-            /* Empty State */
             <div className="bg-white rounded-3xl p-12 text-center border border-gray-100 max-w-lg mx-auto space-y-4 shadow-sm">
               <div className="w-16 h-16 rounded-full bg-teal-50 text-primary flex items-center justify-center mx-auto">
                 <Briefcase className="w-8 h-8" />
@@ -425,7 +406,6 @@ export default function Index({
             </div>
           )}
 
-          {/* Pagination */}
           {jobs?.links && jobs.links.length > 3 && (
             <div className="flex items-center justify-center gap-1.5 pt-6">
               {jobs.links.map((link, idx) => {
@@ -461,7 +441,6 @@ export default function Index({
         </div>
       </section>
 
-      {/* Modal for Job Details & Application */}
       <JobDetailsModal
         isOpen={Boolean(selectedJob)}
         onClose={() => setSelectedJob(null)}

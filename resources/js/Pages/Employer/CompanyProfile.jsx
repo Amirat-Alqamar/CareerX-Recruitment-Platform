@@ -144,9 +144,7 @@ export default function CompanyProfile({
       <Head title={`${company.name || __('Company')} - ${__('Company Profile')}`} />
 
       <div className="max-w-5xl mx-auto space-y-6">
-        {/* Cover & Header Banner */}
         <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden shadow-sm">
-          {/* Cover */}
           <div className="h-44 sm:h-56 bg-gradient-to-r from-[#014D55] to-[#008A7B] relative overflow-hidden group">
             <input
               type="file"
@@ -195,10 +193,8 @@ export default function CompanyProfile({
             </div>
           </div>
 
-          {/* Logo & Basic Info */}
           <div className="px-6 sm:px-8 pb-6 relative">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-16 mb-4">
-              {/* Logo */}
               <div className="relative inline-block w-28 h-28 shrink-0">
                 <input
                   type="file"
@@ -218,7 +214,6 @@ export default function CompanyProfile({
                     {company.name ? company.name.charAt(0).toUpperCase() : 'C'}
                   </div>
                 )}
-                {/* Delete Logo Button */}
                 {company.logo_url && (
                   <button
                     type="button"
@@ -235,7 +230,6 @@ export default function CompanyProfile({
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 )}
-                {/* Upload/Change Logo Button */}
                 <button
                   type="button"
                   disabled={uploadingLogo}
@@ -252,7 +246,6 @@ export default function CompanyProfile({
                 </button>
               </div>
 
-              {/* Edit Profile Button */}
               <button
                 type="button"
                 onClick={() => setIsEditing(!isEditing)}
@@ -263,7 +256,6 @@ export default function CompanyProfile({
               </button>
             </div>
 
-            {/* Title & Meta Info */}
             <div className="space-y-2">
               <h1 className="text-2xl sm:text-3xl font-black text-slate-900">
                 {company.name}
@@ -304,7 +296,6 @@ export default function CompanyProfile({
           </div>
         </div>
 
-        {/* Edit Form Card (Visible when editing) */}
         {isEditing && (
           <form
             onSubmit={handleFormSubmit}
@@ -444,7 +435,6 @@ export default function CompanyProfile({
               />
             </div>
 
-            {/* Social Links */}
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-2">
                 {__('Social Media Profiles')}
@@ -505,7 +495,6 @@ export default function CompanyProfile({
           </form>
         )}
 
-        {/* Company Description Card */}
         <div className="bg-white rounded-3xl border border-slate-100 p-6 sm:p-8 shadow-sm space-y-4">
           <h3 className="text-base font-black text-slate-900">{__('About the Company')}</h3>
           {company.description ? (
@@ -519,7 +508,6 @@ export default function CompanyProfile({
           )}
         </div>
 
-        {/* Company Active Job Postings */}
         <div className="bg-white rounded-3xl border border-slate-100 p-6 sm:p-8 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-base font-black text-slate-900">{__('Recent Jobs by this Company')}</h3>

@@ -9,12 +9,18 @@ use Inertia\Response;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display the job seeker dashboard with key metrics and profile strength.
-     */
+
     public function index(Request $request)
     {
         $user = $request->user();
+
+        if ($user && $user->isAdmin()) {
+            return redirect()->to(
+                class_exists(\Mcamara\LaravelLocalization\Facades\LaravelLocalization::class)
+                    ? \Mcamara\LaravelLocalization\Facades\LaravelLocalization::localizeUrl(route('admin.dashboard'))
+                    : route('admin.dashboard')
+            );
+        }
 
         if ($user && $user->isEmployer()) {
             return redirect()->to(
@@ -24,7 +30,6 @@ class DashboardController extends Controller
             );
         }
 
-        // Real metrics from database for user
         $stats = [
             'applied' => 0,
             'underReview' => 0,
@@ -48,8 +53,7 @@ class DashboardController extends Controller
                 'offers' => $offersCount,
             ];
 
-            // Calculate profile completion percentage based on profile sections
-            $score = 20; // Base score for account
+            $score = 20;
             if (!empty($profile->job_title)) {
                 $score += 15;
             }
@@ -78,9 +82,6 @@ class DashboardController extends Controller
         ]);
     }
 
-    /**
-     * Display the modern job seeker public profile preview.
-     */
     public function profile(Request $request)
     {
         $user = $request->user();
@@ -186,3 +187,4 @@ class DashboardController extends Controller
         ]);
     }
 }
+

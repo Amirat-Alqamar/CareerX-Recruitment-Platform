@@ -88,7 +88,6 @@ export default function AdminDashboard({
       <Head title={__('Admin Overview') + ' - CareerX'} />
 
       <div className="space-y-8 max-w-7xl mx-auto pb-12 animate-fade-in">
-        {/* Flash messages */}
         {flash?.success && (
           <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center gap-3">
             <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
@@ -102,18 +101,21 @@ export default function AdminDashboard({
           </div>
         )}
 
-        {/* Hero Welcome Banner */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#014D55] via-[#013b41] to-[#00262b] p-6 sm:p-8 lg:p-10 text-white shadow-xl">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r rtl:bg-gradient-to-l from-[#03444B] via-[#026E78] to-[#009B99] p-6 sm:p-8 lg:p-10 text-white shadow-xl shadow-teal-950/10 border border-teal-500/20">
+          <div className="absolute -right-12 -top-12 w-72 h-72 rounded-full bg-white/15 blur-3xl pointer-events-none" />
+          <div className="absolute -left-12 -bottom-12 w-80 h-80 rounded-full bg-[#00B7B5]/25 blur-3xl pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.12),transparent_65%)] pointer-events-none" />
+
           <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div className="space-y-2 max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-emerald-300 text-xs font-bold tracking-wide">
-                <Sparkles className="w-3.5 h-3.5" />
+            <div className="space-y-2.5 max-w-2xl">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/15 backdrop-blur-md text-teal-100 text-xs font-bold tracking-wide border border-white/20 shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-teal-200" />
                 <span>{__('System Administrator Portal')}</span>
               </div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white drop-shadow-xs">
                 {__('Platform Command Center')}
               </h1>
-              <p className="text-slate-200 text-xs sm:text-sm font-medium leading-relaxed">
+              <p className="text-teal-50/90 text-xs sm:text-sm font-medium leading-relaxed max-w-xl">
                 {__('Monitor recruitment analytics, moderate job postings, manage platform users, and track top demanded careers in real time.')}
               </p>
             </div>
@@ -121,28 +123,27 @@ export default function AdminDashboard({
             <div className="flex flex-wrap items-center gap-3 shrink-0">
               <Link
                 href={`/${locale}/admin/pending-jobs`}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-900 font-black text-xs transition-all shadow-md active:scale-95"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-900 font-black text-xs transition-all shadow-md hover:shadow-lg active:scale-95"
               >
-                <ShieldCheck className="w-4 h-4" />
+                <ShieldCheck className="w-4 h-4 text-slate-900" />
                 <span>{__('Pending Approvals')}</span>
                 {stats.pending_jobs > 0 && (
-                  <span className="px-2 py-0.5 rounded-full bg-amber-900/20 text-slate-900 text-[11px]">
+                  <span className="px-2 py-0.5 rounded-full bg-slate-900/15 text-slate-900 text-[11px] font-black">
                     {stats.pending_jobs}
                   </span>
                 )}
               </Link>
               <Link
                 href={`/${locale}/admin/reports`}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold text-xs backdrop-blur-md transition-all active:scale-95"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white/15 hover:bg-white/25 text-white border border-white/25 font-bold text-xs backdrop-blur-md transition-all shadow-xs active:scale-95"
               >
-                <FileBarChart className="w-4 h-4" />
+                <FileBarChart className="w-4 h-4 text-teal-200" />
                 <span>{__('View Reports')}</span>
               </Link>
             </div>
           </div>
         </div>
 
-        {/* Top KPI Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {kpis.map((kpi, index) => {
             const Icon = kpi.icon;
@@ -173,9 +174,7 @@ export default function AdminDashboard({
           })}
         </div>
 
-        {/* Analytics Highlights: Most Demanded Jobs & Top Skills */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Top In-Demand Categories (أكثر الأعمال المطلوبة) */}
           <div className="lg:col-span-2 bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-sm space-y-6">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center gap-3">
@@ -232,7 +231,6 @@ export default function AdminDashboard({
             </div>
           </div>
 
-          {/* Top In-Demand Skills Cloud */}
           <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-sm space-y-6 flex flex-col justify-between">
             <div className="space-y-4">
               <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
@@ -280,9 +278,7 @@ export default function AdminDashboard({
           </div>
         </div>
 
-        {/* Dual Tables: Recent Jobs & Recent Users */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Recent Jobs */}
           <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-sm space-y-5">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center gap-2.5">
@@ -338,7 +334,6 @@ export default function AdminDashboard({
             </div>
           </div>
 
-          {/* Recent Users Joined */}
           <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-sm space-y-5">
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
               <div className="flex items-center gap-2.5">

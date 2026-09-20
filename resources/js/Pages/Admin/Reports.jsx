@@ -50,7 +50,6 @@ export default function AdminReports({
       <Head title={__('Platform Reports & Analytics') + ' - CareerX'} />
 
       <div className="space-y-8 max-w-7xl mx-auto pb-12 animate-fade-in">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -69,7 +68,6 @@ export default function AdminReports({
           </button>
         </div>
 
-        {/* Top Summary Metric Row */}
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
           <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm space-y-1">
             <span className="text-[11px] font-bold text-slate-400 block">{__('Total Jobs Posted')}</span>
@@ -93,9 +91,7 @@ export default function AdminReports({
           </div>
         </div>
 
-        {/* Section 1: Top In-Demand Careers (أكثر الأعمال المطلوبة) & In-Demand Skills */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Top In-Demand Categories */}
           <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-sm space-y-6">
             <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
               <div className="p-2.5 rounded-2xl bg-[#E6F8F6] text-[#014D55]">
@@ -146,7 +142,6 @@ export default function AdminReports({
             </div>
           </div>
 
-          {/* Top In-Demand Skills */}
           <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-sm space-y-6">
             <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
               <div className="p-2.5 rounded-2xl bg-purple-50 text-purple-600">
@@ -185,9 +180,7 @@ export default function AdminReports({
           </div>
         </div>
 
-        {/* Section 2: Job Posts Distribution (تقارير عن الوظائف) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Jobs by Status */}
           <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
             <h3 className="text-sm font-black text-slate-900">{__('Jobs by Status')}</h3>
             <div className="space-y-2.5">
@@ -210,7 +203,6 @@ export default function AdminReports({
             </div>
           </div>
 
-          {/* Jobs by Work Type */}
           <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
             <h3 className="text-sm font-black text-slate-900">{__('Work Environment')}</h3>
             <div className="space-y-2.5">
@@ -229,7 +221,6 @@ export default function AdminReports({
             </div>
           </div>
 
-          {/* Jobs by Contract Type */}
           <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
             <h3 className="text-sm font-black text-slate-900">{__('Employment Contract Type')}</h3>
             <div className="space-y-2.5">
@@ -253,9 +244,7 @@ export default function AdminReports({
           </div>
         </div>
 
-        {/* Section 3: Companies & Candidate Applications Funnel (إحصائيات الشركات والمتقدمين) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Top Hiring Companies */}
           <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-sm space-y-5">
             <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
               <div className="p-2.5 rounded-2xl bg-indigo-50 text-indigo-600">
@@ -309,7 +298,6 @@ export default function AdminReports({
             </div>
           </div>
 
-          {/* Candidate Applications Funnel */}
           <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-100 shadow-sm space-y-5">
             <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
               <div className="p-2.5 rounded-2xl bg-emerald-50 text-[#008A7B]">

@@ -5,6 +5,8 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Inertia\Inertia;
 use App\Http\Controllers\JobSeeker\DashboardController;
 use App\Http\Controllers\JobListingController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Dashboard\TwoFactorAuthenticationController;
 
 Route::group([
     'prefix' => LaravelLocalization::setLocale(),
@@ -24,6 +26,18 @@ Route::group([
         return redirect('/' . app()->getLocale() . '#about');
     })->name('about.redirect');
 
+    Route::get('/privacy', function () {
+        return Inertia::render('Legal/Privacy');
+    })->name('privacy');
+
+    Route::get('/terms', function () {
+        return Inertia::render('Legal/Terms');
+    })->name('terms');
+
+    Route::get('/cookies', function () {
+        return Inertia::render('Legal/Cookies');
+    })->name('cookies');
+
     Route::get('/login', function () {
         return Inertia::render('Auth/Login');
     })->name('login');
@@ -38,20 +52,18 @@ Route::group([
         ]);
     })->name('password.request');
 
-    // Job Seeker Dashboard and Profile routes (Protected for authenticated users only)
     Route::group(['middleware' => ['auth']], function () {
-        Route::get('/2fa', [\App\Http\Controllers\Dashboard\TwoFactorAuthenticationController::class, 'index'])->name('2fa');
+        Route::get('/2fa', [TwoFactorAuthenticationController::class, 'index'])->name('2fa');
         Route::get('/seeker/dashboard', [DashboardController::class, 'index'])->name('seeker.dashboard');
         Route::get('/seeker/profile', [DashboardController::class, 'profile'])->name('seeker.profile');
         Route::get('/profile', function () {
             return redirect()->route('seeker.profile');
         })->name('profile.index');
 
-        // Notification actions
-        Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
-        Route::post('/notifications/read-all', [\App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
-        Route::post('/notifications/clear', [\App\Http\Controllers\NotificationController::class, 'clearAll'])->name('notifications.clear');
-        Route::post('/notifications/{id}/read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
+        Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+        Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+        Route::post('/notifications/clear', [NotificationController::class, 'clearAll'])->name('notifications.clear');
+        Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
     });
 
     require __DIR__ . '/job_seeker.php';

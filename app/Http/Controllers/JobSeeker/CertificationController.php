@@ -82,3 +82,4 @@ class CertificationController extends Controller
         return redirect()->back()->with('success', __('Certification deleted successfully.'));
     }
 }
+

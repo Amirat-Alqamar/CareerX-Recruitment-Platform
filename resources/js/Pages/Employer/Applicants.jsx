@@ -30,7 +30,7 @@ export default function Applicants({
 }) {
   const { __, locale, isRtl } = useTranslation();
 
-  const [viewMode, setViewMode] = useState('table'); // 'table' as default
+  const [viewMode, setViewMode] = useState('table'); 
   const [search, setSearch] = useState(filters.search || '');
   const [jobId, setJobId] = useState(filters.job_id || '');
   const [status, setStatus] = useState(filters.status || '');
@@ -46,7 +46,6 @@ export default function Applicants({
       city_id: newFilters.city_id !== undefined ? newFilters.city_id : cityId,
     };
 
-    // Remove empty keys
     Object.keys(query).forEach((k) => {
       if (!query[k]) delete query[k];
     });
@@ -129,7 +128,6 @@ export default function Applicants({
       <Head title={__('Job Applicants')} />
 
       <div className="space-y-6">
-        {/* Header Title & View Switcher */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -140,7 +138,6 @@ export default function Applicants({
             </p>
           </div>
 
-          {/* View Toggle (Table / Grid) */}
           <div className="inline-flex items-center bg-white border border-slate-200 rounded-2xl p-1 shadow-sm shrink-0">
             <button
               type="button"
@@ -171,7 +168,6 @@ export default function Applicants({
           </div>
         </div>
 
-        {/* Quick Status Badges */}
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
           {statusPills.map((pill) => {
             const isActive = status === pill.key;
@@ -199,10 +195,8 @@ export default function Applicants({
           })}
         </div>
 
-        {/* Filters Card */}
         <div className="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm space-y-4">
           <form onSubmit={handleSearchSubmit} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3">
-            {/* Search Input (4 cols) */}
             <div className="lg:col-span-4 relative">
               <input
                 type="text"
@@ -214,7 +208,6 @@ export default function Applicants({
               <Search className="w-4 h-4 text-slate-400 absolute start-3 top-3" />
             </div>
 
-            {/* Job Filter (3 cols) */}
             <div className="lg:col-span-3">
               <select
                 value={jobId}
@@ -233,7 +226,6 @@ export default function Applicants({
               </select>
             </div>
 
-            {/* Experience Filter (2 cols) */}
             <div className="lg:col-span-2">
               <select
                 value={experience}
@@ -251,7 +243,6 @@ export default function Applicants({
               </select>
             </div>
 
-            {/* Location / City Filter (2 cols) */}
             <div className="lg:col-span-2">
               <select
                 value={cityId}
@@ -270,7 +261,6 @@ export default function Applicants({
               </select>
             </div>
 
-            {/* Search Button (1 col) */}
             <div className="lg:col-span-1 flex items-center gap-1.5">
               <button
                 type="submit"
@@ -292,10 +282,8 @@ export default function Applicants({
           </form>
         </div>
 
-        {/* Applications Content: Table View (Default) or Grid Cards */}
         {applications?.data && applications.data.length > 0 ? (
           viewMode === 'table' ? (
-            /* Modern ATS Table View */
             <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-start border-collapse">
@@ -322,7 +310,6 @@ export default function Applicants({
                           key={app.id}
                           className="hover:bg-slate-50/80 transition-colors group"
                         >
-                          {/* Candidate Name & Info */}
                           <td className="py-4 px-5">
                             <div className="flex items-center gap-3.5">
                               {candidate?.avatar ? (
@@ -354,7 +341,6 @@ export default function Applicants({
                             </div>
                           </td>
 
-                          {/* Applied Job */}
                           <td className="py-4 px-5">
                             <div>
                               <span className="font-bold text-slate-800 block truncate">
@@ -367,7 +353,6 @@ export default function Applicants({
                             </div>
                           </td>
 
-                          {/* Experience & Location */}
                           <td className="py-4 px-5">
                             <div className="space-y-1">
                               {app.profile?.years_of_experience !== undefined && app.profile?.years_of_experience !== null ? (
@@ -387,12 +372,10 @@ export default function Applicants({
                             </div>
                           </td>
 
-                          {/* Applied Date */}
                           <td className="py-4 px-5 whitespace-nowrap text-slate-600 font-medium text-[11px]">
                             {app.created_at ? new Date(app.created_at).toLocaleDateString() : '-'}
                           </td>
 
-                          {/* Status Badge & Google Meet Alert */}
                           <td className="py-4 px-5">
                             <div className="flex flex-col gap-1.5 items-start">
                               <span
@@ -410,7 +393,6 @@ export default function Applicants({
                             </div>
                           </td>
 
-                          {/* Action Button (Eye Icon) */}
                           <td className="py-4 px-5 text-center">
                             <Link
                               href={`/${locale}/employer/applicants/${app.id}`}
@@ -428,7 +410,6 @@ export default function Applicants({
               </div>
             </div>
           ) : (
-            /* Cards / Grid View */
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {applications.data.map((app) => {
                 const statusInfo = getStatusBadge(app.status);
@@ -443,7 +424,6 @@ export default function Applicants({
                     className="bg-white rounded-3xl border border-slate-100 p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between gap-5 group"
                   >
                     <div>
-                      {/* Top row: Status Badge & Applied Time */}
                       <div className="flex items-center justify-between gap-2 mb-4">
                         <span
                           className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold border ${statusInfo.bg}`}
@@ -455,7 +435,6 @@ export default function Applicants({
                         </span>
                       </div>
 
-                      {/* Candidate Info */}
                       <div className="flex items-start gap-3.5 mb-4">
                         {candidate?.avatar ? (
                           <img
@@ -482,7 +461,6 @@ export default function Applicants({
                         </div>
                       </div>
 
-                      {/* Job Applied For */}
                       <div className="p-3 bg-slate-50 rounded-2xl border border-slate-100 mb-3 space-y-1.5">
                         <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
                           <Briefcase className="w-3.5 h-3.5 text-[#008A7B] shrink-0" />
@@ -494,7 +472,6 @@ export default function Applicants({
                         </div>
                       </div>
 
-                      {/* Badges: Experience & Location */}
                       <div className="flex flex-wrap gap-2 text-xs">
                         {app.profile?.years_of_experience !== undefined && app.profile?.years_of_experience !== null && (
                           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-100 text-slate-700 font-semibold text-[11px]">
@@ -510,7 +487,6 @@ export default function Applicants({
                         )}
                       </div>
 
-                      {/* Google Meet Scheduled Badge */}
                       {app.meeting_link && (
                         <div className="mt-3 p-2 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-between text-xs text-blue-900 font-bold">
                           <span className="flex items-center gap-1.5">
@@ -526,7 +502,6 @@ export default function Applicants({
                       )}
                     </div>
 
-                    {/* Bottom Action */}
                     <Link
                       href={`/${locale}/employer/applicants/${app.id}`}
                       className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-xs bg-slate-900 text-white hover:bg-[#008A7B] transition-all cursor-pointer shadow-sm"
@@ -563,7 +538,6 @@ export default function Applicants({
           </div>
         )}
 
-        {/* Pagination */}
         {applications?.links && applications.links.length > 3 && (
           <div className="flex items-center justify-center gap-1.5 pt-4">
             {applications.links.map((lnk, idx) => (

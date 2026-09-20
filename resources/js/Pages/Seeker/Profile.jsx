@@ -34,11 +34,9 @@ export default function Profile({
   const { __ } = useTranslation();
   const { flash } = usePage().props;
 
-  // Active modal state: 'language', 'education', 'experience', 'skills', 'certification', 'resumes', 'profile'
   const [activeModal, setActiveModal] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
 
-  // Flash notification banner state
   const [showFlash, setShowFlash] = useState(false);
 
   useEffect(() => {
@@ -49,9 +47,7 @@ export default function Profile({
     }
   }, [flash]);
 
-  // Check URL search parameters to trigger specific modal if linked from sidebar
   useEffect(() => {
-    // Reset body overflow to guarantee scrolling is never stuck
     document.body.style.overflow = '';
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -73,7 +69,6 @@ export default function Profile({
       else if (['portfolio', 'projects'].includes(modalParam)) setActiveModal('portfolio');
       else if (['profile', 'edit'].includes(modalParam)) setActiveModal('profile');
 
-      // Crucial: remove the query parameter immediately so refreshing (F5) doesn't keep reopening the modal!
       window.history.replaceState({}, '', window.location.pathname);
     }
 
@@ -82,7 +77,6 @@ export default function Profile({
     };
   }, []);
 
-  // Active tab state: 'Profile', 'Resume', 'Portfolio'
   const [activeTab, setActiveTab] = useState('Profile');
 
   const handleTabChange = (tabKey) => {
@@ -108,7 +102,6 @@ export default function Profile({
     <DashboardLayout userRole="seeker">
       <Head title={__('My Profile')} />
 
-      {/* Floating Flash Message Toast */}
       {showFlash && (flash?.success || flash?.error) && (
         <div className="fixed top-20 right-6 rtl:right-auto rtl:left-6 z-50 max-w-md animate-fade-in shadow-xl rounded-2xl overflow-hidden border border-slate-200">
           <div
@@ -134,7 +127,6 @@ export default function Profile({
       )}
 
       <div className="max-w-6xl mx-auto space-y-6 pb-12">
-        {/* Main Banner & User Overview */}
         <ProfileHeader
           data={profileData?.header}
           activeTab={activeTab}
@@ -157,7 +149,6 @@ export default function Profile({
           }}
         />
 
-        {/* Tab-driven Content Area */}
         <div id="profile-content-area" className="transition-all duration-300">
           {activeTab === 'Portfolio' && (
             <div className="space-y-6">
@@ -213,7 +204,6 @@ export default function Profile({
 
           {activeTab === 'Profile' && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Left Column - Main Details (2 Cols) */}
               <div className="lg:col-span-2 space-y-6">
                 <ProfessionalSummary
                   summary={profileData?.summary}
@@ -260,7 +250,6 @@ export default function Profile({
                 />
               </div>
 
-              {/* Right Column - Side Details (1 Col) */}
               <div className="space-y-6">
                 <ResumesSection
                   resumes={profileData?.resumes}
@@ -307,7 +296,6 @@ export default function Profile({
         </div>
       </div>
 
-      {/* Interactive Modals */}
       <LanguageModal
         isOpen={activeModal === 'language'}
         onClose={closeModal}

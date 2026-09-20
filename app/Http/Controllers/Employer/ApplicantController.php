@@ -14,24 +14,19 @@ use Inertia\Inertia;
 
 class ApplicantController extends Controller
 {
-    /**
-     * Display a listing of candidates who applied to the employer's jobs.
-     */
+
     public function index(Request $request)
     {
         $companyId = Auth::user()->company_id;
 
-        // Jobs for the filter dropdown
         $companyJobs = Job::where('company_id', $companyId)->select('id', 'title')->get();
 
-        // Cities for location filter
         $cities = City::orderBy('name')->get(['id', 'name']);
 
         $query = JobApplication::whereHas('jobPost', function ($q) use ($companyId) {
             $q->where('company_id', $companyId);
         })->with(['jobPost:id,title,job_type,work_type,salary_min,salary_max', 'profile.user:id,name,email,avatar', 'profile.city:id,name', 'profile.country:id,name', 'resume:id,title,file_path']);
 
-        // Filter by search (candidate name, email, or job title)
         if ($request->filled('search')) {
             $term = '%' . $request->search . '%';
             $query->where(function ($q) use ($term) {
@@ -44,12 +39,10 @@ class ApplicantController extends Controller
             });
         }
 
-        // Filter by job
         if ($request->filled('job_id')) {
             $query->where('job_post_id', $request->job_id);
         }
 
-        // Filter by status
         if ($request->filled('status')) {
             $status = $request->status;
             if ($status === 'pending' || $status === 'applied') {
@@ -59,7 +52,6 @@ class ApplicantController extends Controller
             }
         }
 
-        // Filter by Experience (years of experience)
         if ($request->filled('experience')) {
             $exp = (int) $request->experience;
             $query->whereHas('profile', function ($pq) use ($exp) {
@@ -67,7 +59,6 @@ class ApplicantController extends Controller
             });
         }
 
-        // Filter by Location / City
         if ($request->filled('city_id')) {
             $cityId = $request->city_id;
             $query->whereHas('profile', function ($pq) use ($cityId) {
@@ -79,7 +70,6 @@ class ApplicantController extends Controller
 
         $appliedCount = JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->whereIn('status', ['applied', 'pending'])->count();
 
-        // Application status counts for quick badges
         $counts = [
             'total'             => JobApplication::whereHas('jobPost', fn($q) => $q->where('company_id', $companyId))->count(),
             'applied'           => $appliedCount,
@@ -99,14 +89,10 @@ class ApplicantController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified applicant's profile and application details.
-     */
     public function show(JobApplication $application)
     {
         $this->authorizeCompanyApplication($application);
 
-        // Auto mark as reviewed if it is currently applied or pending
         if (in_array($application->status, ['applied', 'pending'])) {
             $application->update(['status' => 'reviewed']);
             $candidateUser = $application->profile?->user;
@@ -173,9 +159,6 @@ class ApplicantController extends Controller
         ]);
     }
 
-    /**
-     * Schedule an interview and generate a Google Meet link.
-     */
     public function scheduleInterview(Request $request, JobApplication $application)
     {
         $this->authorizeCompanyApplication($application);
@@ -188,7 +171,7 @@ class ApplicantController extends Controller
 
         $meetingLink = trim($validated['custom_link'] ?? '');
         if (!empty($meetingLink)) {
-            // Auto add protocol if missing
+
             if (!preg_match("~^(?:f|ht)tps?://~i", $meetingLink)) {
                 if (str_contains($meetingLink, 'meet.google.com')) {
                     $meetingLink = 'https://' . $meetingLink;
@@ -199,7 +182,7 @@ class ApplicantController extends Controller
                 }
             }
         } else {
-            // Fallback direct link to open Google Meet room creator
+
             $meetingLink = 'https://meet.google.com/new';
         }
 
@@ -223,9 +206,6 @@ class ApplicantController extends Controller
         return redirect()->back()->with('success', $isReschedule ? __('Interview rescheduled successfully.') : __('Interview scheduled successfully.'));
     }
 
-    /**
-     * Update the application status.
-     */
     public function updateStatus(Request $request, JobApplication $application)
     {
         $this->authorizeCompanyApplication($application);
@@ -239,7 +219,7 @@ class ApplicantController extends Controller
         $application->update(['status' => $status]);
 
         $candidateUser = $application->profile?->user;
-        // Avoid sending notification if status did not change or if status is interview (which will be sent by scheduleInterview with complete date/time)
+
         if ($candidateUser && $application->wasChanged('status') && $status !== 'interview') {
             $candidateUser->notify(new \App\Notifications\ApplicationStatusChangedNotification($application, 'status'));
         }
@@ -247,9 +227,6 @@ class ApplicantController extends Controller
         return redirect()->back()->with('success', __('Applicant status updated successfully.'));
     }
 
-    /**
-     * Download the candidate's resume for this application.
-     */
     public function downloadResume(JobApplication $application)
     {
         $this->authorizeCompanyApplication($application);
@@ -263,9 +240,6 @@ class ApplicantController extends Controller
         return Storage::disk('public')->download($resume->file_path, $resume->title . '.' . pathinfo($resume->file_path, PATHINFO_EXTENSION));
     }
 
-    /**
-     * Security check: ensure the application belongs to a job posted by the employer's company.
-     */
     protected function authorizeCompanyApplication(JobApplication $application): void
     {
         $application->loadMissing('jobPost');
@@ -275,3 +249,4 @@ class ApplicantController extends Controller
         }
     }
 }
+

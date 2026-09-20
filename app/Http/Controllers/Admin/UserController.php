@@ -10,19 +10,15 @@ use Inertia\Inertia;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of all platform users with filtering.
-     */
+
     public function index(Request $request)
     {
         $query = User::with(['company:id,name', 'profile:id,user_id,job_title']);
 
-        // Filter by role
         if ($request->filled('role') && in_array($request->role, ['job_seeker', 'employer', 'admin'])) {
             $query->where('role', $request->role);
         }
 
-        // Filter by status
         if ($request->filled('status')) {
             if ($request->status === 'active') {
                 $query->where('status', true);
@@ -31,7 +27,6 @@ class UserController extends Controller
             }
         }
 
-        // Search by name or email
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -56,7 +51,6 @@ class UserController extends Controller
             ];
         });
 
-        // Overview counts
         $stats = [
             'total'       => User::count(),
             'job_seekers' => User::where('role', 'job_seeker')->count(),
@@ -72,9 +66,6 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Toggle ban status of a user.
-     */
     public function toggleBan(Request $request, User $user)
     {
         if ($user->id === Auth::id()) {
@@ -82,7 +73,7 @@ class UserController extends Controller
         }
 
         if ($user->status) {
-            // Ban the user
+
             $request->validate([
                 'ban_reason' => ['nullable', 'string', 'max:255'],
             ]);
@@ -94,7 +85,7 @@ class UserController extends Controller
 
             return redirect()->back()->with('success', __('User account has been banned successfully.'));
         } else {
-            // Unban user
+
             $user->update([
                 'status' => true,
                 'ban_reason' => null,
@@ -104,17 +95,22 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Delete a user permanently.
-     */
     public function destroy(User $user)
     {
         if ($user->id === Auth::id()) {
             return redirect()->back()->with('error', __('You cannot delete your own admin account.'));
         }
 
+        $company = $user->company;
+
         $user->delete();
+
+        if ($company && $company->users()->count() === 0) {
+            $company->jobs()->delete();
+            $company->delete();
+        }
 
         return redirect()->back()->with('success', __('User deleted successfully.'));
     }
 }
+

@@ -28,7 +28,6 @@ export default function TwoFactorAuth({ user }) {
             <Head title={__('Two Factor Authentication')} />
 
             <div className="container-fluid max-w-4xl mx-auto py-4">
-                {/* Breadcrumb */}
                 <nav className="flex mb-4 text-xs font-semibold text-slate-500">
                     <a href={`/${locale}/2fa`} className="hover:text-[#008A7B]">
                         {__('Two Factor Authentication')}
@@ -37,16 +36,13 @@ export default function TwoFactorAuth({ user }) {
 
                 <div className="row">
                     <div className="col-md-8 w-full">
-                        {/* Card */}
                         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                            {/* Card Header */}
                             <div className="bg-[#008A7B] text-white px-6 py-4">
                                 <h3 className="text-lg font-bold">
                                     {__('Two-Factor Authentication')}
                                 </h3>
                             </div>
 
-                            {/* Card Body */}
                             <div className="p-6">
                                 <p className="text-sm text-slate-600 mb-6 leading-relaxed">
                                     {__('Two-factor authentication (2FA) adds an extra layer of security to your account by requiring a form of verification in addition to your password. This helps protect your account from unauthorized access, even if someone obtains your password.')}
@@ -79,7 +75,6 @@ export default function TwoFactorAuth({ user }) {
                                 ) : (
                                     <div className="space-y-6">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            {/* QR Code Section */}
                                             <div>
                                                 <h5 className="font-bold text-slate-800 text-sm mb-1">
                                                     {__('Two-factor authentication is enabled for this account.')}
@@ -95,7 +90,6 @@ export default function TwoFactorAuth({ user }) {
                                                 )}
                                             </div>
 
-                                            {/* Recovery Codes Section */}
                                             <div>
                                                 <h5 className="font-bold text-slate-800 text-sm mb-1">
                                                     {__('Recovery Codes')}
@@ -115,7 +109,6 @@ export default function TwoFactorAuth({ user }) {
 
                                         <hr className="border-slate-200 my-4" />
 
-                                        {/* Disable Form */}
                                         <form onSubmit={handleDisable}>
                                             <button
                                                 type="submit"

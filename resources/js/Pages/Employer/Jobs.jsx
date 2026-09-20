@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import {
   Briefcase,
@@ -8,18 +8,17 @@ import {
   Pencil,
   Trash2,
   Power,
-  Eye,
-  CheckCircle2,
   Clock,
   Archive,
-  ArrowRight,
-  ExternalLink,
 } from 'lucide-react';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import useTranslation from '@/hooks/useTranslation';
+import DeleteConfirmModal from '@/Components/Common/DeleteConfirmModal';
 
 export default function Jobs({ jobs, stats = {}, filters = {} }) {
-  const { __, locale, isRtl } = useTranslation();
+  const { __, locale } = useTranslation();
+  const [jobToDelete, setJobToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleToggleStatus = (jobId) => {
     router.post(
@@ -37,12 +36,16 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
     );
   };
 
-  const handleDelete = (jobId) => {
-    if (confirm(__('Are you sure you want to delete this job posting? This cannot be undone.'))) {
-      router.delete(`/${locale}/employer/jobs/${jobId}`, {
-        preserveScroll: true,
-      });
-    }
+  const confirmDelete = () => {
+    if (!jobToDelete) return;
+    setIsDeleting(true);
+    router.delete(`/${locale}/employer/jobs/${jobToDelete.id}`, {
+      preserveScroll: true,
+      onFinish: () => {
+        setIsDeleting(false);
+        setJobToDelete(null);
+      },
+    });
   };
 
   const handleStatusFilter = (st) => {
@@ -91,7 +94,6 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
       <Head title={__('Manage Jobs')} />
 
       <div className="space-y-6">
-        {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -111,7 +113,6 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
           </Link>
         </div>
 
-        {/* Stats Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
             <span className="text-xs font-bold text-slate-400 block mb-1">{__('Total Jobs')}</span>
@@ -135,7 +136,6 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
           </div>
         </div>
 
-        {/* Filter Pills */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1">
           {[
             { key: '', label: __('All Postings') },
@@ -162,7 +162,6 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
           })}
         </div>
 
-        {/* Jobs List / Table Card */}
         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
           {jobs?.data && jobs.data.length > 0 ? (
             <div className="divide-y divide-slate-100">
@@ -189,9 +188,7 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
                     </div>
                   </div>
 
-                  {/* Right: Applicants & Actions */}
                   <div className="flex flex-wrap items-center gap-3 shrink-0">
-                    {/* View Candidates link */}
                     <Link
                       href={`/${locale}/employer/applicants?job_id=${job.id}`}
                       className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-[#E6F8F6] text-slate-700 hover:text-[#008A7B] font-bold text-xs transition-all cursor-pointer"
@@ -202,21 +199,31 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
                       </span>
                     </Link>
 
-                    {/* Toggle publish / close */}
                     <button
                       type="button"
                       onClick={() => handleToggleStatus(job.id)}
-                      className={`p-2 rounded-xl border text-xs font-semibold transition-colors cursor-pointer ${
+                      className={`p-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer shadow-xs ${
                         job.status === 'published'
-                          ? 'border-amber-200 text-amber-600 hover:bg-amber-50'
-                          : 'border-emerald-200 text-emerald-600 hover:bg-emerald-50'
+                          ? 'border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-100'
+                          : job.status === 'pending'
+                          ? 'border-amber-300 text-amber-700 bg-amber-50 hover:bg-amber-100'
+                          : job.status === 'closed'
+                          ? 'border-rose-300 text-rose-700 bg-rose-50 hover:bg-rose-100'
+                          : 'border-slate-200 text-slate-600 bg-slate-50 hover:bg-slate-100'
                       }`}
-                      title={job.status === 'published' ? __('Close Job') : __('Publish Job')}
+                      title={
+                        job.status === 'published'
+                          ? __('Close Job (Currently Published)')
+                          : job.status === 'closed'
+                          ? __('Re-open Job (Submit for Approval)')
+                          : job.status === 'pending'
+                          ? __('Pending Admin Approval')
+                          : __('Publish Job')
+                      }
                     >
                       <Power className="w-4 h-4" />
                     </button>
 
-                    {/* Duplicate */}
                     <button
                       type="button"
                       onClick={() => handleDuplicate(job.id)}
@@ -226,7 +233,6 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
                       <Copy className="w-4 h-4" />
                     </button>
 
-                    {/* Edit */}
                     <Link
                       href={`/${locale}/employer/jobs/${job.id}/edit`}
                       className="p-2 rounded-xl border border-slate-200 text-slate-600 hover:text-[#008A7B] hover:bg-slate-100 transition-colors cursor-pointer"
@@ -235,11 +241,10 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
                       <Pencil className="w-4 h-4" />
                     </Link>
 
-                    {/* Delete */}
                     <button
                       type="button"
-                      onClick={() => handleDelete(job.id)}
-                      className="p-2 rounded-xl border border-slate-200 text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                      onClick={() => setJobToDelete(job)}
+                      className="p-2 rounded-xl border border-rose-200 text-rose-600 bg-rose-50/50 hover:bg-rose-100 hover:border-rose-300 transition-colors cursor-pointer shadow-xs"
                       title={__('Delete Job')}
                     >
                       <Trash2 className="w-4 h-4" />
@@ -270,7 +275,6 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
           )}
         </div>
 
-        {/* Pagination */}
         {jobs?.links && jobs.links.length > 3 && (
           <div className="flex items-center justify-center gap-1.5 pt-4">
             {jobs.links.map((lnk, idx) => (
@@ -290,6 +294,23 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
           </div>
         )}
       </div>
+
+      <DeleteConfirmModal
+        isOpen={!!jobToDelete}
+        onClose={() => setJobToDelete(null)}
+        onConfirm={confirmDelete}
+        isLoading={isDeleting}
+        title={__('Delete Job Posting')}
+        message={
+          <>
+            {__('Are you sure you want to permanently delete')}{' '}
+            <strong className="text-slate-900">{jobToDelete?.title}</strong>?{' '}
+            {__('All applicant applications for this post will also be removed. This cannot be undone.')}
+          </>
+        }
+        confirmText={__('Yes, Delete Permanently')}
+        cancelText={__('Cancel')}
+      />
     </DashboardLayout>
   );
 }

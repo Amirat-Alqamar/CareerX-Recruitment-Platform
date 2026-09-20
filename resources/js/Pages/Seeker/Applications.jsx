@@ -35,7 +35,6 @@ export default function Applications({
   const [activeFilter, setActiveFilter] = useState('all');
   const [selectedApp, setSelectedApp] = useState(null);
 
-  // Flash notification toast
   const [showFlash, setShowFlash] = useState(false);
   useEffect(() => {
     if (flash?.success || flash?.error) {
@@ -45,7 +44,6 @@ export default function Applications({
     }
   }, [flash]);
 
-  // Open modal if selectedAppId is passed
   useEffect(() => {
     if (selectedAppId && applications.length > 0) {
       const match = applications.find((a) => String(a.id) === String(selectedAppId));
@@ -230,7 +228,6 @@ export default function Applications({
     <DashboardLayout userRole="seeker">
       <Head title={__('My Applications')} />
 
-      {/* Floating Flash Message Toast */}
       {showFlash && (flash?.success || flash?.error) && (
         <div className="fixed top-20 right-6 rtl:right-auto rtl:left-6 z-50 max-w-md animate-fade-in shadow-xl rounded-2xl overflow-hidden border border-slate-200">
           <div
@@ -256,7 +253,6 @@ export default function Applications({
       )}
 
       <div className="max-w-6xl mx-auto space-y-6 pb-12">
-        {/* Page Header Banner */}
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-100 shadow-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 rtl:right-auto rtl:left-0 w-80 h-full bg-gradient-to-l rtl:bg-gradient-to-r from-[#008A7B]/10 to-transparent pointer-events-none" />
           <div className="relative z-10">
@@ -273,9 +269,7 @@ export default function Applications({
           </div>
         </div>
 
-        {/* Stats KPI Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Total */}
           <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
               <Briefcase className="w-6 h-6" />
@@ -286,7 +280,6 @@ export default function Applications({
             </div>
           </div>
 
-          {/* Under Review */}
           <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
               <Eye className="w-6 h-6" />
@@ -297,7 +290,6 @@ export default function Applications({
             </div>
           </div>
 
-          {/* Accepted */}
           <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
               <CheckCircle2 className="w-6 h-6" />
@@ -308,7 +300,6 @@ export default function Applications({
             </div>
           </div>
 
-          {/* Rejected */}
           <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm flex items-center gap-4">
             <div className="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
               <XCircle className="w-6 h-6" />
@@ -320,7 +311,6 @@ export default function Applications({
           </div>
         </div>
 
-        {/* Filter Tabs */}
         <div className="bg-white rounded-3xl p-3 border border-slate-100 shadow-sm flex items-center gap-2 overflow-x-auto">
           {[
             { key: 'all', label: __('All Applications'), count: stats.total },
@@ -354,7 +344,6 @@ export default function Applications({
           ))}
         </div>
 
-        {/* Applications List */}
         <div className="space-y-4">
           {filteredApplications.length > 0 ? (
             filteredApplications.map((app) => (
@@ -364,7 +353,6 @@ export default function Applications({
                 className="bg-white rounded-3xl p-6 border border-slate-100 hover:border-slate-200 hover:shadow-md transition-all cursor-pointer group"
               >
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  {/* Left info */}
                   <div className="space-y-2 flex-1">
                     <div className="flex items-center gap-3 flex-wrap">
                       <h2 className="text-lg font-black text-slate-900 group-hover:text-[#008A7B] transition-colors">
@@ -397,7 +385,6 @@ export default function Applications({
                     </div>
                   </div>
 
-                  {/* Right Action */}
                   <div className="flex items-center gap-3 shrink-0 self-end md:self-center">
                     <button
                       type="button"
@@ -413,7 +400,6 @@ export default function Applications({
                   </div>
                 </div>
 
-                {/* Google Meet Scheduled Box if present */}
                 {app.meeting_link && (
                   <div
                     onClick={(e) => e.stopPropagation()}
@@ -448,7 +434,6 @@ export default function Applications({
                   </div>
                 )}
 
-                {/* 3-Stage Visual Stepper */}
                 <ApplicationStepper
                   status={app.status}
                   meetingLink={app.meeting_link}
@@ -483,7 +468,6 @@ export default function Applications({
         </div>
       </div>
 
-      {/* Application Details Modal */}
       <ModalWrapper
         isOpen={Boolean(selectedApp)}
         onClose={() => setSelectedApp(null)}
@@ -492,7 +476,6 @@ export default function Applications({
       >
         {selectedApp && (
           <div className="space-y-6">
-            {/* Job Header */}
             <div className="p-4 bg-slate-50 rounded-2xl border border-slate-100 space-y-2">
               <div className="flex items-center justify-between flex-wrap gap-2">
                 <h3 className="text-base font-black text-slate-900">
@@ -506,14 +489,12 @@ export default function Applications({
               </p>
             </div>
 
-            {/* 3-Stage Visual Stepper in Modal */}
             <ApplicationStepper
               status={selectedApp.status}
               meetingLink={selectedApp.meeting_link}
               __={__}
             />
 
-            {/* Submission metadata */}
             <div className="grid grid-cols-2 gap-3 text-xs bg-slate-50/50 p-4 rounded-2xl border border-slate-100">
               <div>
                 <span className="text-slate-400 font-semibold block">{__('Date Applied')}</span>
@@ -529,7 +510,6 @@ export default function Applications({
               </div>
             </div>
 
-            {/* Attached Resume */}
             {selectedApp.resume && (
               <div className="space-y-2">
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
@@ -561,7 +541,6 @@ export default function Applications({
               </div>
             )}
 
-            {/* Cover Letter */}
             {selectedApp.cover_letter && (
               <div className="space-y-2">
                 <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
@@ -573,7 +552,6 @@ export default function Applications({
               </div>
             )}
 
-            {/* Google Meet Scheduled Info in Modal */}
             {selectedApp.meeting_link && (
               <div className="p-4 bg-blue-50/80 border border-blue-200/80 rounded-2xl flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5">
@@ -605,7 +583,6 @@ export default function Applications({
               </div>
             )}
 
-            {/* Close action */}
             <div className="flex justify-end pt-2">
               <button
                 type="button"

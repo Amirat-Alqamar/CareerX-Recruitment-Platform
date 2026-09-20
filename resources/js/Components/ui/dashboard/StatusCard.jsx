@@ -30,7 +30,6 @@ export default function StatusCard({
 
   return (
     <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex flex-col justify-between h-36 transition-all duration-300 hover:shadow-md hover:border-slate-200 hover:-translate-y-0.5 group">
-      {/* Top Bar: Icon & Trend */}
       <div className="flex items-center justify-between">
 
         <div className="text-3xl font-black text-slate-900 tracking-tight">
@@ -44,7 +43,6 @@ export default function StatusCard({
         )}
       </div>
 
-      {/* Content */}
       <div className="flex items-center justify-between">
 
         <div className="text-xs font-semibold text-slate-500">

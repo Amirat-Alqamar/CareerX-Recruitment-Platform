@@ -103,7 +103,6 @@ export default function EducationModal({ isOpen, onClose, education = null }) {
       maxWidth="max-w-xl"
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* University */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
             {__('University / Institution')} <span className="text-red-500">*</span>
@@ -122,7 +121,6 @@ export default function EducationModal({ isOpen, onClose, education = null }) {
           )}
         </div>
 
-        {/* Degree */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
             {__('Degree / Field of Study')} <span className="text-red-500">*</span>
@@ -141,7 +139,6 @@ export default function EducationModal({ isOpen, onClose, education = null }) {
           )}
         </div>
 
-        {/* GPA & Years Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">
@@ -200,7 +197,6 @@ export default function EducationModal({ isOpen, onClose, education = null }) {
           </div>
         </div>
 
-        {/* Modal Actions */}
         <div className="flex items-center justify-between pt-4 border-t border-slate-100 mt-6">
           {isEdit ? (
             <button
