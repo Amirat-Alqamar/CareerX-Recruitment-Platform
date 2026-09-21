@@ -42,10 +42,39 @@ class HandleInertiaRequests extends Middleware
             ? LaravelLocalization::getCurrentLocaleDirection()
             : ($locale === 'ar' ? 'rtl' : 'ltr');
 
+        // Modular Auto-Merge: Load all domain translation files from lang/{locale}/*.json
+        $translations = [];
+        $localeDir = base_path("lang/{$locale}");
+        if (is_dir($localeDir)) {
+            $files = glob("{$localeDir}/*.json") ?: [];
+            usort($files, function ($a, $b) {
+                if (str_contains($a, 'common.json')) return -1;
+                if (str_contains($b, 'common.json')) return 1;
+                return strcmp($a, $b);
+            });
+
+            foreach ($files as $file) {
+                $content = @file_get_contents($file);
+                if ($content) {
+                    $decoded = json_decode($content, true);
+                    if (is_array($decoded)) {
+                        $translations = array_merge($translations, $decoded);
+                    }
+                }
+            }
+        }
+
+        // Also merge root or compiled locale file if it exists
         $translationsPath = base_path("lang/{$locale}.json");
-        $translations = file_exists($translationsPath)
-            ? json_decode(file_get_contents($translationsPath), true) ?: []
-            : [];
+        if (file_exists($translationsPath)) {
+            $rootContent = @file_get_contents($translationsPath);
+            if ($rootContent) {
+                $rootTranslations = json_decode($rootContent, true);
+                if (is_array($rootTranslations)) {
+                    $translations = array_merge($translations, $rootTranslations);
+                }
+            }
+        }
 
         $locales = [];
         if (class_exists(LaravelLocalization::class)) {
@@ -82,14 +111,14 @@ class HandleInertiaRequests extends Middleware
                 'two_factor_confirmed' => !is_null($user->two_factor_confirmed_at),
             ];
 
-            $notifications = $user->notifications()->take(15)->get()->map(function ($n) use ($locale) {
+            $notifications = $user->notifications()->take(15)->get()->map(function ($n) use ($locale, $translations) {
                 $data = $n->data;
                 $params = $data['params'] ?? [];
                 $rawTitle = $data['title'] ?? 'Notification';
                 $rawMessage = $data['message'] ?? '';
 
-                $title = __($rawTitle, $params);
-                $message = __($rawMessage, $params);
+                $title = $translations[$rawTitle] ?? __($rawTitle, $params);
+                $message = $translations[$rawMessage] ?? __($rawMessage, $params);
 
                 if ($locale === 'ar' && !empty($data['title_ar']) && $title === $rawTitle) {
                     $title = $data['title_ar'];
@@ -123,8 +152,14 @@ class HandleInertiaRequests extends Middleware
                 'unread_notifications_count' => $unreadCount,
             ],
             'flash' => [
-                'success' => fn () => $request->session()->get('success'),
-                'error' => fn () => $request->session()->get('error'),
+                'success' => function () use ($request, $translations) {
+                    $msg = $request->session()->get('success');
+                    return ($msg && isset($translations[$msg])) ? $translations[$msg] : $msg;
+                },
+                'error' => function () use ($request, $translations) {
+                    $msg = $request->session()->get('error');
+                    return ($msg && isset($translations[$msg])) ? $translations[$msg] : $msg;
+                },
             ],
             'locale' => $locale,
             'direction' => $direction,
