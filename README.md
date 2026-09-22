@@ -99,13 +99,15 @@ php artisan serve
 
 ---
 
-## 🔐 Demo Credentials
+## 🔐 Default Admin Account
 
-| Role | Email | Password | Access Level |
+After running the database seeders, the default administrator account is available:
+
+| Account | Email | Password | Role |
 | :--- | :--- | :--- | :--- |
 | **System Administrator** | `admin@careerx.com` | `password` | Super Admin |
-| **Employer** | `employer@careerx.com` | `password` | Corporate Recruiter |
-| **Job Seeker** | `seeker@careerx.com` | `password` | Candidate |
+
+> **Note:** Employers and Job Seekers can easily register new accounts directly through the registration page (`/register`) by selecting their desired account type.
 
 ---
 
