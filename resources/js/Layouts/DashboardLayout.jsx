@@ -65,24 +65,28 @@ export default function DashboardLayout({ children, userRole }) {
   };
 
   return (
-    <div dir={direction} className="h-screen bg-[#F8FAFC] flex text-slate-800 antialiased overflow-hidden relative">
-      <Sidebar
-        userRole={effectiveRole}
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        isCollapsed={sidebarCollapsed}
-        onToggleCollapse={() => setSidebarCollapsed((prev) => !prev)}
-      />
+    <div dir={direction} className="h-screen print:h-auto print:overflow-visible print:bg-white bg-[#F8FAFC] flex text-slate-800 antialiased overflow-hidden relative">
+      <div className="print:hidden">
+        <Sidebar
+          userRole={effectiveRole}
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          isCollapsed={sidebarCollapsed}
+          onToggleCollapse={() => setSidebarCollapsed((prev) => !prev)}
+        />
+      </div>
 
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        <DashboardHeader onToggleSidebar={handleToggleSidebar} />
-        <main className="p-4 sm:p-6 lg:p-8 flex-1 overflow-y-auto">
+      <div className="flex-1 flex flex-col min-w-0 h-screen print:h-auto print:overflow-visible overflow-hidden">
+        <div className="print:hidden">
+          <DashboardHeader onToggleSidebar={handleToggleSidebar} />
+        </div>
+        <main className="p-4 sm:p-6 lg:p-8 flex-1 overflow-y-auto print:h-auto print:overflow-visible print:p-0">
           {children}
         </main>
       </div>
 
       {showFlash && (flash?.success || flash?.error) && (
-        <div className="fixed top-5 right-5 rtl:right-auto rtl:left-5 z-50 max-w-md shadow-2xl animate-in fade-in slide-in-from-top-4 duration-300">
+        <div className="fixed top-5 right-5 rtl:right-auto rtl:left-5 z-50 max-w-md shadow-2xl animate-in fade-in slide-in-from-top-4 duration-300 print:hidden">
           <div
             className={`flex items-center gap-3 px-4 py-3 rounded-2xl border text-white text-xs sm:text-sm font-semibold ${
               flash.success ? 'bg-[#008A7B] border-teal-600' : 'bg-red-600 border-red-700'

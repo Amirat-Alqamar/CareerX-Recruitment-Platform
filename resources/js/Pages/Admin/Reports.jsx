@@ -49,7 +49,27 @@ export default function AdminReports({
     <DashboardLayout userRole="admin">
       <Head title={__('Platform Reports & Analytics') + ' - CareerX'} />
 
-      <div className="space-y-8 max-w-7xl mx-auto pb-12 animate-fade-in">
+      <style>{`
+        @media print {
+          @page {
+            size: A4 portrait;
+            margin: 10mm;
+          }
+          html, body {
+            height: auto !important;
+            overflow: visible !important;
+            background: #ffffff !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          .break-inside-avoid {
+            break-inside: avoid !important;
+            page-break-inside: avoid !important;
+          }
+        }
+      `}</style>
+
+      <div className="space-y-8 max-w-7xl mx-auto pb-12 animate-fade-in print:p-0 print:m-0 print:max-w-none">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -62,7 +82,7 @@ export default function AdminReports({
           <button
             type="button"
             onClick={() => window.print()}
-            className="px-4 py-2 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold text-xs shadow-xs transition-colors cursor-pointer self-start sm:self-auto"
+            className="px-4 py-2 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold text-xs shadow-xs transition-colors cursor-pointer self-start sm:self-auto print:hidden"
           >
             🖨️ {__('Print / Export Report')}
           </button>
