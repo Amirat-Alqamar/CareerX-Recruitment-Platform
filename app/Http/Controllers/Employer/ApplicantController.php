@@ -8,6 +8,7 @@ use App\Models\Job;
 use App\Models\JobApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -17,6 +18,8 @@ class ApplicantController extends Controller
 
     public function index(Request $request)
     {
+        Gate::authorize('applications.view');
+
         $companyId = Auth::user()->company_id;
 
         $companyJobs = Job::where('company_id', $companyId)->select('id', 'title')->get();
@@ -91,6 +94,7 @@ class ApplicantController extends Controller
 
     public function show(JobApplication $application)
     {
+        Gate::authorize('applications.view');
         $this->authorizeCompanyApplication($application);
 
         if (in_array($application->status, ['applied', 'pending'])) {
@@ -161,6 +165,7 @@ class ApplicantController extends Controller
 
     public function scheduleInterview(Request $request, JobApplication $application)
     {
+        Gate::authorize('applications.manage');
         $this->authorizeCompanyApplication($application);
 
         $validated = $request->validate([
@@ -208,6 +213,7 @@ class ApplicantController extends Controller
 
     public function updateStatus(Request $request, JobApplication $application)
     {
+        Gate::authorize('applications.manage');
         $this->authorizeCompanyApplication($application);
 
         $validated = $request->validate([
@@ -229,6 +235,7 @@ class ApplicantController extends Controller
 
     public function downloadResume(JobApplication $application)
     {
+        Gate::authorize('applications.view');
         $this->authorizeCompanyApplication($application);
 
         $resume = $application->resume;

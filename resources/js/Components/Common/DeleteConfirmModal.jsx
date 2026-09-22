@@ -12,8 +12,28 @@ export default function DeleteConfirmModal({
   cancelText,
   isLoading = false,
   icon,
+  variant = 'danger',
+  confirmButtonClass,
 }) {
   const { __ } = useTranslation();
+
+  const variantStyles = {
+    danger: {
+      headerIcon: 'text-rose-600',
+      button: 'bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white shadow-rose-200',
+    },
+    warning: {
+      headerIcon: 'text-amber-600',
+      button: 'bg-amber-600 hover:bg-amber-700 active:bg-amber-800 text-white shadow-amber-200',
+    },
+    teal: {
+      headerIcon: 'text-[#008A7B]',
+      button: 'bg-[#008A7B] hover:bg-[#014D55] text-white shadow-sm hover:shadow',
+    },
+  }[variant] || {
+    headerIcon: 'text-rose-600',
+    button: 'bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white shadow-rose-200',
+  };
 
   useEffect(() => {
     if (!isOpen) return;
@@ -43,7 +63,7 @@ export default function DeleteConfirmModal({
 
       <div className="relative bg-white rounded-3xl border border-slate-100 shadow-2xl w-full max-w-md p-6 space-y-4 animate-scale-up z-10">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-          <div className="flex items-center gap-2 text-rose-600">
+          <div className={`flex items-center gap-2 ${variantStyles.headerIcon}`}>
             {icon || <Trash2 className="w-5 h-5" />}
             <h3 className="text-base font-black text-slate-900">
               {title || __('Delete Confirmation')}
@@ -76,15 +96,15 @@ export default function DeleteConfirmModal({
             type="button"
             onClick={onConfirm}
             disabled={isLoading}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white text-xs font-bold transition-colors cursor-pointer shadow-sm shadow-rose-200 disabled:opacity-60 disabled:cursor-not-allowed"
+            className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm disabled:opacity-60 disabled:cursor-not-allowed ${confirmButtonClass || variantStyles.button}`}
           >
             {isLoading ? (
               <>
                 <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                <span>{__('Deleting...')}</span>
+                <span>{__('Processing...')}</span>
               </>
             ) : (
-              <span>{confirmText || __('Yes, Delete Permanently')}</span>
+              <span>{confirmText || __('Yes, Confirm')}</span>
             )}
           </button>
         </div>

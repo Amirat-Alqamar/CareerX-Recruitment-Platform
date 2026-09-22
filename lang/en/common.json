@@ -392,5 +392,11 @@
     "Your application for :job at :company has been received and is pending review.": "Your application for :job at :company has been received and is pending review.",
     "Your application for :job at :company status was updated.": "Your application for :job at :company status was updated.",
     "Your job opening :job has been approved and is now live.": "Your job opening :job has been approved and is now live.",
-    "Your job opening :job was rejected by platform administration.": "Your job opening :job was rejected by platform administration."
+    "Your job opening :job was rejected by platform administration.": "Your job opening :job was rejected by platform administration.",
+    "Delete Confirmation": "Delete Confirmation",
+    "Are you sure you want to delete this item? This action cannot be undone.": "Are you sure you want to delete this item? This action cannot be undone.",
+    "Processing...": "Processing...",
+    "Yes, Confirm": "Yes, Confirm",
+    "Welcome, :name!": "Welcome, :name!",
+    "actions": "actions"
 }

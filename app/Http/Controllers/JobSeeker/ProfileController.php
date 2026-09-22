@@ -8,6 +8,7 @@ use App\Models\Country;
 use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ProfileController extends Controller
 {
@@ -18,6 +19,8 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
+        Gate::authorize('profile.edit');
+
         $validated = $request->validate([
             'country_id'          => 'nullable|exists:countries,id',
             'city_id'             => 'nullable|exists:cities,id',

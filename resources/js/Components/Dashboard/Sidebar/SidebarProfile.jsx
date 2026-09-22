@@ -31,7 +31,7 @@ export default function SidebarProfile({ user, isCollapsed = false }) {
     return (
       <div className="p-3 border-b border-slate-100 flex justify-center">
         <div
-          className={`w-10 h-10 rounded-full ${isAdmin ? 'bg-[#014D55]' : isEmployer ? 'bg-[#008A7B]' : 'bg-[#014D55]'} text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-sm cursor-pointer`}
+          className="w-10 h-10 rounded-full bg-[#008A7B] text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-sm cursor-pointer"
           title={`${name} (${headline})`}
         >
           {initials}
@@ -42,7 +42,7 @@ export default function SidebarProfile({ user, isCollapsed = false }) {
 
   return (
     <div className="flex items-center gap-3 p-4 border-b border-slate-100">
-      <div className={`w-10 h-10 rounded-full ${isAdmin ? 'bg-[#014D55]' : isEmployer ? 'bg-[#008A7B]' : 'bg-[#014D55]'} text-white font-bold text-sm flex items-center justify-center shrink-0`}>
+      <div className="w-10 h-10 rounded-full bg-[#008A7B] text-white font-bold text-sm flex items-center justify-center shrink-0 shadow-xs">
         {initials}
       </div>
       <div className="overflow-hidden flex-1">

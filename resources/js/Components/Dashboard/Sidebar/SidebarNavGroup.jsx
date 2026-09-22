@@ -20,8 +20,13 @@ export default function SidebarNavGroup({ navigation, onItemClick, isCollapsed =
           )}
           <nav className="space-y-1">
             {group.items.map((item, itemIdx) => {
+              const user = props.auth?.user;
+              if (item.ability && !user?.super_admin && !(user?.abilities || []).includes(item.ability)) {
+                return null;
+              }
+
               const Icon = item.icon;
-              const targetPath = `/${locale}${item.path}`;
+              const targetPath = item.isBlade ? item.path : `/${locale}${item.path}`;
               const isActive = url.includes(item.path);
               const isNotification = item.path === '/notifications';
               const showBadge = isNotification ? unreadNotificationsCount > 0 : Boolean(item.badge);

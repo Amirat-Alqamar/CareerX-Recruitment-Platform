@@ -7,7 +7,7 @@ use App\Http\Controllers\Admin\JobManagementController;
 use App\Http\Controllers\Admin\PendingJobController;
 use App\Http\Controllers\Admin\ReportController;
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'can:admin.access'])->prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -22,8 +22,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/jobs/{job}', [JobManagementController::class, 'destroy'])->name('jobs.destroy');
 
     Route::get('/pending-jobs', [PendingJobController::class, 'index'])->name('pending-jobs.index');
-    Route::post('/pending-jobs/{job}/approve', [PendingJobController::class, 'approve'])->name('pending-jobs.approve');
-    Route::post('/pending-jobs/{job}/reject', [PendingJobController::class, 'reject'])->name('pending-jobs.reject');
+    Route::post('/pending-jobs/{job}/approve', [JobManagementController::class, 'approve'])->name('pending-jobs.approve');
+    Route::post('/pending-jobs/{job}/reject', [JobManagementController::class, 'reject'])->name('pending-jobs.reject');
 
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
 

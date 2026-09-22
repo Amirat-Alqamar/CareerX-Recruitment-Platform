@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Inertia\Inertia;
-use App\Http\Controllers\JobSeeker\DashboardController;
 use App\Http\Controllers\JobListingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Dashboard\TwoFactorAuthenticationController;
@@ -54,11 +53,6 @@ Route::group([
 
     Route::group(['middleware' => ['auth']], function () {
         Route::get('/2fa', [TwoFactorAuthenticationController::class, 'index'])->name('2fa');
-        Route::get('/seeker/dashboard', [DashboardController::class, 'index'])->name('seeker.dashboard');
-        Route::get('/seeker/profile', [DashboardController::class, 'profile'])->name('seeker.profile');
-        Route::get('/profile', function () {
-            return redirect()->route('seeker.profile');
-        })->name('profile.index');
 
         Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
         Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
@@ -69,6 +63,7 @@ Route::group([
     require __DIR__ . '/job_seeker.php';
     require __DIR__ . '/employer.php';
     require __DIR__ . '/admin.php';
+    require __DIR__ . '/role-permession.php';
 
 });
 

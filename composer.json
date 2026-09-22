@@ -11,7 +11,8 @@
         "laravel/fortify": "*",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "mcamara/laravel-localization": "^2.4"
+        "mcamara/laravel-localization": "^2.4",
+        "melbedran/role-permession": "1.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -85,5 +86,11 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [{
+        "name": "melbedran-role-permession",
+        "type": "vcs",
+        "url": "https://github.com/muhammed-bedran/Melbedran-Role-permession.git",
+        "no-api": true
+    }]
 }

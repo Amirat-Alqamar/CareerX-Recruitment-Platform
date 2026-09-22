@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -13,6 +14,8 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
+        Gate::authorize('users.manage');
+
         $query = User::with(['company:id,name', 'profile:id,user_id,job_title']);
 
         if ($request->filled('role') && in_array($request->role, ['job_seeker', 'employer', 'admin'])) {
@@ -68,6 +71,8 @@ class UserController extends Controller
 
     public function toggleBan(Request $request, User $user)
     {
+        Gate::authorize('users.manage');
+
         if ($user->id === Auth::id()) {
             return redirect()->back()->with('error', __('You cannot ban your own account.'));
         }
@@ -97,6 +102,8 @@ class UserController extends Controller
 
     public function destroy(User $user)
     {
+        Gate::authorize('users.manage');
+
         if ($user->id === Auth::id()) {
             return redirect()->back()->with('error', __('You cannot delete your own admin account.'));
         }

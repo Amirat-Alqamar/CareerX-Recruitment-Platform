@@ -6,7 +6,7 @@ use App\Http\Controllers\Employer\JobController;
 use App\Http\Controllers\Employer\ApplicantController;
 use App\Http\Controllers\Employer\DashboardController;
 
-Route::middleware(['auth', 'employer'])->prefix('employer')->name('employer.')->group(function () {
+Route::middleware(['auth', 'can:employer.access'])->prefix('employer')->name('employer.')->group(function () {
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

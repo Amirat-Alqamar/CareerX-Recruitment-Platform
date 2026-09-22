@@ -40,6 +40,11 @@
     "Job": "Job",
     "Job Details": "Job Details",
     "Job duplicated successfully as a draft. You can now make changes and publish it.": "Job duplicated successfully as a draft. You can now make changes and publish it.",
+    "Close Job": "Close Job",
+    "Close Job Posting": "Close Job Posting",
+    "Are you sure you want to close this job?": "Are you sure you want to close this job?",
+    "Job seekers will no longer be able to view or apply for this position.": "Job seekers will no longer be able to view or apply for this position.",
+    "Yes, Close Job": "Yes, Close Job",
     "Job has been closed.": "Job has been closed.",
     "Job not found.": "Job not found.",
     "Job post updated successfully.": "Job post updated successfully.",
@@ -98,5 +103,7 @@
     "You": "You",
     "You do not have permission to manage this job post.": "You do not have permission to manage this job post.",
     "You have already applied for this job position.": "You have already applied for this job position.",
-    "Your Bookmarked Jobs": "Your Bookmarked Jobs"
+    "Your Bookmarked Jobs": "Your Bookmarked Jobs",
+    "Close Job (Currently Published)": "Close Job (Currently Published)",
+    "Re-open Job (Submit for Approval)": "Re-open Job (Submit for Approval)"
 }

@@ -9,32 +9,13 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 class HandleInertiaRequests extends Middleware
 {
-    /**
-     * The root template that's loaded on the first page visit.
-     *
-     * @see https://inertiajs.com/server-side-setup#root-template
-     *
-     * @var string
-     */
     protected $rootView = 'app';
 
-    /**
-     * Determines the current asset version.
-     *
-     * @see https://inertiajs.com/asset-versioning
-     */
     public function version(Request $request): ?string
     {
         return parent::version($request);
     }
 
-    /**
-     * Define the props that are shared by default.
-     *
-     * @see https://inertiajs.com/shared-data
-     *
-     * @return array<string, mixed>
-     */
     public function share(Request $request): array
     {
         $locale = app()->getLocale();
@@ -42,7 +23,6 @@ class HandleInertiaRequests extends Middleware
             ? LaravelLocalization::getCurrentLocaleDirection()
             : ($locale === 'ar' ? 'rtl' : 'ltr');
 
-        // Modular Auto-Merge: Load all domain translation files from lang/{locale}/*.json
         $translations = [];
         $localeDir = base_path("lang/{$locale}");
         if (is_dir($localeDir)) {
@@ -64,7 +44,6 @@ class HandleInertiaRequests extends Middleware
             }
         }
 
-        // Also merge root or compiled locale file if it exists
         $translationsPath = base_path("lang/{$locale}.json");
         if (file_exists($translationsPath)) {
             $rootContent = @file_get_contents($translationsPath);
@@ -109,6 +88,7 @@ class HandleInertiaRequests extends Middleware
                 'cover_image' => $user->cover_image ? (str_starts_with($user->cover_image, 'http') ? $user->cover_image : asset('storage/' . $user->cover_image)) : null,
                 'two_factor_enabled' => !is_null($user->two_factor_secret),
                 'two_factor_confirmed' => !is_null($user->two_factor_confirmed_at),
+                'abilities' => method_exists($user, 'allowedAbilities') ? $user->allowedAbilities() : [],
             ];
 
             $notifications = $user->notifications()->take(15)->get()->map(function ($n) use ($locale, $translations) {

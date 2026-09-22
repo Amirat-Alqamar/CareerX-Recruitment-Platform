@@ -8,7 +8,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Menu,
-  ShieldCheck,
+  KeyRound,
 } from 'lucide-react';
 import useTranslation from '@/hooks/useTranslation';
 import TwoFactorModal from '@/Components/Dashboard/Common/TwoFactorModal';
@@ -110,7 +110,7 @@ export default function DashboardHeader({ onToggleSidebar }) {
           }`}
           title={auth?.user?.two_factor_enabled ? __('2FA Security (Active)') : __('Two-Factor Authentication')}
         >
-          <ShieldCheck className="w-5 h-5 stroke-[1.75]" />
+          <KeyRound className="w-5 h-5 stroke-[1.75]" />
         </Link>
 
         <Link
@@ -135,7 +135,7 @@ export default function DashboardHeader({ onToggleSidebar }) {
               ? `/${locale}/employer/company`
               : `/${locale}/seeker/profile`
           }
-          className="w-9 h-9 rounded-full bg-[#014D55] text-white font-semibold text-xs flex items-center justify-center tracking-wider select-none shadow-sm hover:opacity-90 transition-opacity"
+          className="w-9 h-9 rounded-full bg-[#008A7B] text-white font-semibold text-xs flex items-center justify-center tracking-wider select-none shadow-sm hover:bg-[#014D55] transition-colors"
           title={auth?.user?.name || (userRole === 'admin' ? __('Admin Panel') : __('My Profile'))}
         >
           {userInitials}

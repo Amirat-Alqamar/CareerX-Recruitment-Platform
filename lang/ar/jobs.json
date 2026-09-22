@@ -40,6 +40,11 @@
     "Job": "الوظيفة",
     "Job Details": "تفاصيل الوظيفة",
     "Job duplicated successfully as a draft. You can now make changes and publish it.": "تم نسخ الوظيفة بنجاح كمسودة. يمكنك الآن إجراء التعديلات ونشرها.",
+    "Close Job": "إغلاق الوظيفة",
+    "Close Job Posting": "إغلاق إعلان الوظيفة",
+    "Are you sure you want to close this job?": "هل أنت متأكد أنك تريد إغلاق هذه الوظيفة؟",
+    "Job seekers will no longer be able to view or apply for this position.": "لن يتمكن الباحثون عن عمل من عرض هذه الوظيفة أو التقديم إليها بعد الآن.",
+    "Yes, Close Job": "نعم، إغلاق الوظيفة",
     "Job has been closed.": "تم إغلاق الوظيفة.",
     "Job not found.": "الوظيفة غير موجودة.",
     "Job post updated successfully.": "تم تحديث الإعلان الوظيفي بنجاح.",
@@ -98,5 +103,7 @@
     "You": "أنت",
     "You do not have permission to manage this job post.": "ليس لديك الصلاحية لإدارة هذا الإعلان الوظيفي.",
     "You have already applied for this job position.": "لقد قمت بالفعل بالتقديم على هذه الوظيفة سابقاً.",
-    "Your Bookmarked Jobs": "وظائفك المحفوظة والمفضلة"
+    "Your Bookmarked Jobs": "وظائفك المحفوظة والمفضلة",
+    "Close Job (Currently Published)": "إغلاق الوظيفة (منشورة حالياً)",
+    "Re-open Job (Submit for Approval)": "إعادة فتح الوظيفة (إرسال للموافقة)"
 }

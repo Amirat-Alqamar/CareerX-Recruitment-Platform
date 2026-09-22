@@ -7,6 +7,7 @@ use App\Models\SavedJob;
 use App\Models\Job;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class SavedJobController extends Controller
@@ -36,6 +37,8 @@ class SavedJobController extends Controller
 
     public function toggle($jobId)
     {
+        Gate::authorize('jobs.save');
+
         $user = Auth::user();
         $existing = SavedJob::where('user_id', $user->id)
             ->where('job_post_id', $jobId)

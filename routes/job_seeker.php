@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\JobSeeker\DashboardController;
 use App\Http\Controllers\JobSeeker\ProfileController;
 use App\Http\Controllers\JobSeeker\ExperienceController;
 use App\Http\Controllers\JobSeeker\EducationController;
@@ -13,9 +14,21 @@ use App\Http\Controllers\JobSeeker\PortfolioController;
 use App\Http\Controllers\JobSeeker\SavedJobController;
 use App\Http\Controllers\JobSeeker\JobSearchController;
 
-Route::middleware(['auth'])->prefix('job-seeker')->name('job-seeker.')->group(function () {
+Route::middleware(['auth'])->group(function () {
+    Route::get('/seeker/dashboard', [DashboardController::class, 'index'])->name('seeker.dashboard');
+    Route::get('/seeker/profile', [DashboardController::class, 'profile'])->name('seeker.profile');
+    Route::get('/profile', function () {
+        return redirect()->route('seeker.profile');
+    })->name('profile.index');
+});
 
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+Route::middleware(['auth'])
+    ->prefix('job-seeker')
+    ->name('job-seeker.')
+    ->group(function () {
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.avatar');

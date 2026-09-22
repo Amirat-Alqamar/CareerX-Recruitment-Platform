@@ -7,6 +7,7 @@ use App\Models\JobApplication;
 use App\Models\Job;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class JobApplicationController extends Controller
@@ -38,6 +39,8 @@ class JobApplicationController extends Controller
 
     public function store(Request $request)
     {
+        Gate::authorize('jobs.apply');
+
         $validated = $request->validate([
             'job_post_id'  => 'required|exists:job_posts,id',
             'resume_id'    => 'nullable|exists:resumes,id',

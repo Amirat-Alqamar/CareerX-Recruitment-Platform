@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             LanguageSeeder::class,
             LocationSeeder::class,
             UserSeeder::class,
+            RoleSeeder::class,
             NotificationSeeder::class,
         ]);
     }

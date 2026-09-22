@@ -19,6 +19,8 @@ import {
   BarChart3,
   CheckCircle2,
   BellRing,
+  ClipboardCheck,
+  KeyRound,
 } from 'lucide-react';
 
 export const seekerNavigation = [
@@ -28,7 +30,7 @@ export const seekerNavigation = [
       { label: 'Dashboard', path: '/seeker/dashboard', isBlade: false, icon: LayoutDashboard },
       { label: 'My Profile', path: '/seeker/profile', isBlade: false, icon: User },
       { label: 'Notifications', path: '/notifications', isBlade: false, icon: BellRing },
-      { label: 'Two-Factor Auth', path: '/2fa', isBlade: false, icon: ShieldCheck },
+      { label: 'Two-Factor Auth', path: '/2fa', isBlade: false, icon: KeyRound },
     ],
   },
   {
@@ -48,7 +50,7 @@ export const employerNavigation = [
       { label: 'Dashboard', path: '/employer/dashboard', isBlade: false, icon: LayoutDashboard },
       { label: 'Company Profile', path: '/employer/company', isBlade: false, icon: Building2 },
       { label: 'Notifications', path: '/notifications', isBlade: false, icon: BellRing },
-      { label: 'Two-Factor Auth', path: '/2fa', isBlade: false, icon: ShieldCheck },
+      { label: 'Two-Factor Auth', path: '/2fa', isBlade: false, icon: KeyRound },
     ],
   },
   {
@@ -66,16 +68,17 @@ export const adminNavigation = [
     group: 'ADMIN CONTROL',
     items: [
       { label: 'Dashboard', path: '/admin/dashboard', isBlade: false, icon: LayoutDashboard },
-      { label: 'Pending Approvals', path: '/admin/pending-jobs', isBlade: false, icon: ShieldCheck },
+      { label: 'Pending Approvals', path: '/admin/pending-jobs', isBlade: false, icon: ClipboardCheck },
       { label: 'Notifications', path: '/notifications', isBlade: false, icon: BellRing },
-      { label: 'Two-Factor Auth', path: '/2fa', isBlade: false, icon: ShieldCheck },
+      { label: 'Two-Factor Auth', path: '/2fa', isBlade: false, icon: KeyRound },
     ],
   },
   {
     group: 'PLATFORM MANAGEMENT',
     items: [
-      { label: 'Manage Users', path: '/admin/users', isBlade: false, icon: Users },
+      { label: 'Manage Users', path: '/admin/users', isBlade: false, icon: Users, ability: 'users.manage' },
       { label: 'Manage Jobs', path: '/admin/jobs', isBlade: false, icon: Briefcase },
+      { label: 'Roles & Permissions', path: '/admin/roles', isBlade: false, icon: ShieldCheck, ability: 'roles.view' },
     ],
   },
   {
@@ -85,5 +88,3 @@ export const adminNavigation = [
     ],
   },
 ];
-
-

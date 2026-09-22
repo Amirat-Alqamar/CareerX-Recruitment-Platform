@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Job;
-use App\Notifications\JobModerationStatusNotification;
 use Inertia\Inertia;
 
 class PendingJobController extends Controller
@@ -60,36 +59,6 @@ class PendingJobController extends Controller
             'pendingJobs' => $pendingJobs,
             'count' => $pendingJobs->count(),
         ]);
-    }
-
-    public function approve(Job $job)
-    {
-        $job->update([
-            'status' => 'published',
-            'is_active' => true,
-        ]);
-
-        $employer = $job->createdByUser ?? $job->company?->users()->first();
-        if ($employer) {
-            $employer->notify(new JobModerationStatusNotification($job, 'approved'));
-        }
-
-        return redirect()->back()->with('success', __('Job post approved and published successfully.'));
-    }
-
-    public function reject(Job $job)
-    {
-        $job->update([
-            'status' => 'closed',
-            'is_active' => false,
-        ]);
-
-        $employer = $job->createdByUser ?? $job->company?->users()->first();
-        if ($employer) {
-            $employer->notify(new JobModerationStatusNotification($job, 'rejected'));
-        }
-
-        return redirect()->back()->with('success', __('Job post rejected.'));
     }
 }
 

@@ -10,6 +10,7 @@ import {
   Power,
   Clock,
   Archive,
+  AlertTriangle,
 } from 'lucide-react';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import useTranslation from '@/hooks/useTranslation';
@@ -19,12 +20,38 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
   const { __, locale } = useTranslation();
   const [jobToDelete, setJobToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [jobToClose, setJobToClose] = useState(null);
+  const [isClosing, setIsClosing] = useState(false);
 
-  const handleToggleStatus = (jobId) => {
+  const handleToggleStatus = (job) => {
+    if (job.status === 'published') {
+      setJobToClose(job);
+    } else {
+      executeToggleStatus(job.id);
+    }
+  };
+
+  const executeToggleStatus = (jobId) => {
     router.post(
       `/${locale}/employer/jobs/${jobId}/toggle`,
       {},
       { preserveScroll: true }
+    );
+  };
+
+  const confirmCloseJob = () => {
+    if (!jobToClose) return;
+    setIsClosing(true);
+    router.post(
+      `/${locale}/employer/jobs/${jobToClose.id}/toggle`,
+      {},
+      {
+        preserveScroll: true,
+        onFinish: () => {
+          setIsClosing(false);
+          setJobToClose(null);
+        },
+      }
     );
   };
 
@@ -201,7 +228,7 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
 
                     <button
                       type="button"
-                      onClick={() => handleToggleStatus(job.id)}
+                      onClick={() => handleToggleStatus(job)}
                       className={`p-2 rounded-xl border text-xs font-semibold transition-all cursor-pointer shadow-xs ${
                         job.status === 'published'
                           ? 'border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-100'
@@ -294,6 +321,30 @@ export default function Jobs({ jobs, stats = {}, filters = {} }) {
           </div>
         )}
       </div>
+
+      {/* Close Job Confirmation Modal */}
+      <DeleteConfirmModal
+        isOpen={!!jobToClose}
+        onClose={() => setJobToClose(null)}
+        onConfirm={confirmCloseJob}
+        isLoading={isClosing}
+        variant="teal"
+        icon={<Power className="w-5 h-5 text-[#008A7B]" />}
+        title={__('Close Job Posting')}
+        message={
+          <>
+            {__('Are you sure you want to close this job?')}{' '}
+            {jobToClose?.title && (
+              <>
+                (<strong className="text-slate-900">{jobToClose.title}</strong>).{' '}
+              </>
+            )}
+            {__('Job seekers will no longer be able to view or apply for this position.')}
+          </>
+        }
+        confirmText={__('Yes, Close Job')}
+        cancelText={__('Cancel')}
+      />
 
       <DeleteConfirmModal
         isOpen={!!jobToDelete}

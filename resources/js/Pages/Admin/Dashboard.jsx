@@ -310,7 +310,7 @@ export default function AdminDashboard({
 
                     <div className="flex items-center gap-3 shrink-0">
                       <span
-                        className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
+                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-extrabold ${
                           j.status === 'published'
                             ? 'bg-emerald-50 text-emerald-700'
                             : j.status === 'pending'
@@ -318,7 +318,13 @@ export default function AdminDashboard({
                             : 'bg-slate-100 text-slate-600'
                         }`}
                       >
-                        {j.status}
+                        {j.status === 'published'
+                          ? __('Published')
+                          : j.status === 'pending'
+                          ? __('Pending')
+                          : j.status === 'closed'
+                          ? __('Closed')
+                          : __('Draft')}
                       </span>
                       <span className="text-[10px] text-slate-400 font-medium">
                         {j.created_at}
@@ -386,7 +392,11 @@ export default function AdminDashboard({
                             : 'bg-blue-50 text-blue-700'
                         }`}
                       >
-                        {u.role}
+                        {u.role === 'admin'
+                          ? __('Administrator')
+                          : u.role === 'employer'
+                          ? __('Employer')
+                          : __('Job Seeker')}
                       </span>
                       <span
                         className={`w-2 h-2 rounded-full ${

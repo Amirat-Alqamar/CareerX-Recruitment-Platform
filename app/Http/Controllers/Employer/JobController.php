@@ -14,6 +14,7 @@ use App\Notifications\JobDetailsUpdatedCandidateNotification;
 use App\Notifications\JobPendingApprovalNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -52,6 +53,8 @@ class JobController extends Controller
 
     public function create()
     {
+        Gate::authorize('jobs.create');
+
         $categories = JobCategory::orderBy('name')->get();
         $countries = Country::orderBy('name')->get();
         $skills = Skill::orderBy('name')->get();
@@ -74,6 +77,8 @@ class JobController extends Controller
 
     public function store(Request $request)
     {
+        Gate::authorize('jobs.create');
+
         $validated = $request->validate([
             'title'            => ['required', 'string', 'max:255'],
             'category_id'      => ['required', 'exists:job_categories,id'],
@@ -128,6 +133,7 @@ class JobController extends Controller
 
     public function edit(Job $job)
     {
+        Gate::authorize('jobs.update');
         $this->authorizeCompanyJob($job);
 
         $categories = JobCategory::orderBy('name')->get();
@@ -151,6 +157,7 @@ class JobController extends Controller
 
     public function update(Request $request, Job $job)
     {
+        Gate::authorize('jobs.update');
         $this->authorizeCompanyJob($job);
 
         $validated = $request->validate([
@@ -237,6 +244,7 @@ class JobController extends Controller
 
     public function destroy(Job $job)
     {
+        Gate::authorize('jobs.delete');
         $this->authorizeCompanyJob($job);
 
         $job->delete();
@@ -247,6 +255,7 @@ class JobController extends Controller
 
     public function toggleStatus(Job $job)
     {
+        Gate::authorize('jobs.update');
         $this->authorizeCompanyJob($job);
 
         if ($job->status === 'published') {
@@ -266,6 +275,7 @@ class JobController extends Controller
 
     public function duplicate(Job $job)
     {
+        Gate::authorize('jobs.create');
         $this->authorizeCompanyJob($job);
 
         $newJob = $job->replicate();

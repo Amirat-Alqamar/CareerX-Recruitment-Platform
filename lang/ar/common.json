@@ -392,5 +392,11 @@
     "Your application for :job at :company has been received and is pending review.": "تم استلام طلبك لوظيفة :job لدى شركة :company وهو قيد الانتظار لمراجعته.",
     "Your application for :job at :company status was updated.": "تم تحديث حالة طلبك لوظيفة :job لدى شركة :company.",
     "Your job opening :job has been approved and is now live.": "تمت الموافقة على إعلان الوظيفة :job وأصبح معروضاً للباحثين عن عمل.",
-    "Your job opening :job was rejected by platform administration.": "تم رفض إعلان الوظيفة :job من قبل إدارة المنصة."
+    "Your job opening :job was rejected by platform administration.": "تم رفض إعلان الوظيفة :job من قبل إدارة المنصة.",
+    "Delete Confirmation": "تأكيد الحذف",
+    "Are you sure you want to delete this item? This action cannot be undone.": "هل أنت متأكد من رغبتك في حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.",
+    "Processing...": "جاري المعالجة...",
+    "Yes, Confirm": "نعم، تأكيد",
+    "Welcome, :name!": "مرحباً، :name!",
+    "actions": "الإجراءات"
 }

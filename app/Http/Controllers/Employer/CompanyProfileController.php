@@ -7,6 +7,7 @@ use App\Models\City;
 use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -62,11 +63,14 @@ class CompanyProfileController extends Controller
 
     public function edit()
     {
+        Gate::authorize('company.profile.edit');
         return $this->show();
     }
 
     public function update(Request $request)
     {
+        Gate::authorize('company.profile.edit');
+
         $company = Auth::user()->company;
 
         $validated = $request->validate([
@@ -134,6 +138,7 @@ class CompanyProfileController extends Controller
 
     public function deleteLogo()
     {
+        Gate::authorize('company.profile.edit');
         $company = Auth::user()->company;
         if ($company && $company->logo) {
             if (Storage::disk('public')->exists($company->logo)) {
@@ -147,6 +152,7 @@ class CompanyProfileController extends Controller
 
     public function deleteCover()
     {
+        Gate::authorize('company.profile.edit');
         $company = Auth::user()->company;
         if ($company && $company->cover_image) {
             if (Storage::disk('public')->exists($company->cover_image)) {

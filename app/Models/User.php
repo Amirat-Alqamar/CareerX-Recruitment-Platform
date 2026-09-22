@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Melbedran\RolePermession\Concerns\HasRoles;
 
 class User extends Authenticatable
 {
 
-    use HasFactory, Notifiable, TwoFactorAuthenticatable;
+    use HasFactory, Notifiable, TwoFactorAuthenticatable, HasRoles;
 
     protected $fillable = [
         'company_id',
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'cover_image',
         'bio',
         'role',
+        'super_admin',
         'status',
         'ban_reason'
     ];
@@ -45,6 +47,11 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
+    public function isRolePermessionSuperAdmin(): bool
+    {
+        return (bool) $this->super_admin || $this->isAdmin();
+    }
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -57,6 +64,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'super_admin' => 'boolean',
         ];
     }
 
