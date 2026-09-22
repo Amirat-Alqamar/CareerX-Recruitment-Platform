@@ -1,115 +1,113 @@
-# CareerX — Modern Recruitment & Talent Platform
+# CareerX — Recruitment & Talent Acquisition Platform
 
 <p align="center">
-  <strong>منصة توظيف ذكية ومتكاملة تربط الباحثين عن عمل، الشركات، ومسؤولي النظام</strong>
-  <br>
-  <em>An enterprise-ready recruitment platform built with Laravel 12, Inertia.js, React, and Tailwind CSS.</em>
+  <strong>An enterprise-grade recruitment ecosystem connecting Job Seekers, Employers, and Administrators in a single high-performance web application.</strong>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel 12" />
   <img src="https://img.shields.io/badge/Inertia.js-3.x-9553E9?style=for-the-badge&logo=inertia&logoColor=white" alt="Inertia.js" />
-  <img src="https://img.shields.io/badge/React-19.x-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/React-19.x-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 19" />
   <img src="https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
-  <img src="https://img.shields.io/badge/i18n-Arabic_%26_English-008A7B?style=for-the-badge" alt="Bilingual" />
+  <img src="https://img.shields.io/badge/Localization-EN%20%7C%20AR%20(RTL)-008A7B?style=for-the-badge" alt="Bilingual RTL/LTR" />
 </p>
 
 ---
 
-## 📌 نبذة عن المشروع (Overview)
+## 📌 Project Overview
 
-**CareerX** هي منصة توظيف حديثة ومتكاملة تجمع بين بساطة تجربة المستخدم وقوة البنية التحتية البرمجية. توفر المنصة 3 بوابات تفاعلية مستقلة (للباحثين عن عمل، الشركات، والمديرين) تتيح إدارة دورة التوظيف بالكامل من نشر الوظائف وتتبع المتقدمين إلى جدولة المقابلات وإصدار التقارير الإحصائية.
-
----
-
-## ✨ المميزات الرئيسية (Key Features)
-
-### 👨‍💼 1. بوابة الباحث عن عمل (Job Seeker Portal)
-* **ملف مهني متكامل:** إدارة الخبرات العملية، التعليم، المهارات، اللغات، الشهادات المهنية، ومعرض الأعمال (Portfolio).
-* **إدارة السير الذاتية:** رفع وتحميل السير الذاتية المتعددة (PDF/DOCX).
-* **محرك بحث وتصفية الوظائف:** فلترة متقدمة حسب نوع الدوام (حضوري / عن بعد / هجين)، الموقع الجغرافي، الراتب، ومجال العمل.
-* **تتبع الطلبات:** لوحة لمتابعة حالات الطلبات المقدمة (قيد المراجعة، تمت الموافقة، مقابلة، مرفوض).
-* **حفظ الوظائف المفضلة (Saved Jobs).**
-
-### 🏢 2. بوابة الشركات وأصحاب العمل (Employer Portal)
-* **الملف التعريفي للشركة:** شعار الشركة، الغلاف، تفاصيل المقر، وروابط التواصل.
-* **إدارة إعلانات الوظائف (Job Postings CRUD):** نشر، تعديل، تكرار (Duplicate)، وإيقاف/تفعيل الإعلانات.
-* **نظام تتبع المتقدمين (ATS Pipeline):** استعراض المتقدمين لكل وظيفة، فحص سيرهم الذاتية، وتغيير حالات التقديم.
-* **جدولة المقابلات:** تنسيق مواعيد المقابلات وإنشاء روابط Google Meet تلقائياً ومشاركتها مع المرشح.
-
-### 🛡️ 3. لوحة تحكم الإدارة (Admin Panel)
-* **إحصائيات وتقارير متقدمة:** تقارير تحليلية شاملة لنشاط المنصة مع إمكانية **الطباعة والتصدير كـ PDF** بعدة صفحات منسقة.
-* **مراجعة واعتماد الوظائف:** نظام موافقة مسبقة على الإعلانات الجديدة لضمان جودة المحتوى.
-* **إدارة المستخدمين:** تفعيل، تجميد، وحظر الحسابات المخالفة.
-* **إدارة الأدوار والصلاحيات (RBAC):** كتالوج صلاحيات مبني بنظام Laravel Gates لإنشاء رتب مخصصة وتوزيع الصلاحيات بدقة.
+**CareerX** is a modern recruitment and talent platform built to streamline the hiring lifecycle for candidates, corporate recruiters, and platform administrators. Built with **Laravel 12**, **Inertia.js**, and **React 19**, it delivers a responsive Single Page Application (SPA) experience backed by a robust and secure backend architecture.
 
 ---
 
-## ⚙️ الخصائص التقنية المتقدمة (Technical Highlights)
+## ✨ Core Features & Portals
 
-* **SPA بدون API منفصل:** استخدام **Inertia.js** لدمج قوة وسرعة React مع أمان ومتانة Laravel.
-* **تعدد لغوي كامل (Full i18n RTL & LTR):** دعم أصيل للغتين العربية والإنجليزية مع ضبط تلقائي للاتجاه وتجميع ملفات الترجمة بشكل Modular.
-* **أمان عالي (Security & 2FA):** دعم التحقق بخطوتين عبر رموز QR وأكواد الاستعادة (Laravel Fortify) بالإضافة لمفاتيح الأمان (Passkeys).
-* **بنية مسارات معيارية (Modular Routing):** فصل المسارات حسب المجالات (`job_seeker.php`, `employer.php`, `admin.php`, `role-permession.php`).
-* **تصميم عصري ونظيف:** واجهات مستخدم متجاوبة مع كافة الشاشات باستخدام Tailwind CSS ومكتبة أيقونات Lucide.
+### 👨‍💼 1. Job Seeker Portal
+* **Comprehensive Career Profile:** Manage work experience, education, skills, spoken languages, verified certifications, and project portfolio.
+* **Resume Management:** Upload and download resumes in multiple formats (PDF / DOCX).
+* **Smart Job Search & Filtering:** Filter by job type (Full-time, Part-time, Internship, Freelance), work arrangement (On-site, Remote, Hybrid), location, and salary expectations.
+* **Application Tracker:** Monitor application status in real-time (`Applied`, `Under Review`, `Interview Scheduled`, `Accepted`, `Rejected`).
+* **Saved Jobs:** Bookmark and organize opportunities for quick application.
+
+### 🏢 2. Employer & Corporate Portal
+* **Company Profile Management:** Showcase company identity with logos, banner images, company story, and official links.
+* **Job Posting Lifecycle:** Full CRUD management for job listings, including duplicate posting and one-click status toggle (Active/Closed).
+* **Applicant Tracking System (ATS Pipeline):** Visual pipeline to evaluate candidate profiles, inspect resumes, and update recruitment stages.
+* **Automated Interview Scheduling:** Schedule interviews with candidate notification and automated Google Meet room generation.
+
+### 🛡️ 3. Administrative Control Center
+* **Executive Analytics & Deep Reporting:** Real-time platform metrics and trends with **multi-page, print-ready PDF export**.
+* **Job Post Moderation:** Review and approve or reject employer listings before publication.
+* **User Management:** Monitor user activity with immediate ban/unban capabilities.
+* **Dynamic Role-Based Access Control (RBAC):** Catalog-based abilities system powered by Laravel Gates, allowing custom roles creation and granular permission delegation.
 
 ---
 
-## 🛠️ التقنيات المستخدمة (Tech Stack)
+## ⚙️ Technical Highlights
 
-| المجال | التقنية |
+* **Modern Monolith Architecture:** Combines Laravel’s backend power and security with React’s client-side speed via Inertia.js — eliminating the overhead of managing a separate REST API.
+* **Full Bilingual Support (Arabic & English):** Native bi-directional layout support (**RTL / LTR**) with automated domain-based translation loading.
+* **Hardened Security & 2FA:** Built-in Two-Factor Authentication with QR codes, recovery codes, and Passkey support powered by Laravel Fortify.
+* **Modular Routing:** Clean domain-driven route segmentation (`job_seeker.php`, `employer.php`, `admin.php`, `role-permession.php`).
+* **Optimized Print Engine:** Custom `@media print` styling for generating clean, multi-page PDF documents for analytics and candidate dossiers.
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technologies |
 | :--- | :--- |
 | **Backend** | PHP 8.2+, Laravel 12, Laravel Fortify, Eloquent ORM |
-| **Frontend** | React 19, Inertia.js v3, Tailwind CSS, Lucide React, Vite |
+| **Frontend** | React 19, Inertia.js v3, Tailwind CSS, Lucide Icons, Vite |
 | **Database** | MySQL / SQLite |
-| **Localization** | Mcamara Laravel-Localization & Custom Modular Translator |
-| **Authorization** | Custom RBAC (Melbedran Role-Permission) & Laravel Gates |
+| **Localization** | `mcamara/laravel-localization` & Modular JSON Auto-Merger |
+| **Authorization** | Custom RBAC (Role-Permission Package) with Native Laravel Gates |
 
 ---
 
-## 🚀 التشغيل والتثبيت المحلي (Local Installation)
+## 🚀 Quick Setup & Installation
 
-### 1. استنساخ المشروع (Clone Repository)
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/souha-2003/CareerX-Recruitment-Platform.git
 cd CareerX-Recruitment-Platform
 ```
 
-### 2. تثبيت الحزم (Install Dependencies)
+### 2. Install Dependencies
 ```bash
 composer install
 npm install
 ```
 
-### 3. إعداد البيئة وقاعدة البيانات (Environment Setup)
+### 3. Environment & Database Configuration
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
-*قم بضبط اتصال قاعدة البيانات في ملف `.env`، ثم نفّذ:*
+*Configure your database credentials in `.env`, then run:*
 ```bash
 php artisan migrate --seed
 php artisan storage:link
 ```
 
-### 4. تشغيل خوادم التطوير (Run Development Servers)
+### 4. Start Development Servers
 ```bash
 npm run dev
 php artisan serve
 ```
-*افتح المتصفح وتوجه إلى: `http://127.0.0.1:8000`*
+*Access the application at: `http://127.0.0.1:8000`*
 
 ---
 
-## 🔐 بيانات الدخول التجريبية (Default Test Accounts)
+## 🔐 Demo Credentials
 
-| الحساب | البريد الإلكتروني | كلمة المرور | الصلاحية |
+| Role | Email | Password | Access Level |
 | :--- | :--- | :--- | :--- |
-| **مسؤول النظام** | `admin@careerx.com` | `password` | Super Admin |
-| **شركة / صاحب عمل** | `employer@careerx.com` | `password` | Employer |
-| **باحث عن عمل** | `seeker@careerx.com` | `password` | Job Seeker |
+| **System Administrator** | `admin@careerx.com` | `password` | Super Admin |
+| **Employer** | `employer@careerx.com` | `password` | Corporate Recruiter |
+| **Job Seeker** | `seeker@careerx.com` | `password` | Candidate |
 
 ---
 
-## 📄 الترخيص (License)
-هذا المشروع مفتوح المصدر ومبني لأغراض أكاديمية واستعراض المهارات البرمجية تحت رخصة [MIT License](LICENSE).
+## 📄 License
+This project is open-source software licensed under the [MIT License](LICENSE).
