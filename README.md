@@ -1,59 +1,115 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# CareerX — Modern Recruitment & Talent Platform
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <strong>منصة توظيف ذكية ومتكاملة تربط الباحثين عن عمل، الشركات، ومسؤولي النظام</strong>
+  <br>
+  <em>An enterprise-ready recruitment platform built with Laravel 12, Inertia.js, React, and Tailwind CSS.</em>
 </p>
 
-## About Laravel
+<p align="center">
+  <img src="https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel 12" />
+  <img src="https://img.shields.io/badge/Inertia.js-3.x-9553E9?style=for-the-badge&logo=inertia&logoColor=white" alt="Inertia.js" />
+  <img src="https://img.shields.io/badge/React-19.x-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/i18n-Arabic_%26_English-008A7B?style=for-the-badge" alt="Bilingual" />
+</p>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📌 نبذة عن المشروع (Overview)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**CareerX** هي منصة توظيف حديثة ومتكاملة تجمع بين بساطة تجربة المستخدم وقوة البنية التحتية البرمجية. توفر المنصة 3 بوابات تفاعلية مستقلة (للباحثين عن عمل، الشركات، والمديرين) تتيح إدارة دورة التوظيف بالكامل من نشر الوظائف وتتبع المتقدمين إلى جدولة المقابلات وإصدار التقارير الإحصائية.
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## ✨ المميزات الرئيسية (Key Features)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 👨‍💼 1. بوابة الباحث عن عمل (Job Seeker Portal)
+* **ملف مهني متكامل:** إدارة الخبرات العملية، التعليم، المهارات، اللغات، الشهادات المهنية، ومعرض الأعمال (Portfolio).
+* **إدارة السير الذاتية:** رفع وتحميل السير الذاتية المتعددة (PDF/DOCX).
+* **محرك بحث وتصفية الوظائف:** فلترة متقدمة حسب نوع الدوام (حضوري / عن بعد / هجين)، الموقع الجغرافي، الراتب، ومجال العمل.
+* **تتبع الطلبات:** لوحة لمتابعة حالات الطلبات المقدمة (قيد المراجعة، تمت الموافقة، مقابلة، مرفوض).
+* **حفظ الوظائف المفضلة (Saved Jobs).**
 
-## Laravel Sponsors
+### 🏢 2. بوابة الشركات وأصحاب العمل (Employer Portal)
+* **الملف التعريفي للشركة:** شعار الشركة، الغلاف، تفاصيل المقر، وروابط التواصل.
+* **إدارة إعلانات الوظائف (Job Postings CRUD):** نشر، تعديل، تكرار (Duplicate)، وإيقاف/تفعيل الإعلانات.
+* **نظام تتبع المتقدمين (ATS Pipeline):** استعراض المتقدمين لكل وظيفة، فحص سيرهم الذاتية، وتغيير حالات التقديم.
+* **جدولة المقابلات:** تنسيق مواعيد المقابلات وإنشاء روابط Google Meet تلقائياً ومشاركتها مع المرشح.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 🛡️ 3. لوحة تحكم الإدارة (Admin Panel)
+* **إحصائيات وتقارير متقدمة:** تقارير تحليلية شاملة لنشاط المنصة مع إمكانية **الطباعة والتصدير كـ PDF** بعدة صفحات منسقة.
+* **مراجعة واعتماد الوظائف:** نظام موافقة مسبقة على الإعلانات الجديدة لضمان جودة المحتوى.
+* **إدارة المستخدمين:** تفعيل، تجميد، وحظر الحسابات المخالفة.
+* **إدارة الأدوار والصلاحيات (RBAC):** كتالوج صلاحيات مبني بنظام Laravel Gates لإنشاء رتب مخصصة وتوزيع الصلاحيات بدقة.
 
-### Premium Partners
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## ⚙️ الخصائص التقنية المتقدمة (Technical Highlights)
 
-## Contributing
+* **SPA بدون API منفصل:** استخدام **Inertia.js** لدمج قوة وسرعة React مع أمان ومتانة Laravel.
+* **تعدد لغوي كامل (Full i18n RTL & LTR):** دعم أصيل للغتين العربية والإنجليزية مع ضبط تلقائي للاتجاه وتجميع ملفات الترجمة بشكل Modular.
+* **أمان عالي (Security & 2FA):** دعم التحقق بخطوتين عبر رموز QR وأكواد الاستعادة (Laravel Fortify) بالإضافة لمفاتيح الأمان (Passkeys).
+* **بنية مسارات معيارية (Modular Routing):** فصل المسارات حسب المجالات (`job_seeker.php`, `employer.php`, `admin.php`, `role-permession.php`).
+* **تصميم عصري ونظيف:** واجهات مستخدم متجاوبة مع كافة الشاشات باستخدام Tailwind CSS ومكتبة أيقونات Lucide.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+---
 
-## Code of Conduct
+## 🛠️ التقنيات المستخدمة (Tech Stack)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| المجال | التقنية |
+| :--- | :--- |
+| **Backend** | PHP 8.2+, Laravel 12, Laravel Fortify, Eloquent ORM |
+| **Frontend** | React 19, Inertia.js v3, Tailwind CSS, Lucide React, Vite |
+| **Database** | MySQL / SQLite |
+| **Localization** | Mcamara Laravel-Localization & Custom Modular Translator |
+| **Authorization** | Custom RBAC (Melbedran Role-Permission) & Laravel Gates |
 
-## Security Vulnerabilities
+---
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 🚀 التشغيل والتثبيت المحلي (Local Installation)
 
-## License
+### 1. استنساخ المشروع (Clone Repository)
+```bash
+git clone https://github.com/souha-2003/CareerX-Recruitment-Platform.git
+cd CareerX-Recruitment-Platform
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 2. تثبيت الحزم (Install Dependencies)
+```bash
+composer install
+npm install
+```
+
+### 3. إعداد البيئة وقاعدة البيانات (Environment Setup)
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+*قم بضبط اتصال قاعدة البيانات في ملف `.env`، ثم نفّذ:*
+```bash
+php artisan migrate --seed
+php artisan storage:link
+```
+
+### 4. تشغيل خوادم التطوير (Run Development Servers)
+```bash
+npm run dev
+php artisan serve
+```
+*افتح المتصفح وتوجه إلى: `http://127.0.0.1:8000`*
+
+---
+
+## 🔐 بيانات الدخول التجريبية (Default Test Accounts)
+
+| الحساب | البريد الإلكتروني | كلمة المرور | الصلاحية |
+| :--- | :--- | :--- | :--- |
+| **مسؤول النظام** | `admin@careerx.com` | `password` | Super Admin |
+| **شركة / صاحب عمل** | `employer@careerx.com` | `password` | Employer |
+| **باحث عن عمل** | `seeker@careerx.com` | `password` | Job Seeker |
+
+---
+
+## 📄 الترخيص (License)
+هذا المشروع مفتوح المصدر ومبني لأغراض أكاديمية واستعراض المهارات البرمجية تحت رخصة [MIT License](LICENSE).
