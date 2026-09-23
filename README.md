@@ -59,7 +59,7 @@
 | :--- | :--- |
 | **Backend** | PHP 8.2+, Laravel 12, Laravel Fortify, Eloquent ORM |
 | **Frontend** | React 19, Inertia.js v3, Tailwind CSS, Lucide Icons, Vite |
-| **Database** | MySQL / SQLite |
+| **Database** | MySQL  |
 | **Localization** | `mcamara/laravel-localization` & Modular JSON Auto-Merger |
 | **Authorization** | Custom RBAC (Role-Permission Package) with Native Laravel Gates |
 

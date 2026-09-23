@@ -11,6 +11,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Illuminate\Support\Str;
+use Melbedran\RolePermession\Models\Role;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -78,6 +79,11 @@ class CreateNewUser implements CreatesNewUsers
             'phone'      => $input['phone'] ?? null,
             'status'     => true,
         ]);
+
+        $role = Role::where('name', $input['role'])->first();
+        if ($role) {
+            $user->roles()->syncWithoutDetaching([$role->id]);
+        }
 
         if ($user->isJobSeeker()) {
             JobSeekerProfile::firstOrCreate([

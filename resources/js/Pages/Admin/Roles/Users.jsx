@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Head, Link, router } from '@inertiajs/react';
 import {
   Users,
@@ -26,6 +26,18 @@ export default function RolesUsers({ users = { data: [] }, roles = [], q = '' })
     });
     return map;
   });
+
+  useEffect(() => {
+    const map = {};
+    (users.data || []).forEach((u) => {
+      map[u.id] = (u.roles || []).map((r) => r.id);
+    });
+    setSelectedRoles(map);
+  }, [users.data]);
+
+  useEffect(() => {
+    setSearch(q);
+  }, [q]);
 
   const handleRoleToggle = (userId, roleId) => {
     const current = selectedRoles[userId] || [];

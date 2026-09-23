@@ -24,10 +24,14 @@ class UserRoleController extends Controller
             ->when(
                 $request->filled('q'),
                 function ($query) use ($request) {
-                    $q = '%'.$request->string('q').'%';
-                    $query->where(function ($inner) use ($q) {
-                        $inner->where('name', 'like', $q)
-                            ->orWhere('email', 'like', $q);
+                    $raw = trim($request->string('q')->toString());
+                    $query->where(function ($inner) use ($raw) {
+                        $inner->where('name', 'like', "%{$raw}%");
+                        if (str_contains($raw, '@')) {
+                            $inner->orWhere('email', 'like', "%{$raw}%");
+                        } else {
+                            $inner->orWhereRaw("SUBSTRING_INDEX(email, '@', 1) LIKE ?", ["%{$raw}%"]);
+                        }
                     });
                 }
             )

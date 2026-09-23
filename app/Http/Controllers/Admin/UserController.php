@@ -31,10 +31,14 @@ class UserController extends Controller
         }
 
         if ($request->filled('search')) {
-            $search = $request->search;
+            $search = trim($request->search);
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                $q->where('name', 'like', "%{$search}%");
+                if (str_contains($search, '@')) {
+                    $q->orWhere('email', 'like', "%{$search}%");
+                } else {
+                    $q->orWhereRaw("SUBSTRING_INDEX(email, '@', 1) LIKE ?", ["%{$search}%"]);
+                }
             });
         }
 
