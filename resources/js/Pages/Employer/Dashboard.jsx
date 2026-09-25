@@ -13,7 +13,6 @@ import {
   UserCheck,
   TrendingUp,
   Star,
-  Flame,
 } from 'lucide-react';
 import DashboardLayout from '@/Layouts/DashboardLayout';
 import useTranslation from '@/hooks/useTranslation';
@@ -159,22 +158,17 @@ export default function EmployerDashboard({
         </div>
 
         {mostAppliedJob && (
-          <div className="bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-emerald-500/10 border border-amber-200/70 rounded-3xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-5">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white flex items-center justify-center shrink-0 shadow-md">
-                <Flame className="w-7 h-7" />
+          <div className="bg-gradient-to-r from-teal-500/10 via-emerald-500/5 to-teal-500/10 border border-teal-200/70 rounded-3xl p-6 sm:p-7 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+            <div>
+              <div className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-teal-100 text-[#014D55] text-[11px] font-black mb-1.5">
+                <span>{__('Most Popular Job Opening')}</span>
               </div>
-              <div>
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[11px] font-black mb-1">
-                  <span>🔥 {__('Most Popular Job Opening')}</span>
-                </div>
-                <h3 className="text-lg sm:text-xl font-black text-slate-900">
-                  {mostAppliedJob.title}
-                </h3>
-                <p className="text-xs text-slate-500 font-medium mt-0.5">
-                  {mostAppliedJob.job_type} • {mostAppliedJob.work_type}
-                </p>
-              </div>
+              <h3 className="text-lg sm:text-xl font-black text-slate-900">
+                {mostAppliedJob.title}
+              </h3>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">
+                {mostAppliedJob.job_type} • {mostAppliedJob.work_type}
+              </p>
             </div>
 
             <div className="flex items-center gap-4 shrink-0">
@@ -231,12 +225,22 @@ export default function EmployerDashboard({
                         </h4>
                         <span
                           className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border ${
-                            job.status === 'active'
+                            job.status === 'published' || job.status === 'active'
                               ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                              : 'bg-slate-100 text-slate-600 border-slate-200'
+                              : job.status === 'pending'
+                              ? 'bg-amber-50 text-amber-700 border-amber-200'
+                              : job.status === 'draft'
+                              ? 'bg-slate-100 text-slate-600 border-slate-200'
+                              : 'bg-rose-50 text-rose-700 border-rose-200'
                           }`}
                         >
-                          {job.status === 'active' ? __('Active') : __('Closed')}
+                          {job.status === 'published' || job.status === 'active'
+                            ? __('Published')
+                            : job.status === 'pending'
+                            ? __('Pending')
+                            : job.status === 'draft'
+                            ? __('Draft')
+                            : __('Closed')}
                         </span>
                       </div>
                       <div className="flex items-center gap-3 text-xs text-slate-400">
