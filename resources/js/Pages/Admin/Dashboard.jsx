@@ -88,18 +88,6 @@ export default function AdminDashboard({
       <Head title={__('Admin Overview') + ' - CareerX'} />
 
       <div className="space-y-8 max-w-7xl mx-auto pb-12 animate-fade-in">
-        {flash?.success && (
-          <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center gap-3">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-            <span>{flash.success}</span>
-          </div>
-        )}
-        {flash?.error && (
-          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-sm font-semibold flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
-            <span>{flash.error}</span>
-          </div>
-        )}
 
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r rtl:bg-gradient-to-l from-[#03444B] via-[#026E78] to-[#009B99] p-6 sm:p-8 lg:p-10 text-white shadow-xl shadow-teal-950/10 border border-teal-500/20">
           <div className="absolute -right-12 -top-12 w-72 h-72 rounded-full bg-white/15 blur-3xl pointer-events-none" />

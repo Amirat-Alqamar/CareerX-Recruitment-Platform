@@ -120,18 +120,6 @@ export default function AdminJobs({
       <Head title={__('Job Management') + ' - CareerX'} />
 
       <div className="space-y-6 max-w-7xl mx-auto pb-12 animate-fade-in">
-        {flash?.success && (
-          <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold flex items-center gap-3">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-            <span>{flash.success}</span>
-          </div>
-        )}
-        {flash?.error && (
-          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-800 text-sm font-semibold flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />
-            <span>{flash.error}</span>
-          </div>
-        )}
 
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>

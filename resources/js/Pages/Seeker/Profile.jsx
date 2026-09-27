@@ -37,15 +37,6 @@ export default function Profile({
   const [activeModal, setActiveModal] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
 
-  const [showFlash, setShowFlash] = useState(false);
-
-  useEffect(() => {
-    if (flash?.success || flash?.error) {
-      setShowFlash(true);
-      const timer = setTimeout(() => setShowFlash(false), 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [flash]);
 
   useEffect(() => {
     document.body.style.overflow = '';
@@ -102,29 +93,6 @@ export default function Profile({
     <DashboardLayout userRole="seeker">
       <Head title={__('My Profile')} />
 
-      {showFlash && (flash?.success || flash?.error) && (
-        <div className="fixed top-20 right-6 rtl:right-auto rtl:left-6 z-50 max-w-md animate-fade-in shadow-xl rounded-2xl overflow-hidden border border-slate-200">
-          <div
-            className={`p-4 flex items-center justify-between gap-3 text-sm font-bold text-white ${
-              flash.success ? 'bg-[#008A7B]' : 'bg-red-600'
-            }`}
-          >
-            <div className="flex items-center gap-2" dir="auto">
-              {flash.success ? <CheckCircle2 className="w-5 h-5 shrink-0" /> : <AlertCircle className="w-5 h-5 shrink-0" />}
-              <span dir="auto" className="leading-snug">
-                {__(flash.success || flash.error)}
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => setShowFlash(false)}
-              className="p-1 hover:bg-white/20 rounded-lg transition-colors cursor-pointer"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
 
       <div className="max-w-6xl mx-auto space-y-6 pb-12">
         <ProfileHeader

@@ -21,7 +21,7 @@ class DashboardController extends Controller
             return redirect()->route('employer.company.edit')
                 ->with('error', __('Please complete your company profile first.'));
         }
-
+        
         $companyId = $company->id;
 
         $totalJobs = Job::where('company_id', $companyId)->count();

@@ -73,7 +73,7 @@ class ReportController extends Controller
                 ];
             });
 
-        $topCompanies = Company::withCount(['jobs', 'users'])
+        $topCompanies = Company::withCount('jobs')
             ->orderByDesc('jobs_count')
             ->take(8)
             ->get()

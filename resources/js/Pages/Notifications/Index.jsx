@@ -27,20 +27,10 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
 
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [items, setItems] = useState(notifications.data || []);
-  const [showFlash, setShowFlash] = useState(false);
 
   React.useEffect(() => {
     setItems(notifications.data || []);
   }, [notifications.data]);
-
-  React.useEffect(() => {
-    if (flash?.success || flash?.error) {
-      setShowFlash(true);
-      const timer = setTimeout(() => setShowFlash(false), 4500);
-      return () => clearTimeout(timer);
-    }
-  }, [flash]);
-
   const handleOpenDetailModal = (item) => {
     setSelectedNotification(item);
     if (!item.is_read) {
@@ -122,33 +112,7 @@ export default function NotificationsIndex({ notifications = {}, unreadCount = 0
       <Head title={__('Notifications Center') + ' - CareerX'} />
 
       <div className="space-y-6 max-w-7xl mx-auto pb-12 animate-fade-in">
-        {showFlash && (flash?.success || flash?.error) && (
-          <div className="fixed top-20 right-6 rtl:right-auto rtl:left-6 z-50 max-w-md animate-fade-in shadow-xl rounded-2xl overflow-hidden border border-slate-200">
-            <div
-              className={`p-4 flex items-center justify-between gap-3 text-sm font-bold text-white ${
-                flash.success ? 'bg-[#008A7B]' : 'bg-red-600'
-              }`}
-            >
-              <div className="flex items-center gap-2" dir="auto">
-                {flash.success ? (
-                  <CheckCircle2 className="w-5 h-5 shrink-0" />
-                ) : (
-                  <AlertCircle className="w-5 h-5 shrink-0" />
-                )}
-                <span dir="auto" className="leading-snug">
-                  {__(flash.success || flash.error)}
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowFlash(false)}
-                className="p-1 hover:bg-white/20 rounded-lg transition-colors cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        )}
+
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
           <div className="space-y-1">

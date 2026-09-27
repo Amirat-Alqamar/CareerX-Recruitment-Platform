@@ -24,7 +24,6 @@ class FortifyServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // توجيه ذكي بحسب نوع الحساب بعد تسجيل الدخول
         $this->app->singleton(\Laravel\Fortify\Contracts\LoginResponse::class, function () {
             return new class implements \Laravel\Fortify\Contracts\LoginResponse {
                 public function toResponse($request)
@@ -71,7 +70,6 @@ class FortifyServiceProvider extends ServiceProvider
             };
         });
 
-        // توجيه ذكي بحسب نوع الحساب بعد إنشاء حساب جديد
         $this->app->singleton(\Laravel\Fortify\Contracts\RegisterResponse::class, function () {
             return new class implements \Laravel\Fortify\Contracts\RegisterResponse {
                 public function toResponse($request)
@@ -122,34 +120,28 @@ class FortifyServiceProvider extends ServiceProvider
             );
         });
 
-        // 1. صفحة تسجيل الدخول عبر Inertia
         Fortify::loginView(function () {
             return Inertia::render('Auth/Login');
         });
 
-        // 2. صفحة إنشاء حساب جديد عبر Inertia
         Fortify::registerView(function () {
             return Inertia::render('Auth/Register');
         });
 
-        // 3. صفحة نسيان كلمة المرور
         Fortify::requestPasswordResetLinkView(function () {
             return Inertia::render('Auth/ForgotPassword', [
                 'status' => session('status'),
             ]);
         });
 
-        // 4. صفحة إعادة تعيين كلمة المرور
         Fortify::resetPasswordView(function ($request) {
             return Inertia::render('Auth/ResetPassword', ['request' => $request]);
         });
 
-        // 5. صفحة التحقق بخطوتين
         Fortify::twoFactorChallengeView(function () {
             return Inertia::render('Auth/TwoFactorChallenge');
         });
 
-        // التحقق المخصص للحسابات المحظورة
         Fortify::authenticateUsing(function ($request) {
             $user = User::where('email', $request->email)->first();
 

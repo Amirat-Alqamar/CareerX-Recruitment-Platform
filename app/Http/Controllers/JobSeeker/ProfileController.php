@@ -85,9 +85,7 @@ class ProfileController extends Controller
         $user->cover_image = $path;
         $user->save();
 
-        return redirect
-
-        ()->back()->with('success', __('Cover photo updated successfully.'));
+        return redirect()->back()->with('success', __('Cover photo updated successfully.'));
     }
 
     public function deleteAvatar()
