@@ -1,115 +1,59 @@
-# CareerX — Recruitment & Talent Acquisition Platform
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 <p align="center">
-  <strong>An enterprise-grade recruitment ecosystem connecting Job Seekers, Employers, and Administrators in a single high-performance web application.</strong>
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white" alt="Laravel 12" />
-  <img src="https://img.shields.io/badge/Inertia.js-3.x-9553E9?style=for-the-badge&logo=inertia&logoColor=white" alt="Inertia.js" />
-  <img src="https://img.shields.io/badge/React-19.x-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 19" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
-  <img src="https://img.shields.io/badge/Localization-EN%20%7C%20AR%20(RTL)-008A7B?style=for-the-badge" alt="Bilingual RTL/LTR" />
-</p>
+## About Laravel
 
----
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-## 📌 Project Overview
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-**CareerX** is a modern recruitment and talent platform built to streamline the hiring lifecycle for candidates, corporate recruiters, and platform administrators. Built with **Laravel 12**, **Inertia.js**, and **React 19**, it delivers a responsive Single Page Application (SPA) experience backed by a robust and secure backend architecture.
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
----
+## Learning Laravel
 
-## ✨ Core Features & Portals
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
 
-### 👨‍💼 1. Job Seeker Portal
-* **Comprehensive Career Profile:** Manage work experience, education, skills, spoken languages, verified certifications, and project portfolio.
-* **Resume Management:** Upload and download resumes in multiple formats (PDF / DOCX).
-* **Smart Job Search & Filtering:** Filter by job type (Full-time, Part-time, Internship, Freelance), work arrangement (On-site, Remote, Hybrid), location, and salary expectations.
-* **Application Tracker:** Monitor application status in real-time (`Applied`, `Under Review`, `Interview Scheduled`, `Accepted`, `Rejected`).
-* **Saved Jobs:** Bookmark and organize opportunities for quick application.
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-### 🏢 2. Employer & Corporate Portal
-* **Company Profile Management:** Showcase company identity with logos, banner images, company story, and official links.
-* **Job Posting Lifecycle:** Full CRUD management for job listings, including duplicate posting and one-click status toggle (Active/Closed).
-* **Applicant Tracking System (ATS Pipeline):** Visual pipeline to evaluate candidate profiles, inspect resumes, and update recruitment stages.
-* **Automated Interview Scheduling:** Schedule interviews with candidate notification and automated Google Meet room generation.
+## Laravel Sponsors
 
-### 🛡️ 3. Administrative Control Center
-* **Executive Analytics & Deep Reporting:** Real-time platform metrics and trends with **multi-page, print-ready PDF export**.
-* **Job Post Moderation:** Review and approve or reject employer listings before publication.
-* **User Management:** Monitor user activity with immediate ban/unban capabilities.
-* **Dynamic Role-Based Access Control (RBAC):** Catalog-based abilities system powered by Laravel Gates, allowing custom roles creation and granular permission delegation.
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
----
+### Premium Partners
 
-## ⚙️ Technical Highlights
+- **[Vehikl](https://vehikl.com)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
+- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+- **[Redberry](https://redberry.international/laravel-development)**
+- **[Active Logic](https://activelogic.com)**
 
-* **Modern Monolith Architecture:** Combines Laravel’s backend power and security with React’s client-side speed via Inertia.js — eliminating the overhead of managing a separate REST API.
-* **Full Bilingual Support (Arabic & English):** Native bi-directional layout support (**RTL / LTR**) with automated domain-based translation loading.
-* **Hardened Security & 2FA:** Built-in Two-Factor Authentication with QR codes, recovery codes, and Passkey support powered by Laravel Fortify.
-* **Modular Routing:** Clean domain-driven route segmentation (`job_seeker.php`, `employer.php`, `admin.php`, `role-permession.php`).
-* **Optimized Print Engine:** Custom `@media print` styling for generating clean, multi-page PDF documents for analytics and candidate dossiers.
+## Contributing
 
----
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-## 🛠️ Tech Stack
+## Code of Conduct
 
-| Layer | Technologies |
-| :--- | :--- |
-| **Backend** | PHP 8.2+, Laravel 12, Laravel Fortify, Eloquent ORM |
-| **Frontend** | React 19, Inertia.js v3, Tailwind CSS, Lucide Icons, Vite |
-| **Database** | MySQL  |
-| **Localization** | `mcamara/laravel-localization` & Modular JSON Auto-Merger |
-| **Authorization** | Custom RBAC (Role-Permission Package) with Native Laravel Gates |
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
----
+## Security Vulnerabilities
 
-## 🚀 Quick Setup & Installation
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-### 1. Clone the Repository
-```bash
-git clone https://github.com/souha-2003/CareerX-Recruitment-Platform.git
-cd CareerX-Recruitment-Platform
-```
+## License
 
-### 2. Install Dependencies
-```bash
-composer install
-npm install
-```
-
-### 3. Environment & Database Configuration
-```bash
-cp .env.example .env
-php artisan key:generate
-```
-*Configure your database credentials in `.env`, then run:*
-```bash
-php artisan migrate --seed
-php artisan storage:link
-```
-
-### 4. Start Development Servers
-```bash
-npm run dev
-php artisan serve
-```
-*Access the application at: `http://127.0.0.1:8000`*
-
----
-
-## 🔐 Default Admin Account
-
-After running the database seeders, the default administrator account is available:
-
-| Account | Email | Password | Role |
-| :--- | :--- | :--- | :--- |
-| **System Administrator** | `admin@careerx.com` | `password` | Super Admin |
-
-> **Note:** Employers and Job Seekers can easily register new accounts directly through the registration page (`/register`) by selecting their desired account type.
-
----
-
-## 📄 License
-This project is open-source software licensed under the [MIT License](LICENSE).
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
